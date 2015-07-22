@@ -51,7 +51,7 @@ router.get('/show/:slug', function(req, res, next) {
           'slug' : location.slug,
           'id' : location._id
         },
-        scripts: ['locations/show'],
+        scripts: ['moment', 'locations/show'],
         errors: err
       });
     }  
@@ -84,23 +84,60 @@ router.post('/update/:id', function(req, res) {
     });
 });
 
-router.post('/log/:id', function(req, res) {
+router.delete('/delete/:id', function(req, res) {
     var db = req.db;
     var collection = db.get('locations');
     var id = req.params.id;
-    var newLog = req.body;
-    console.log(newLog);
-    collection.update({'_id':id}, {$addToSet:{log:newLog}}, function(err, result){
+    collection.remove({ '_id' : id }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+});
+
+router.get('/logs/:slug', function(req, res) {
+  var slug = req.params.slug;
+  var collectionName = slug.replace(/-/g, '_') + '_logs';
+  var db = req.db;
+  var collection = db.get(collectionName);
+  collection.find({}, {sort: {'date': -1}}, function(e, location) {
+    res.json(location);
+  });
+});
+
+router.post('/insert-log/:slug', function(req, res) {
+    var slug = req.params.slug;
+    var collectionName = slug.replace(/-/g, '_') + '_logs';
+    var db = req.db;
+    var collection = db.get(collectionName);
+    var data = req.body;
+    console.log(data);
+    collection.insert(data, function(err, result){
       res.send(
           (err === null) ? { msg: '' } : { msg: err }
       );
     });
 });
 
-router.delete('/delete/:id', function(req, res) {
-    var db = req.db;
-    var collection = db.get('locations');
+router.post('/update-log/:slug/:id', function(req, res) {
     var id = req.params.id;
+    var slug = req.params.slug;
+    var collectionName = slug.replace(/-/g, '_') + '_logs';
+    var db = req.db;
+    var collection = db.get(collectionName);
+    var data = req.body;
+    console.log(data);
+    collection.update({'_id':id}, data, function(err, result){
+      res.send(
+          (err === null) ? { msg: '' } : { msg: err }
+      );
+    });
+});
+
+router.delete('/delete-log/:slug/:id', function(req, res) {
+    var slug = req.params.slug;
+    var id = req.params.id;
+    var collectionName = slug.replace(/-/g, '_') + '_logs';
+    var db = req.db;
+    var collection = db.get(collectionName);
     collection.remove({ '_id' : id }, function(err) {
         res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });

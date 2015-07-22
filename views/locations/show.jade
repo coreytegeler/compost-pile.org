@@ -5,20 +5,39 @@ block content
 
 	#location.edit
 		form#info
-			input#name(type='text', placeholder='Name')
-			input#street(type='text', placeholder='Street Address')
-			input#city(type='text', placeholder='City/Town')
-			input#state(type='text', placeholder='State')
-			input#zip(type='text', placeholder='Zip Code')
-			input.submit(type='submit', value='')
+			input.name(type='text', placeholder='Name')
+			input.street(type='text', placeholder='Street Address')
+			input.city(type='text', placeholder='City/Town')
+			input.state(type='text', placeholder='State')
+			input.zip(type='text', placeholder='Zip Code')
 
-		form#log
-			.titles
-				.title.total Total
-				.title.input Input
-				.title.output Output
-			.row
-				input#total(type='text', placeholder='0')
-				input#input(type='text', placeholder='0')
-				input#output(type='text', placeholder='0')
-				input.submit(type='submit', value='')
+			input.save(type='submit', value='')
+			input.delete(type='submit', value='')
+
+		table#log
+			thead
+				tr.titles
+					th.title.month Month
+					th.title.day Day
+					th.title.year Year
+					th.title.total Total
+					th.title.input Input
+					th.title.output Output
+					th.title.buttons 
+			tbody
+				tr.row
+					td.cell.date.month(label='month')
+						select.date.month(type='text', data-type='month')
+					td.cell.date.day(label='day')
+						select.date.day(type='text', data-type='day')
+					td.cell.date.year(label='year')
+						select.date.year(type='text', data-type='year')
+					td.cell.data.total(label='total')
+						input(type='text', placeholder='0', data-type='total')
+					td.cell.data.input(label='input')
+						input(type='text', placeholder='0', data-type='input')
+					td.cell.data.output(label='output')
+						input(type='text', placeholder='0', data-type='output')
+					td.cell.buttons(label='buttons')
+						input.save(type='submit', value='')
+						input.delete(type='submit', value='')
