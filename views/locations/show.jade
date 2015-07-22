@@ -1,0 +1,24 @@
+extends ../layout
+
+block content
+	h1= title
+
+	#location.edit
+		form#info
+			input#name(type='text', placeholder='Name')
+			input#street(type='text', placeholder='Street Address')
+			input#city(type='text', placeholder='City/Town')
+			input#state(type='text', placeholder='State')
+			input#zip(type='text', placeholder='Zip Code')
+			input.submit(type='submit', value='')
+
+		form#log
+			.titles
+				.title.total Total
+				.title.input Input
+				.title.output Output
+			.row
+				input#total(type='text', placeholder='0')
+				input#input(type='text', placeholder='0')
+				input#output(type='text', placeholder='0')
+				input.submit(type='submit', value='')

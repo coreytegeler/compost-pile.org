@@ -1,0 +1,147 @@
+@font-face {
+    font-family: 'GT Walsheim';
+    src: url('fonts/gt-walsheim-web.eot');
+    src: url('fonts/gt-walsheim-web.eot?#iefix') format('embedded-opentype'),
+         url('fonts/gt-walsheim-web.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'GT Walsheim Oblique';
+    src: url('fonts/gt-walsheim-regular-oblique-web.eot');
+    src: url('fonts/gt-walsheim-regular-oblique-web.eot?#iefix') format('embedded-opentype'),
+         url('fonts/gt-walsheim-regular-oblique-web.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'GT Walsheim Bold';
+    src: url('fonts/gt-walsheim-bold-web.eot');
+    src: url('fonts/gt-walsheim-bold-web.eot?#iefix') format('embedded-opentype'),
+         url('fonts/gt-walsheim-bold-web.ttf') format('truetype');
+}
+
+@font-face {
+    font-family: 'GT Walsheim Bold Oblique';
+    src: url('fonts/gt-walsheim-bold-oblique-web.eot');
+    src: url('fonts/gt-walsheim-bold-oblique-web.eot?#iefix') format('embedded-opentype'),
+         url('fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
+}
+
+body {
+	background: rgba(41,235,150,1);
+	padding: 50px;
+	color: rgba(17,70,122,1);
+	font-family: "GT Walsheim";
+	font-size: 16px;
+}
+main {
+	max-width: 900px;
+	display: table;
+	margin: auto;
+}
+header {
+	font-size: 100px;
+	font-family: "GT Walsheim Bold"
+}
+
+h1 {
+	font-size: 50px;
+	font-family: "GT Walsheim Bold"
+}
+
+a, a:visited {
+	color: rgba(17,70,122,1);
+	text-decoration: none;
+}
+
+.list {
+	display: table;
+	margin: 20px 0;
+	font-size: 25px;
+}
+.list .cell {
+	display: table;
+	float: left;
+	margin: 0 10px 10px 0;
+}
+.list .cell a {
+	border-bottom: 1px dotted rgba(17,70,122,1);
+}
+.list .cell:last-child {
+	margin-right: 0;
+}
+
+/*FORMS*/
+form {
+	padding: 50px 0 0 0;
+	width: 100%;
+	max-width: 900px;
+}
+input {
+	font-family: "GT Walsheim Bold";
+	display: block;
+	padding: 2px 0 2px 6px;
+	background: rgba(17,70,122,0.2);
+	color: rgba(17,70,122,1);
+	font-size: 25px;
+	border: 0;
+	outline: none;
+}
+input[type="text"] {
+	float: left;
+	margin: 0 20px 20px 0;
+	border-bottom: 3px solid rgba(17,70,122,1);
+}
+input[type="submit"] {
+	width: 40px;
+	height: 40px;
+	margin: 0;
+	padding: 5px;
+	float: none;
+	clear: both;
+	border: 3px solid rgba(17,70,122,1);
+	cursor: pointer;
+	background-image: url(../images/add.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 20px;  
+}
+input[type="submit"]:hover {
+	cursor: pointer;	
+}
+
+form#info input[type="text"] {
+	width: calc(50% - 16px);
+}
+form#info input[type="text"]:nth-child(even) {
+	margin-right: 0px;
+}
+form#log .titles {
+	width: 100%;
+}
+form#log .titles .title {
+	width: calc(100%/3 - 40px);
+	margin-right: 20px;
+	padding: 0 5px 3px 1px;
+	font-family: 'GT Walsheim Bold';
+	font-size: 25px;
+	float: left;
+}
+form#log .titles .title:last-child {
+	margin-right: 0;
+}
+form#log .row {
+	margin-bottom: 10px;
+	width: 100%;
+	clear: both;
+	display: table;
+}
+form#log .row input[type="text"] {
+	width: calc(100%/3 - 40px);
+}
+/*form#log .row input[type="text"]:nth-child(3) {
+	margin-right: 0px;
+}*/
+form#log .row input[type="submit"] {
+	float: left;
+	clear: none;
+}

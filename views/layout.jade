@@ -1,0 +1,15 @@
+doctype html
+html
+	head
+		title= title
+		link(rel='stylesheet', href='/stylesheets/reset.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+		script(src='http://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js')
+		script(type='text/javascript').
+			var localData =!{JSON.stringify(data)}
+		if scripts
+			each script in scripts
+				script(src='/javascripts/' + script + '.js')
+		body
+			main
+				block content
