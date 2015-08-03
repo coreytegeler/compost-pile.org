@@ -1,0 +1,48 @@
+extends ../layout
+
+block content
+	main.admin
+		#location.show
+			header
+				h1#title= title
+				.buttons
+					input.submit.save(type='submit', value='')
+					input.submit.delete(type='submit', value='')
+
+			#location.edit
+				form#info
+					input.text#name(type='text', placeholder='Name')
+					input.text#password(type='password', placeholder='Password')
+					input.text#email(type='text', placeholder='Email Address')
+					input.text#confirmpassword(type='password', placeholder='Password')
+
+					textarea#how(type='textarea', rows='10', placeholder='Tell us about how you compost.')
+					textarea#who(type='textarea', rows='10', placeholder='Who is involved in the composting process at your school?')
+					
+				table#log
+					thead
+						tr.titles
+							th.title.month Month
+							th.title.day Day
+							th.title.year Year
+							th.title.total Total
+							th.title.input Input
+							th.title.output Output
+							th.title.buttons 
+					tbody
+						tr.row
+							td.cell.date.month(label='month')
+								select.date.month(type='text', data-type='month')
+							td.cell.date.day(label='day')
+								select.date.day(type='text', data-type='day')
+							td.cell.date.year(label='year')
+								select.date.year(type='text', data-type='year')
+							td.cell.data.total(label='total')
+								input.text(type='text', placeholder='0', data-type='total')
+							td.cell.data.input(label='input')
+								input.text(type='text', placeholder='0', data-type='input')
+							td.cell.data.output(label='output')
+								input.text(type='text', placeholder='0', data-type='output')
+							td.cell.buttons(label='buttons')
+								input.save(type='submit', value='')
+								input.delete(type='submit', value='')

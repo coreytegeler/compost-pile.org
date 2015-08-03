@@ -26,22 +26,21 @@
          url('fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
 }
 
-body {
+html, body {
 	background: rgba(41,235,150,1);
-	padding: 50px;
 	color: rgba(17,70,122,1);
 	font-family: "GT Walsheim";
 	font-size: 16px;
+	margin: 0;
 }
 main {
-	max-width: 900px;
-	min-width: 600px;
 	display: table;
 	margin: auto;
 }
 header {
 	font-size: 100px;
-	font-family: "GT Walsheim Bold"
+	font-family: "GT Walsheim Bold";
+	display:table;
 }
 
 h1 {
@@ -71,6 +70,21 @@ a, a:visited {
 	margin-right: 0;
 }
 
+#location header {
+
+}
+#location header h1 {
+	float: left;	
+	display: table;
+}
+#location .buttons {
+	display: table-cell;
+  	vertical-align: middle;
+}
+#location .buttons input.submit {
+	margin-left: 10px;
+	float: left;
+}
 /*FORMS*/
 form {
 	padding: 50px 0 0 0;
@@ -78,17 +92,17 @@ form {
 	max-width: 900px;
 	display: table;
 }
-input, select {
+input, select, textarea {
 	font-family: "GT Walsheim Bold";
 	display: block;
 	padding: 2px 0 2px 6px;
-	background: rgba(17,70,122,0.2);
+	background: rgba(17,70,122,0.1);
 	color: rgba(17,70,122,1);
 	font-size: 25px;
 	border: 0;
 	outline: none;
 }
-input[type="text"] {
+input.text {
 	height: 33px;
 	border-bottom: 3px solid rgba(17,70,122,1);
 }
@@ -100,7 +114,23 @@ input[type="submit"] {
 	cursor: pointer;
 	background-position: center;
 	background-repeat: no-repeat;
-	background-size: 20px;
+	background-size: 25px;
+}
+input[type="submit"]:hover {
+	cursor: pointer;	
+}
+input[type="submit"].add {
+	background-image: url(../images/plus.svg);
+}
+input[type="submit"].save {
+	background-image: url(../images/check.svg);
+}
+input[type="submit"].delete {
+	background-image: url(../images/x.svg);
+	margin-left: 20px;
+}
+textarea {
+	resize: none;
 }
 select {
 	height: 40px;
@@ -110,26 +140,22 @@ select {
   	background-size: 20px;
   	background-repeat: no-repeat;
   	background-position: calc(100% - 10px) center; 
-}
-input[type="submit"]:hover {
-	cursor: pointer;	
-}
-input[type="submit"].save {
-	background-image: url(../images/plus.svg);
-}
-input[type="submit"].delete {
-	background-image: url(../images/x.svg);
-	margin-left: 20px;
+  	cursor: pointer;
 }
 form#info input {
 	float: left;
 }
-form#info input[type="text"] {
+form#info input.text,
+form#info textarea {
 	width: calc(50% - 16px);
 	margin: 0 20px 20px 0;
 }
-form#info input[type="text"]:nth-child(even) {
+form#info input.text:nth-child(even),
+form#info textarea:nth-child(even) {
 	margin-right: 0px;
+}
+form#info textarea {
+	float: left;
 }
 table#log {
 	clear: both;
@@ -166,7 +192,7 @@ table#log td.cell.year {
 table#log td.cell.data {
 	width: 12%;
 }
-table#log .row input[type="text"], table#log .row select {
+table#log .row input.text, table#log .row select {
 	width: 100%;
 }
 table#log .row input[type="submit"] {
