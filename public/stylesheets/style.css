@@ -1,3 +1,7 @@
+/*yellow: #fdd700*/
+/*light blue: #2ca0ff*/
+
+
 @font-face {
     font-family: 'GT Walsheim';
     src: url('fonts/gt-walsheim-web.eot');
@@ -26,9 +30,12 @@
          url('fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
 }
 
+
 html, body {
-	background: rgba(41,235,150,1);
-	color: rgba(17,70,122,1);
+	/*background: rgba(46,255,155,1);*/
+	/*background-color: #c9845b;*/
+	background-color: #e9ffea;
+	color: rgba(34,139,224,1);
 	font-family: "GT Walsheim";
 	font-size: 16px;
 	margin: 0;
@@ -37,19 +44,26 @@ main {
 	display: table;
 	margin: auto;
 }
+#about {
+	width: 100%;
+	height: 300px;
+	background: #73db71;
+}
 header {
 	font-size: 100px;
 	font-family: "GT Walsheim Bold";
 	display:table;
 }
-
+header svg {
+	display: table;
+	margin: auto;
+}
 h1 {
 	font-size: 50px;
 	font-family: "GT Walsheim Bold"
 }
 
 a, a:visited {
-	color: rgba(17,70,122,1);
 	text-decoration: none;
 }
 
@@ -64,7 +78,7 @@ a, a:visited {
 	margin: 0 10px 10px 0;
 }
 .list .cell a {
-	border-bottom: 1px dotted rgba(17,70,122,1);
+	border-bottom: 1px dotted rgba(34,139,224,1);
 }
 .list .cell:last-child {
 	margin-right: 0;
@@ -96,21 +110,21 @@ input, select, textarea {
 	font-family: "GT Walsheim Bold";
 	display: block;
 	padding: 2px 0 2px 6px;
-	background: rgba(17,70,122,0.1);
-	color: rgba(17,70,122,1);
+	background: rgba(34,139,224,0.1);
+	color: rgba(34,139,224,1);
 	font-size: 25px;
 	border: 0;
 	outline: none;
 }
 input.text {
 	height: 33px;
-	border-bottom: 3px solid rgba(17,70,122,1);
+	border-bottom: 3px solid rgba(34,139,224,1);
 }
 input[type="submit"] {
 	width: 40px;
 	height: 40px;
 	margin: 0;
-	/*border: 3px solid rgba(17,70,122,1);*/
+	/*border: 3px solid rgba(34,139,224,1);*/
 	cursor: pointer;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -164,7 +178,7 @@ table#log {
     margin-top: 50px;
 }
 table#log .titles {
-	border-bottom: 3px solid rgba(17,70,122,1);
+	border-bottom: 3px solid rgba(34,139,224,1);
 }
 table#log .titles .title {
 	font-family: 'GT Walsheim Bold';

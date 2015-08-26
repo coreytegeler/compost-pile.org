@@ -46,11 +46,7 @@ function updateLocation(event) {
             dataType: 'JSON'
         }).done(function( response ) {
             if (response.msg === '') {
-               // var newSlug = response.slug;
-               // var oldSlug = localData.slug;
-               // if(newSlug !== oldSlug) {
-               //      window.location = '/admin/'+newSlug;
-               // }
+
             }
             else {
                 alert(response.msg);

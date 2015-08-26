@@ -33,7 +33,7 @@ router.get('/data/:slug', function(req, res) {
 
 router.get('/new', function(req, res, next) {
   console.log(req);
-  res.render('locations/new', {
+  res.render('admin/new', {
     title: 'New Location',
     scripts: ['admin/new'],
     styles: ['admin']

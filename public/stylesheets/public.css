@@ -1,0 +1,178 @@
+/*GARDENER GLOVE CURSOR*/
+/*GARDENER GLOVE CURSOR*/
+/*GARDENER GLOVE CURSOR*/
+/*GARDENER GLOVE CURSOR*/
+
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+::-webkit-scrollbar { 
+    display: none; 
+}
+main {
+
+}
+header {
+	width: 100%;
+	height: auto;
+	padding: 50px 0;
+}
+header img {
+	width: 500px;
+	height: auto;
+	display: table;
+	margin: auto;
+}
+aside {
+	height: 100%;
+    width: 200px;
+    position: fixed;
+    display: none;
+}
+section.location {
+	background: #73db71;
+	color: #e9ffea;
+	border-bottom: 6px solid #e9ffea;
+	overflow: hidden;
+}
+section.location header a.open {
+	color: #e9ffea;
+	display: table;
+    margin: auto;
+}
+section.location header h1 {
+    padding-bottom: 15px;
+    border-bottom : 6px solid;
+    position: relative;
+}
+.multiple section.location header h1:hover {
+	cursor: pointer;
+}
+.single section.location header h1:hover {
+	cursor: default;
+}
+.multiple section.location header h1 .arrow {
+	position: absolute;
+	right: -60px;
+	bottom: 10px;
+	transition: transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	-moz-transition: -moz-transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	-webkit-transition: -webkit-transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+}
+.multiple section.location header h1:hover .arrow {
+	transform: translateX(10px);
+	-moz-transform: translateX(10px);
+	-webkit-transform: translateX(10px);
+}
+.single section.location header h1 .arrow {
+	display: none;
+}
+.graph {
+	width: 100%;
+    height: 500px;
+    position: relative;
+}
+.graph .easel {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+}
+.graph canvas {
+    width: 100%;
+    height: 100%;
+	transform: translateY(500px);
+	-moz-transform: translateY(500px);
+	-webkit-transform: translateY(500px);
+    transition: transform 600ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	-moz-transition: -moz-transform 600ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	-webkit-transition: -webkit-transform 600ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+}
+.graph.show canvas {
+	-webkit-transform: translateY(0px);
+	-moz-transform: translateY(0px);
+	transform: translateY(0px);
+}
+.popup {
+	position: absolute;
+	display: none;
+	opacity: 0;
+	background: #73db71;
+	color: #e9ffea;
+	font-size: 18px;
+	border: 6px solid #e9ffea;
+	white-space: nowrap;
+	-webkit-transform: translateY(50px) scale(0.5);
+	-moz-transform: translateY(50px) scale(0.5);
+	transform: translateY(50px) scale(0.5);
+	transition: opacity 100ms ease-in, transform 100ms ease-in;
+	-moz-transition: opacity 100ms ease-in, -moz-transform 100ms ease-in;
+	-webkit-transition: opacity 100ms ease-in, -webkit-transform 100ms ease-in;
+}
+.popup.show {
+	opacity: 1;
+	-webkit-transform: translateY(0px) scale(1);
+	-moz-transform: translateY(0px) scale(1);
+	transform: translateY(0px) scale(1);
+	transition: opacity 100ms ease-in-out 50ms, transform 150ms ease-in-out;
+	-moz-transition: opacity 100ms ease-in-out 50ms, -moz-transform 150ms ease-in-out;
+	-webkit-transition: opacity 100ms ease-in-out 50ms, -webkit-transform 150ms ease-in-out;
+}
+.popup .row {
+	padding: 5px;
+}
+.popup .row:not(:last-child) {
+	border-bottom: 2px solid #e9ffea;
+}
+.popup .row .title {
+	border-bottom: 1px solid #e9ffea;
+	padding-bottom: 5px;
+	margin-bottom: 5px;
+	text-transform: uppercase;
+	font-family: 'GT Walsheim Bold';
+}
+.popup .row .data {
+}
+
+#info {
+	width: 100%;
+	display: table;
+	background-color: #e9ffea;
+	border-top: 6px solid #e9ffea;
+}
+#info .inner {
+	/*max-width: 900px;
+	display: table;
+	margin: auto;*/
+}
+#info .box {
+	/*width: calc(50% - 60px);
+	width: -moz-calc(50% - 60px);
+	width: -webkit-calc(50% - 60px);
+	padding: 30px;*/
+	width: 100%;
+	float: left;
+	padding: 50px 0 0 0;
+}
+#info .box .inner {
+	max-width: 800px;
+	height: 100%;
+	display: table;
+	margin: auto;
+}
+#info .box h2 {
+	color: #754e34;
+	font-size: 40px;
+	font-weight: 700;
+	line-height: 50px;
+}
+
+#info .box .text {
+	color: #754e34;
+	font-size: 28px;
+	line-height: 38px;
+	font-weight: 300;
+	/*border: 6px solid #e8dfb1;*/
+	/*padding: 30px;*/
+}

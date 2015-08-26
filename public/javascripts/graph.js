@@ -1,217 +1,293 @@
-var graphGroup, markerGroup,stuffGroup, tickGroup, horzAxis, vertAxis;
-var graphOffset = 150;
-$(function() {
-	canvas = document.createElement('canvas');
-	width = w();
-	height = h();
-	createCanvas(width,height);
-});
-
-$(window).resize(function() {
-	// paper.view.draw();
-});
-
-function createCanvas(w,h) {
-	canvas.width = width;
-	canvas.height = height;
-	$(canvas).attr('resize', true); 
-	$(canvas).appendTo($('#graph'));
-	paper.setup(canvas);
-	getData();
-}
-
-function getData() {
-	$.getJSON('/logs/' + localData.slug, function(logs) {
-        graphPoints(logs, 'total');
-    });
-}
-function graphPoints(logs, type) {
-	graphGroup = new paper.Group();	
-	markerGroup = new paper.Group();	
-	stuffGroup = new paper.Group();	
-	tickGroup = new paper.Group();	
-	horzAxis = new paper.Group();	
-	vertAxis = new paper.Group();	
-	var line = new paper.Path({
-		strokeWidth: 5,
-		strokeCap: 'round',
-		strokeJoin: 'round',
-		strokeColor: 'rgba(17,70,122,1)'
-	});
-	graphGroup.addChild(line);
-
-	for(var i = 0; i < logs.length; i++) {
-		var log = logs[i];
-		var data = {
-			date: moment(log.date).format('MMMM Do, YYYY'),
-			valueType: type,
-			value: log[type]
-		};
-		var x = 100*i;
-		var y = height - parseInt(log.total);
-		line.add(x, y);
-		var marker = new paper.Shape.Circle({
-			x: x,
-			y: y,
-			radius: 8,
-			strokeWidth: 3,
-			strokeColor: 'rgba(17,70,122,1)',
-			fillColor: 'rgba(41,235,150,1)',
-			data: data
-		});
-		markerGroup.addChild(marker);
-
-		marker.onMouseEnter = function(event) {
-			var marker = event.target;
-			marker.fillColor = 'rgba(17,70,122,1)';
-			$('body').css({cursor: 'pointer'});
-			showData(event.target);
-		};
-
-		marker.onMouseLeave = function(event) {
-			var marker = event.target;
-			marker.fillColor = 'rgba(41,235,150,1)';
-			$('body').css({cursor: 'default'});
-			$('#popup').css({
-				display: 'none'
-			});
-		};
-
-		marker.onClick = function(event) {
-
-		};
-	}
-	line.sendToBack().smooth();
-
-	var limits = [];
-
-	for(var i = 0; i< line.length; i+=50) {
-		var point = line.getLocationAt(i).point;
-		var coords = {
-			x:point.x,
-			y:point.y
-		};
-		limits.push(coords);
-	}
-
-	for(var i = 0; i < limits.length; i++) {
-		var limit = limits[i];
-		var size = 25;
-		for(var ii = 0; ii < height-limit.y; ii += 5) {
-			var shift = random(10,-10);
-			var stuff = new paper.Shape.Circle({
-				x: limit.x + shift,
-				y: height-ii,
-				radius: size,
-				fillColor: 'rgba(17,70,122,0.1)'
-			});
-			stuff.sendToBack();
-			stuffGroup.addChild(stuff);
+var graphOffset = 100;
+var white = '#e9ffea';
+var green = '#73db71';
+var graphHeight = 500;
+var moveLeft;
+function createGraph(location) {
+	function stretchCanvas() {
+		papers[location] = new paper.PaperScope();
+		canvases[location] = document.createElement('canvas');
+		width = w();
+		height = graphHeight;
+		canvases[location].width = width;
+		canvases[location].height = height;
+		$(canvases[location]).css({
+			width: width,
+			height: height
+		})
+		$(canvases[location]).attr('resize', true).attr('id',location); 
+		$(canvases[location]).appendTo($('section#'+location+'  .graph .easel'));
+		papers[location].setup(canvases[location]);
+		
+		groups[location] = {};
+		var groupNames = [
+			'graph',
+			'graphContent',
+			'clippedGraphContent',
+			'markers',
+			'fillSymbols',
+			'ticks',
+			'horzTicks',
+			'vertTicks',
+			'horzAxis',
+			'vertAxis',
+			'fillContent',
+			'axes'
+		];
+		for(var i = 0; i < groupNames.length; i++) {
+			var groupName = groupNames[i];
+			var newGroup = new papers[location].Group({name: groupName});
+			var groupObj = groups[location]
+			groupObj[groupName] = newGroup;
 		}
+		getData(location);
 	}
-	graphGroup.addChild(stuffGroup).addChild(markerGroup);
-	graphGroup.position.x += graphOffset;
-	graphGroup.position.y -= graphOffset;
 
-	createAxes(logs);
-}
+	function getData(location) {
+		$.ajax({
+			url: '/logs/' + location,
+			dataType: 'json',
+			success: function(response) {
+				logs = response;
+				createGraph(logs);
+	        	graphPoints('total');
+	        }
+	    });
+	}
 
-function createAxes(logs) {
-	var graphWidth = width - graphOffset;
-	var graphHeight = height - graphOffset;
-	var tickSize = 15;
-	var strokeWidth = 3;
-	for(var i = 0; i < graphWidth; i+=10) {
-		var x = graphOffset + i;
-		var y = height - graphOffset + 15;
-		var tick = paper.Path.Line({
-			from:[x, y],
-			to:[x, y + tickSize],
-			strokeWidth: strokeWidth,
+	function createGraph(logs) {
+		groups[location].ticks.addChildren([groups[location].horzTicks, groups[location].vertTicks]);
+		// groups[location].graphContent.addChild(groups[location].ticks);
+		var tickSize = 30;
+		var tickInterval = 30;
+		for(var i = graphHeight - tickInterval; i > 0; i-=tickInterval) {
+			var tick = papers[location].Path.Line({
+				from: [0, graphHeight - i],
+				to: [tickSize, graphHeight - i],
+				strokeWidth: 6,
+				strokeCap: 'round',
+				strokeColor: white,
+				opacity: 1
+			});
+			groups[location].vertTicks.addChild(tick);
+		}
+		// tick.onMouseEnter = function(event) {
+		// 	$('body').css({cursor: 'pointer'});
+		// 	var y = this.segments[1].point.y;
+		// 	this.insert(2, [w(), y]);
+		// 	this.opacity = 1;
+		// };
+
+		// tick.onMouseLeave = function(event) {
+		// 	$('body').css({cursor: 'default'});
+		// 	this.removeSegment(2);
+		// 	if(this.data.visibility === false) {
+		// 		this.opacity = 0;
+		// 	} else {
+		// 		this.opacity = 1;
+		// 	}
+		// };
+		papers[location].view.draw();
+	}
+
+	var startGraphing = 0;
+	function graphPoints(type) {
+		var line = new papers[location].Path({
+			name: 'line',
+			strokeWidth: 5,
 			strokeCap: 'round',
 			strokeJoin: 'round',
-			strokeColor: 'rgba(17,70,122,1)'
+			strokeColor: white
 		});
 
-		horzAxis.addChild(tick);
+		line.add(0, height);
+		for(var i = startGraphing; i < logs.length; i++) {
+			var log = logs[i];
+			var data = {
+				date: moment(log.date).format('MMMM Do, YYYY'),
+				index: i,
+				valueType: type,
+				value: log[type]
+			};
+			var x = 100*i;
+			var y = height - parseInt(log.total);
+			line.add(x, y);
+			var marker = new papers[location].Shape.Circle({
+				name: 'marker-' + i,
+				x: x,
+				y: y,
+				radius: 8,
+				strokeWidth: 3,
+				strokeColor: white,
+				fillColor: green,
+				data: data
+			});
+			groups[location].markers.addChild(marker);
+
+			marker.onMouseEnter = function(event) {
+				showPopUp(event.target);
+			};
+
+			marker.onMouseLeave = function(event) {
+				hidePopUp(event.target);
+			};
+
+			marker.onClick = function(event) {
+
+			};
+		}
+		line.sendToBack().smooth();
+		loadFillSymbols(line);
 	}
-	tickGroup.addChild(horzAxis);
 
+	function showPopUp(marker) {
+		marker.fillColor = white;
+		$('body').css({cursor: 'pointer'});
+		var x = marker.x;
+		var y = marker.y;
+		var date = marker.data.date;
+		var valueType = marker.data.valueType;
+		var value = marker.data.value;
+		$('section#'+location+' .popup .row.date .data').html(date);
+		$('section#'+location+' .popup .row.value .title').html(valueType);
+		$('section#'+location+' .popup .row.value .data').html(value+' lbs.');
+		$('section#'+location+' .popup').css({
+			display: 'block'
+		}).css({
+			left: x - $('section#'+location+' .popup')[0].offsetWidth/2,
+			top: y - $('section#'+location+' .popup')[0].offsetHeight - 20,
+		}).addClass('show');
+	}
 
-	var smallInterval = graphHeight - 10;
-	var mediumInterval = graphHeight - 50;
-	var largeInterval = graphHeight - 100;
-	for(var i = graphHeight; i > 0; i-=1) {
-		var x = graphOffset - 15;
-		var y = i;
-		var opacity = 1;
-		var visibility = true;
-		if(i == smallInterval) {
-			tickSize = 15;
-			smallInterval -= 10;
-			size = 'small';
-			if(i == mediumInterval) {
-				tickSize = 20;
-				mediumInterval -= 50;
-				size = 'medium';
-				if(i == largeInterval) {
-					tickSize = 25;
-					largeInterval -= 100;
-					size = 'large';
+	function hidePopUp(marker) {
+		$(groups[location].markers).each(function(i, marker) {
+			marker.fillColor = green;
+		});
+		$('body').css({cursor: 'default'});
+		$('section#'+location+' .popup').removeClass('show');
+		$('section#'+location+' .popup').one('webkitTransitionEnd transitionend', function(e) {
+			if(!$('section#'+location+' .popup').hasClass('show')) {
+				$('section#'+location+' .popup').css({'display':'none'});
+			}
+		});
+	}
+	var svgs = {};
+	var compostables = [
+		'apple',
+		'banana',
+		'beet',
+		'eggshell',
+		'peanut',
+		'tomato',
+		'dirt'
+	];
+	function loadFillSymbols(line) {
+		$.each(compostables, function(i,compostable) {
+			var imgUrl = '../images/compost/'+compostable+'.svg';
+			$.get(imgUrl, null, function(svg) {
+				importedSvg = papers[location].project.importSVG(svg);
+				var symbol = new papers[location].Symbol(importedSvg);
+				svgs[compostable] = symbol;
+			}, 'xml').done(function() {
+				if(i == compostables.length-1) {
+					fillGraphWithSymbols(line);
 				}
-			}
-		} else {
-			visibility = false;
-			opacity = 0;
-			tickSize = 15;
-		}
+			});
+		});
+	}
 
-		var tick = paper.Path.Line({
-			from: [x - tickSize, y],
-			to:[x, y],
-			strokeWidth: 3,
-			strokeCap: 'round',
-			strokeJoin: 'round',
-			strokeColor: 'rgba(17,70,122,1)',
-			opacity: opacity,
-			data: {visibility: visibility}
+	function fillGraphWithSymbols(line) {
+		var mask = new papers[location].Path.Rectangle({
+			name: 'mask',
+			x: 0,
+			y: 0,
+			width: w(),
+			height: h(),
+			clipMask: true
 		});
 
-		tick.onMouseEnter = function(event) {
-			$('body').css({cursor: 'pointer'});
-			var y = this.segments[1].point.y;
-			this.insert(2, [w(), y]);
-			this.opacity = 1;
-		};
+		var endPile;
+		var lineLength = line.segments.length;
+		var lastSeg = line.segments[lineLength-1];
+		var lastPointX = lastSeg.point.x;
 
-		tick.onMouseLeave = function(event) {
-			$('body').css({cursor: 'default'});
-			this.removeSegment(2);
-			if(this.data.visibility === false) {
-				this.opacity = 0;
+		var fill = line.clone().set({
+			name: 'fill',
+			fillColor: '#754e34',
+			strokeCap: '',
+			strokeJoin: '',
+			strokeColor: '',
+			strokeWidth: '',
+			closed: true
+		});
+		fill.add(lastPointX+200, height);
+		// console.log(fill);
+		var fillMask = fill.clone().set({
+			name: 'fillMask',
+			clipMask: true
+		});
+
+
+		var limits = [];
+		for(var i = 0; i< fillMask.length; i+=50) {
+			var point = fillMask.getLocationAt(i).point;
+			var coords = {
+				x:point.x,
+				y:point.y
+			};
+			limits.push(coords);
+		}
+		
+		for(var i = 0; i < limits.length; i++) {
+			var limit = limits[i];
+			var size = 25;
+			for(var ii = 0; ii < height-limit.y; ii += 20) {
+				var shift = random(10,-10);
+				var randInt = random(0, compostables.length - 1);
+				var compostable = compostables[randInt];
+				var fillSymbol = svgs[compostable];
+				var newSymbol = fillSymbol.place({
+					x: limit.x + shift,
+					y: height-ii + shift
+				});
+				newSymbol.scale(0.25);
+				newSymbol.rotate(random(0,360));
+				newSymbol.sendToBack();
+				groups[location].fillSymbols.addChild(newSymbol);
 			}
-		};
+		}
+		
+		
+		
+		// console.log(fillMask);
 
-		vertAxis.addChild(tick);
+		groups[location].fillContent.addChildren([fill, fillMask, groups[location].fillSymbols]);
+		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers]);
+		groups[location].graphContent.addChildren([mask, groups[location].clippedGraphContent, groups[location].ticks]);
+		// graphContent.position.x += graphOffset;
+		// graphContent.position.y -= graphOffset;
+		groups[location].graph.addChild(groups[location].graphContent);
+		papers[location].view.draw();
+		showGraph();
 	}
-	tickGroup.addChild(vertAxis);
-	paper.view.draw();
+
+	function showGraph() {
+		$('.graph').addClass('show');
+	}
+
+
+
+	stretchCanvas();
 }
 
-function showData(marker) {
-	var x = marker.x;
-	var y = marker.y;
-	var date = marker.data.date;
-	var valueType = marker.data.valueType;
-	var value = marker.data.value;
-	$('#popup .row.date .data').html(date);
-	$('#popup .row.value .title').html(valueType);
-	$('#popup .row.value .data').html(value+' lbs.');
-	$('#popup').css({
-		display: 'block'
-	}).css({
-		left: x - $('#popup')[0].offsetWidth/2 + graphOffset,
-		top: y - $('#popup')[0].offsetHeight - 20 - graphOffset,
-
-	});
-}
+// $(window).resize(function() {
+// 	graph.children['background'].set({
+// 		width: w(),
+// 		height: graphHeight
+// 	});
+// 	graphContent.children['mask'].set({
+// 		width: w(),
+// 		height: graphHeight
+// 	});
+// 	papers[location].view.draw();
+// });
