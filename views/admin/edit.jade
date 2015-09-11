@@ -6,8 +6,10 @@ block content
 			header
 				h1#title= title
 				.buttons
-					input.submit.save(type='submit', value='')
-					input.submit.delete(type='submit', value='')
+					a.submit.square.save
+					a.submit.square.delete
+					a.submit.square.view
+					a.submit.square.home(href="/admin")
 
 			#location.edit
 				form#info
@@ -44,5 +46,5 @@ block content
 							td.cell.data.output(label='output')
 								input.text(type='text', placeholder='0', data-type='output')
 							td.cell.buttons(label='buttons')
-								input.save(type='submit', value='')
-								input.delete(type='submit', value='')
+								input.save.square(type='submit', value='')
+								input.delete.square(type='submit', value='')

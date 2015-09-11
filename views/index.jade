@@ -3,23 +3,26 @@ extends layout
 block content
 	aside
 	header#logo
+		a#logoLink(href= '/')
 	main
 		#locations
 			-for(var i in locations)
 				-var location = locations[i]
 				section.location(id= location.slug, data-slug= location.slug)
-					header
-						a.open(href= location.slug)
-							h1 #{location.name}
-								.arrow ➼
-					.graph
-						.easel
-						.popup
-							.row.date
-								.cell.title='Date'
-								.cell.data
-							.row.value
-								.cell.title
-								.cell.data
-					if pageType == 'single'
-						include info.jade
+					a.open(href= location.slug)
+						.content
+							header
+								h1 #{location.name}
+								.close
+							.graph
+								.easel
+								.popup
+									.row.date
+										.cell.title='Date'
+										.cell.data
+									.row.value
+										.cell.title
+										.cell.data
+							//- if pageType == 'single'
+					include info.jade
+	footer

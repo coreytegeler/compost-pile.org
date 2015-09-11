@@ -33,18 +33,23 @@ router.get('/', function(req, res, next) {
 router.get('/:slug', function(req, res, next) {
   var db = req.db;
   var collection = db.get('locations');
-  var slug = req.params.slug;
+  var pageSlug = req.params.slug;
   var locations = [];
-  return collection.findOne({ 'slug' : slug }, function (err, locationDoc) {
-    var location = {};
-    location.slug = locationDoc.slug;
-    location.name = locationDoc.name;
-    locations.push(location);
+  return collection.find({}, {}, function (err, locationsDoc) {
+    for (var i=0; i<locationsDoc.length; i++) {
+      var slug = locationsDoc[i].slug;
+      var name = locationsDoc[i].name;
+      var location = {};
+      location.slug = slug;
+      location.name = name;
+      locations.push(location);
+    }
     if (err) {
       return res.render('/');
     } else {
       return res.render('index', {
         pageType: 'single',
+        selected: pageSlug,
         locations: locations,
         scripts: ['paper','moment','main','graph'],
         styles: ['public'],
@@ -54,13 +59,13 @@ router.get('/:slug', function(req, res, next) {
   });
 });
 
-router.get('/admin', function(req, res, next) {
-  res.render('admin', {
-    title: 'Locations',
-    scripts: ['admin/index'],
-    styles: ['admin']
-  });
-});
+// router.get('/admin', function(req, res, next) {
+//   res.render('admin', {
+//     title: 'Locations',
+//     scripts: ['admin/index'],
+//     styles: ['admin']
+//   });
+// });
 
 router.get('/logs/:slug', function(req, res) {
   var slug = req.params.slug;

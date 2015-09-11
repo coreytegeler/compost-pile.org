@@ -11,7 +11,32 @@ slug.defaults.modes['pretty'] = {
     charmap: slug.charmap,
     multicharmap: slug.multicharmap
 };
-
+router.get('/', function(req, res, next) {  
+  console.log("!!!!!");
+  var db = req.db;
+  var collection = db.get('locations');
+  var locations = [];
+  return collection.find({}, {}, function (err, locationsDoc) {
+    for (var i=0; i<locationsDoc.length; i++) {
+      var slug = locationsDoc[i].slug;
+      var name = locationsDoc[i].name;
+      var location = {};
+      location.slug = slug;
+      location.name = name;
+      locations.push(location);
+    }
+    if (err) {
+      return res.render('/');
+    } else {
+      return res.render('admin/index', {
+        locations: locations,
+        scripts: ['admin/index'],
+        styles: ['admin'],
+        errors: err
+      });
+    }  
+  });
+});
 // Find all records from 'locations' collection in database
 router.get('/data', function(req, res) {
 	var db = req.db;
@@ -28,6 +53,15 @@ router.get('/data/:slug', function(req, res) {
   var slug = req.params.slug;
   collection.findOne({'slug':slug},{},function(e, location) {
     res.json(location);
+  });
+});
+
+router.get('/login', function(req, res, next) {
+  console.log(req);
+  res.render('admin/login', {
+    title: 'Login',
+    scripts: ['admin/login'],
+    styles: ['admin']
   });
 });
 

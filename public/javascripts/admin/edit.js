@@ -1,8 +1,9 @@
 $(document).ready(function() {
     fillLocationForm();
     setupNewLog();
-	$('#location header input.save').on('click', updateLocation);
-    $('#location header input.delete').on('click', deleteLocation);
+	$('#location header a.save').on('click', updateLocation);
+    $('#location header a.delete').on('click', deleteLocation);
+    $('#location header a.view').on('click', viewLocation);
     $('#location #log').on('click', 'input.save', saveLog);
     $('#location #log').on('click', '.row:not(.saved) input.delete', clearLog);
     $('#location #log').on('click', '.row.saved input.delete', deleteLog);
@@ -46,7 +47,7 @@ function updateLocation(event) {
             dataType: 'JSON'
         }).done(function( response ) {
             if (response.msg === '') {
-
+                window.location = '/admin/';
             }
             else {
                 alert(response.msg);
@@ -79,6 +80,11 @@ function deleteLocation(event) {
     } else {
         return false;
     }
+}
+
+function viewLocation(event) {
+    event.preventDefault();
+    window.location = '/'+localData.slug;
 }
 
 function fillDates(row,month,day,year) {

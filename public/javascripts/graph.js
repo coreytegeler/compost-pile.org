@@ -1,7 +1,7 @@
 var graphOffset = 100;
 var white = '#e9ffea';
 var green = '#73db71';
-var graphHeight = 500;
+var graphHeight = 300;
 var moveLeft;
 function createGraph(location) {
 	function stretchCanvas() {
@@ -18,8 +18,7 @@ function createGraph(location) {
 		$(canvases[location]).attr('resize', true).attr('id',location); 
 		$(canvases[location]).appendTo($('section#'+location+'  .graph .easel'));
 		papers[location].setup(canvases[location]);
-		
-		groups[location] = {};
+		groups[location] = new papers[location].Group();
 		var groupNames = [
 			'graph',
 			'graphContent',
@@ -32,13 +31,15 @@ function createGraph(location) {
 			'horzAxis',
 			'vertAxis',
 			'fillContent',
-			'axes'
+			'axes',
+			'graphUtils'
 		];
 		for(var i = 0; i < groupNames.length; i++) {
 			var groupName = groupNames[i];
 			var newGroup = new papers[location].Group({name: groupName});
-			var groupObj = groups[location]
-			groupObj[groupName] = newGroup;
+			var thisGroup = groups[location];
+			thisGroup[groupName] = newGroup;
+			groups[location].addChildren(thisGroup[groupName]);
 		}
 		getData(location);
 	}
@@ -67,7 +68,7 @@ function createGraph(location) {
 				strokeWidth: 6,
 				strokeCap: 'round',
 				strokeColor: white,
-				opacity: 1
+				opacity: 0
 			});
 			groups[location].vertTicks.addChild(tick);
 		}
@@ -94,10 +95,11 @@ function createGraph(location) {
 	function graphPoints(type) {
 		var line = new papers[location].Path({
 			name: 'line',
-			strokeWidth: 5,
+			strokeWidth: 4,
 			strokeCap: 'round',
 			strokeJoin: 'round',
-			strokeColor: white
+			strokeColor: green,
+			opacity: 0
 		});
 
 		line.add(0, height);
@@ -110,7 +112,7 @@ function createGraph(location) {
 				value: log[type]
 			};
 			var x = 100*i;
-			var y = height - parseInt(log.total);
+			var y = height - parseInt(log.total)/2;
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
 				name: 'marker-' + i,
@@ -118,18 +120,23 @@ function createGraph(location) {
 				y: y,
 				radius: 8,
 				strokeWidth: 3,
-				strokeColor: white,
-				fillColor: green,
-				data: data
+				strokeColor: green,
+				fillColor: white,
+				data: data,
+				opacity: 0
 			});
 			groups[location].markers.addChild(marker);
 
 			marker.onMouseEnter = function(event) {
-				showPopUp(event.target);
+				if($('body').hasClass('single')) {
+					showPopUp(event.target);
+				}
 			};
 
 			marker.onMouseLeave = function(event) {
-				hidePopUp(event.target);
+				if($('body').hasClass('single')) {
+					hidePopUp(event.target);
+				}
 			};
 
 			marker.onClick = function(event) {
@@ -141,8 +148,8 @@ function createGraph(location) {
 	}
 
 	function showPopUp(marker) {
-		marker.fillColor = white;
-		$('body').css({cursor: 'pointer'});
+		marker.fillColor = green;
+		$('section#'+location+' a').css({cursor: 'pointer'});
 		var x = marker.x;
 		var y = marker.y;
 		var date = marker.data.date;
@@ -161,9 +168,9 @@ function createGraph(location) {
 
 	function hidePopUp(marker) {
 		$(groups[location].markers).each(function(i, marker) {
-			marker.fillColor = green;
+			marker.fillColor = white;
 		});
-		$('body').css({cursor: 'default'});
+		$('section#'+location+' a').css({cursor: 'default'});
 		$('section#'+location+' .popup').removeClass('show');
 		$('section#'+location+' .popup').one('webkitTransitionEnd transitionend', function(e) {
 			if(!$('section#'+location+' .popup').hasClass('show')) {
@@ -187,6 +194,7 @@ function createGraph(location) {
 			$.get(imgUrl, null, function(svg) {
 				importedSvg = papers[location].project.importSVG(svg);
 				var symbol = new papers[location].Symbol(importedSvg);
+				symbol.data = {'name':compostable};
 				svgs[compostable] = symbol;
 			}, 'xml').done(function() {
 				if(i == compostables.length-1) {
@@ -218,18 +226,16 @@ function createGraph(location) {
 			strokeJoin: '',
 			strokeColor: '',
 			strokeWidth: '',
-			closed: true
+			closed: true,
+			opacity: 1
 		});
 		fill.add(lastPointX+200, height);
-		// console.log(fill);
 		var fillMask = fill.clone().set({
 			name: 'fillMask',
 			clipMask: true
 		});
-
-
 		var limits = [];
-		for(var i = 0; i< fillMask.length; i+=50) {
+		for(var i=0; i<fillMask.length; i+=50) {
 			var point = fillMask.getLocationAt(i).point;
 			var coords = {
 				x:point.x,
@@ -237,7 +243,6 @@ function createGraph(location) {
 			};
 			limits.push(coords);
 		}
-		
 		for(var i = 0; i < limits.length; i++) {
 			var limit = limits[i];
 			var size = 25;
@@ -253,32 +258,72 @@ function createGraph(location) {
 				newSymbol.scale(0.25);
 				newSymbol.rotate(random(0,360));
 				newSymbol.sendToBack();
+				newSymbol.onMouseDown = function(event) {
+					if($('body').hasClass('single')) {
+						var compostable = event.target.symbol.data.name;
+						console.log(compostable);	
+					}
+				}
+				newSymbol.onMouseEnter = function(event) {
+					
+				}
+				newSymbol.onMouseLeave = function(event) {
+					
+				}
 				groups[location].fillSymbols.addChild(newSymbol);
 			}
 		}
-		
-		
-		
-		// console.log(fillMask);
-
 		groups[location].fillContent.addChildren([fill, fillMask, groups[location].fillSymbols]);
 		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers]);
 		groups[location].graphContent.addChildren([mask, groups[location].clippedGraphContent, groups[location].ticks]);
-		// graphContent.position.x += graphOffset;
-		// graphContent.position.y -= graphOffset;
 		groups[location].graph.addChild(groups[location].graphContent);
 		papers[location].view.draw();
-		showGraph();
+		showGraph(location);
 	}
 
-	function showGraph() {
+	function showGraph(location) {
 		$('.graph').addClass('show');
+		var section = $('section.location#'+location);
+		if($(section).hasClass('opened')) {
+			var id = section[0].id;
+			showGraphUtils(id);
+		}
 	}
-
-
 
 	stretchCanvas();
+
 }
+
+function showGraphUtils(location) {
+	var thisGroup = groups[location];
+	var markers = thisGroup.markers;
+	var line = papers[location];
+	var ticks = thisGroup.ticks;
+	// var loadUtils = function onFrame(event) {
+	for(var i = 0; i < markers.children.length; i ++) {
+		markers.children[i].opacity = 1;
+	}
+	papers[location].view.draw();
+	// };
+	// papers[location].view.on('frame', loadUtils);
+}
+
+function hideGraphUtils(location) {
+	console.log(location);
+	var thisGroup = groups[location];
+	var markers = thisGroup.markers;
+	var line = papers[location];
+	var ticks = thisGroup.ticks;
+	var markerCount = markers.children.length;
+	// var loadUtils = function onFrame(event) {
+	for(var i = 0; i < markers.children.length; i ++) {
+		markers.children[i].opacity = 0;
+	}
+	papers[location].view.draw();
+	// };
+	// papers[location].view.on('frame', loadUtils);
+}
+
 
 // $(window).resize(function() {
 // 	graph.children['background'].set({

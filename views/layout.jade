@@ -9,11 +9,21 @@ html
 				link(rel='stylesheet', href='/stylesheets/' + style + '.css')
 		script(src='/javascripts/jquery-2.1.4.min.js')
 		script(src='/javascripts/helpers.js')
+		script(src='/javascripts/transit.js')
+
 		if data
 			script(type='text/javascript').
 				var localData =!{JSON.stringify(data)}
 		if scripts
 			each script in scripts
 				script(type='text/javascript' src='/javascripts/' + script + '.js')
+		
+		if selected	
+			script(type='text/javascript').
+				var selected = !{JSON.stringify(selected)}
+		else 
+			script(type='text/javascript').
+				var selected = null
+
 		body(class= pageType)
 			block content

@@ -7,8 +7,10 @@ var bodyParser = require('body-parser');
 var monk = require('monk');
 var db = monk('localhost:27017/compost');
 
-var routes = require('./routes/index');
 var admin = require('./routes/admin');
+var passport = require('passport');
+var LocalStrategy = require('passport-local').Strategy;
+var routes = require('./routes/index');
 
 var app = express();
 
@@ -24,13 +26,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(app.router);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(function(req,res,next){
     req.db = db;
     next();
 });
 
-app.use('/', routes);
 app.use('/admin/', admin);
+app.use('/', routes);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
