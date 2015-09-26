@@ -39,9 +39,13 @@ router.get('/:slug', function(req, res, next) {
     for (var i=0; i<locationsDoc.length; i++) {
       var slug = locationsDoc[i].slug;
       var name = locationsDoc[i].name;
+      var who = locationsDoc[i].who;
+      var contact = locationsDoc[i].contact;
       var location = {};
       location.slug = slug;
       location.name = name;
+      location.who = who;
+      location.contact = contact;
       locations.push(location);
     }
     if (err) {

@@ -238,3 +238,8 @@ section.location .info .box .text {
 	/*border: 6px solid #e8dfb1;*/
 	/*padding: 30px;*/
 }
+section.location .info .box a {
+	display: inline;
+	cursor: pointer;
+	text-decoration: underline;
+}

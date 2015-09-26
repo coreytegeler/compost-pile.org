@@ -130,7 +130,7 @@ input[type="submit"], a.submit {
 	cursor: pointer;
 	background-color: #cfffc7;
 }
-input[type="submit"].square, a.submit.square {
+input[type="submit"].submit, a.submit.submit {
 	width: 40px;
 	height: 40px;
 	background-position: center;
@@ -138,22 +138,22 @@ input[type="submit"].square, a.submit.square {
 	background-size: 30px;
 	margin-left: 20px;
 }
-a.submit:hover {
+.submit:hover {
 	cursor: pointer;	
 }
-a.submit.add {
+.submit.add {
 	background-image: url(../images/plus.svg);
 }
-a.submit.save {
+.submit.save {
 	background-image: url(../images/check.svg);
 }
-a.submit.delete {
+.submit.delete {
 	background-image: url(../images/x.svg);
 }
-a.submit.view {
+.submit.view {
 	background-image: url(../images/view.svg);
 }
-a.submit.home {
+.submit.home {
 	background-image: url(../images/home.svg);
 }
 textarea {

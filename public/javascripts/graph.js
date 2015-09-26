@@ -51,7 +51,7 @@ function createGraph(location) {
 			success: function(response) {
 				logs = response;
 				createGraph(logs);
-	        	graphPoints('total');
+	        	graphPoints('input');
 	        }
 	    });
 	}
@@ -112,7 +112,7 @@ function createGraph(location) {
 				value: log[type]
 			};
 			var x = 100*i;
-			var y = height - parseInt(log.total)/2;
+			var y = height - parseInt(log[type])/2;
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
 				name: 'marker-' + i,

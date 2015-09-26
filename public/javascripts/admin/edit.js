@@ -37,8 +37,9 @@ function updateLocation(event) {
             'name': $('form#info input#name').val(),
             'email': $('form#info input#email').val(),
             'password': $('form#info input#password').val(),
-            'how': $('form#info input#how').val(),
-            'who': $('form#info input#who').val()
+            'who': $('form#info input#who').val(),
+            'contact': $('form#info input#contact').val(),
+            'how': $('form#info input#how').val()
         };
         $.ajax({
             type: 'POST',
