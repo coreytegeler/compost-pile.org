@@ -99,7 +99,7 @@ function createGraph(location) {
 			strokeCap: 'round',
 			strokeJoin: 'round',
 			strokeColor: green,
-			opacity: 0
+			opacity: 1
 		});
 
 		line.add(0, height);
@@ -297,12 +297,13 @@ function createGraph(location) {
 function showGraphUtils(location) {
 	var thisGroup = groups[location];
 	var markers = thisGroup.markers;
-	var line = papers[location];
+	var line = thisGroup;
 	var ticks = thisGroup.ticks;
 	// var loadUtils = function onFrame(event) {
 	for(var i = 0; i < markers.children.length; i ++) {
 		markers.children[i].opacity = 1;
 	}
+	// line.opacity = 1;
 	papers[location].view.draw();
 	// };
 	// papers[location].view.on('frame', loadUtils);

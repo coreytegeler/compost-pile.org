@@ -159,10 +159,10 @@ function openSection(id, url, anim) {
 	$(hidden).removeClass('hidden')
 	$(hidden).transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
 	
-	var top = $(section).offset().top;
-	$('html, body').animate({
-		scrollTop: top
-	}, speed);
+	// var top = $(section).offset().top;
+	// $('html, body').animate({
+	// 	scrollTop: top
+	// }, speed);
 
 	var openedId = $('section.location.opened').attr('id');
 	$(section).addClass('opened');
@@ -177,11 +177,11 @@ function openSection(id, url, anim) {
 
 		var top = $('#locations').offset().top;
 		
-		$('html, body').animate({
-			scrollTop: top
-		}, 0, function() {
+		// $('html, body').animate({
+		// 	scrollTop: top
+		// }, 0, function() {
 			
-		});
+		// });
 
 		$('#locations').prepend($(section));
 		if(anim) {

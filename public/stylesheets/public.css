@@ -228,12 +228,25 @@ section.location .info .box h2 {
 	font-size: 30px;
 	line-height: 40px;
 	font-weight: 700;
+	margin: 0;
 }
 
 section.location .info .box .text {
-	font-size: 18px;
-	line-height: 28px;
-	font-weight: 300;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: 700;
 	/*border: 6px solid #e8dfb1;*/
 	/*padding: 30px;*/
+}
+section.location .info .box .inner .contact {
+	width: 100%;
+	border-top: 5px solid #73db71;
+	margin: 10px 0 0 0;
+	padding: 10px 0 0 0;
+}
+section.location .info .box .inner .contact a {
+	text-decoration: underline;
+	font-size: 20px;
+	line-height: 30px;
+	font-weight: 700;
 }

@@ -2,12 +2,15 @@
 	.inner
 		.box
 			.inner
-				h2 Composting at #{location.name} is managed by #{location.who}. You can contact them at 
-					a(href="mailto:#{location.contact}") #{location.contact}
+				h2 Who composts here?
 				.text
-					p 
+					p #{location.who}
+				.contact
+					a(href="mailto:#{location.email}") #{location.email}
 		.box
 			.inner
-				h2 Peace Corps outcomes amplify life-saving?
+				h2 How do you compost?
 				.text
-					p Proper resources provide refugee respond minority solution affiliate, 501(c)(3) scalable. Policy social worker Gandhi conflict resolution participatory monitoring policy dialogue measures NGO fight against oppression donors rural agenda democracy community health workers.
+					p #{location.how}
+				.contact
+					a(href="http://www.tidyplanet.co.uk/our-products/the-rocket/a700-rocket/") Tidy Planet A700 Rocket

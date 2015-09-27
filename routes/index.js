@@ -10,9 +10,15 @@ router.get('/', function(req, res, next) {
     for (var i=0; i<locationsDoc.length; i++) {
       var slug = locationsDoc[i].slug;
       var name = locationsDoc[i].name;
+      var who = locationsDoc[i].who;
+      var how = locationsDoc[i].how;
+      var email = locationsDoc[i].email;
       var location = {};
       location.slug = slug;
       location.name = name;
+      location.who = who;
+      location.how = how;
+      location.email = email;
       locations.push(location);
     }
     if (err) {
@@ -40,12 +46,14 @@ router.get('/:slug', function(req, res, next) {
       var slug = locationsDoc[i].slug;
       var name = locationsDoc[i].name;
       var who = locationsDoc[i].who;
-      var contact = locationsDoc[i].contact;
+      var how = locationsDoc[i].how;
+      var email = locationsDoc[i].email;
       var location = {};
       location.slug = slug;
       location.name = name;
       location.who = who;
-      location.contact = contact;
+      location.how = how;
+      location.email = email;
       locations.push(location);
     }
     if (err) {

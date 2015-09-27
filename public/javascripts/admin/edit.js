@@ -17,9 +17,9 @@ function fillLocationForm() {
             var fieldName = input.id;
             $('form#info input#'+fieldName).val(data[fieldName]);
         });
-        $('form#info input.textarea').each(function(i,textarea) {
+        $('form#info textarea').each(function(i,textarea) {
             var fieldName = textarea.id;
-            $('form#info input#'+fieldName).val(data[fieldName]);
+            $('form#info textarea#'+fieldName).val(data[fieldName]);
         });
     }).complete(function() {
 
@@ -37,9 +37,8 @@ function updateLocation(event) {
             'name': $('form#info input#name').val(),
             'email': $('form#info input#email').val(),
             'password': $('form#info input#password').val(),
-            'who': $('form#info input#who').val(),
-            'contact': $('form#info input#contact').val(),
-            'how': $('form#info input#how').val()
+            'who': $('form#info textarea#who').val(),
+            'how': $('form#info textarea#how').val()
         };
         $.ajax({
             type: 'POST',

@@ -101,6 +101,15 @@ a, a:visited {
 	float: left;
 }
 /*FORMS*/
+h2 {
+	font-family: "GT Walsheim Bold";
+	width: 100%;
+	margin: 0px 0 20px 0;
+	color: #73db71;
+	font-size: 25px;
+	float: none;
+	clear: both;
+}
 form {
 	padding: 50px 0 0 0;
 	width: 100%;
@@ -118,6 +127,12 @@ input, select, textarea {
 	border: 0;
 	outline: none;
 }
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+    background-color: rgb(250, 255, 189);
+    background-image: none;
+    color: rgb(0, 0, 0);
+}
+
 input.text {
 	height: 33px;
 	border-bottom: 3px solid #73db71;
@@ -208,7 +223,7 @@ table#log td.cell:last-child {
 	padding-right: 0;
 }
 table#log td.cell.month {
-	width: 20%;
+	width: 23%;
 }
 table#log td.cell.day {
 	width: 13%;
