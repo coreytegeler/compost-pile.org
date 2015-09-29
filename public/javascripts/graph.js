@@ -51,7 +51,7 @@ function createGraph(location) {
 			success: function(response) {
 				logs = response;
 				createGraph(logs);
-	        	graphPoints('input');
+	        	graphPoints('output');
 	        }
 	    });
 	}
