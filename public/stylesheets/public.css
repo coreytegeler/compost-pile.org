@@ -46,26 +46,25 @@ main {
 	width: 100%;
 }
 #locations {
-	width: calc(100% - 20px);
-    padding: 10px;
+	width: calc(100% - 40px);
+    padding: 20px;
 	display: block;
 }
 section.location {
-	width: 100%;
+	width: calc(100% - 20px);
 	color: #e9ffea;
 	position: relative;
 	overflow: hidden;
+	border: 10px solid #73db71;
 }
 section.location .content {
-	width: calc(100% - 40px);
+	width: 100%;
 	height: 100%;
-	margin: 10px;
 	overflow: hidden;
 	background: #e9ffea;
 	transition: all 200ms ease-in-out;
 	-moz-transition: all 200ms ease-in-out;
 	-webkit-transition: all 200ms ease-in-out;
-	border: 10px solid #73db71;
 }
 section.location header {
 	width: 100%;
@@ -155,25 +154,23 @@ section.location header h1 {
 }
 
 section.location .info {
-	width: calc(100% - 20px);
-	color: #73db71;
-	margin: 10px;
+	width: 100%;
 	height: 400px;
 	overflow: hidden;
+	color: #73db71;
+	border-top: 10px solid #73db71;
 	transition: all 500ms cubic-bezier(.42,.15,.03,1);
 	-moz-transition: all 500ms cubic-bezier(.42,.15,.03,1);
 	-webkit-transition: all 500ms cubic-bezier(.42,.15,.03,1);
 }
 section.location .info .inner {
 	width: 100%;
-	margin: 10px 0;
 }
 section.location .info .box {
 	width: calc(50% - 30px);
-	height: 370px;
+	height: 400px;
 	overflow-y: scroll;
 	float: left;
-	border: 10px solid #73db71;
 }
 section.location .info .box:first-child {
 	margin-right: 10px;
@@ -182,11 +179,11 @@ section.location .info .box:last-child {
 	margin-left: 10px;
 }
 section.location .info .box .inner {
-	width: calc(100% - 30px);
-	width: -moz-calc(100% - 30px);
-	width: -webkit-calc(100% - 30px);
+	width: calc(100% - 50px);
+	width: -moz-calc(100% - 50px);
+	width: -webkit-calc(100% - 50px);
 	max-width: 800px;
-	padding: 15px;
+	padding: 25px;
 	height: 100%;
 	display: table;
 	margin: auto;

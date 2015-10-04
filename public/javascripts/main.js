@@ -160,7 +160,7 @@ function openSection(id, url, anim) {
 
 	var openedId = $('section.location.opened').attr('id');
 	$(section).addClass('opened');
-	$(section).transition({'width':'100%'}, speed, 'cubic-bezier(.42,.15,.03,1)', function() {
+	$(section).transition({'width':'calc(100% - 20px)'}, speed, 'cubic-bezier(.42,.15,.03,1)', function() {
 		if($('section.location#'+openedId)) {
 			var opened = $('section.location#'+openedId);
 			$(opened).removeClass('opened');
