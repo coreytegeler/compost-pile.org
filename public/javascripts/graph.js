@@ -3,7 +3,7 @@ var white = '#e9ffea';
 var green = '#73db71';
 var graphHeight = 300;
 var moveLeft;
-function createGraph(location) {
+function handleLogs(location) {
 	function stretchCanvas() {
 		papers[location] = new paper.PaperScope();
 		canvases[location] = document.createElement('canvas');
@@ -54,6 +54,7 @@ function createGraph(location) {
 			success: function(response) {
 				logs = response;
 				createGraph(logs);
+				createLogList(logs);
 	        	graphPoints('output');
 	        }
 	    });
@@ -92,6 +93,20 @@ function createGraph(location) {
 		// 	}
 		// };
 		papers[location].view.draw();
+	}
+
+	function createLogList(logs) {
+		var $logList = $('section#'+location+' .info .logList');
+		$(logs).each(function(i, row) {
+			var date = moment(row.date).format('MMMM Do, YYYY'),
+				input = row.input,
+				output = row.output
+
+			var dateHtml = '<div class="cell date">' + date + '</div>',
+				inputHtml = '<div class="cell input">' + input + '</div>',
+				outputHtml = '<div class="cell output">' + output + '</div>';
+			$logList.append('<li>'+dateHtml+inputHtml+outputHtml+'</li>');
+		});
 	}
 
 	var startGraphing = 0;

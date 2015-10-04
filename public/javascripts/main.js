@@ -106,10 +106,9 @@ function fillSections() {
 				openSection(location, this.href, true);
 			}
 		});
-		createGraph(location);
+		handleLogs(location);
 	});
 }
-
 
 function openSection(id, url, anim) {
 	var speed = 500;

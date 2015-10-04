@@ -9,9 +9,6 @@ html, body {
 	height: 100%;
 	display: table;
 }
-html * {
-	overflow-x: hidden;
-}
 ::-webkit-scrollbar { 
     display: none; 
 }
@@ -165,18 +162,21 @@ section.location .info {
 }
 section.location .info .inner {
 	width: 100%;
+	display: table;
 }
 section.location .info .box {
-	width: calc(50% - 30px);
+	width: calc(50% - 5px);
 	height: 400px;
 	overflow-y: scroll;
 	float: left;
+	border: 0px solid #73db71;
 }
 section.location .info .box:first-child {
-	margin-right: 10px;
+	border-right-width: 5px;
 }
 section.location .info .box:last-child {
-	margin-left: 10px;
+	border-left-width: 5px;
+	overflow: hidden;
 }
 section.location .info .box .inner {
 	width: calc(100% - 50px);
@@ -194,7 +194,6 @@ section.location .info .box h2 {
 	font-weight: 700;
 	margin: 0;
 }
-
 section.location .info .box .text {
 	font-size: 20px;
 	line-height: 30px;
@@ -211,4 +210,38 @@ section.location .info .box .inner .contact a {
 	font-size: 20px;
 	line-height: 30px;
 	font-weight: 700;
+}
+section.location .info .box .inner .labels {
+	width: 100%;
+	display: table;
+	border-bottom:	5px solid #73db71; 
+}
+section.location .info .box .inner .labels .label,
+section.location .info .box .inner .cell {
+	float: left;
+	display: table;
+}
+section.location .info .box .inner .date {
+	width: 50%;
+}
+section.location .info .box .inner .input,
+section.location .info .box .inner .output {
+	width: 25%;
+	text-align: right;
+}
+section.location .info .box .inner .logList {
+	height: calc(100% - 15px);
+	padding-bottom: 30px;
+	overflow-y: auto;
+	font-size: 20px;
+	line-height: 20px;
+	font-weight: 700; 
+	clear: both;
+}
+section.location .info .box .inner .logList li {
+	width: 100%;
+	display: table;
+	padding: 5px 0;
+	border-bottom:	2px solid #73db71; 
+	margin-bottom: 3px;
 }
