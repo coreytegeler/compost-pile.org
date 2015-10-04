@@ -9,12 +9,15 @@ function createGraph(location) {
 		canvases[location] = document.createElement('canvas');
 		width = w();
 		height = graphHeight;
+		$('.easel').css({
+			width: width - 60
+		});
 		canvases[location].width = width;
 		canvases[location].height = height;
 		$(canvases[location]).css({
 			width: width,
 			height: height
-		})
+		});
 		$(canvases[location]).attr('resize', true).attr('id',location); 
 		$(canvases[location]).appendTo($('section#'+location+'  .graph .easel'));
 		papers[location].setup(canvases[location]);
@@ -123,20 +126,18 @@ function createGraph(location) {
 				strokeColor: green,
 				fillColor: white,
 				data: data,
-				opacity: 0
+				opacity: 1
 			});
 			groups[location].markers.addChild(marker);
 
 			marker.onMouseEnter = function(event) {
-				if($('body').hasClass('single')) {
-					showPopUp(event.target);
-				}
+				showPopUp(event.target);
+				$('body').css({'cursor':'pointer'});
 			};
 
 			marker.onMouseLeave = function(event) {
-				if($('body').hasClass('single')) {
-					hidePopUp(event.target);
-				}
+				hidePopUp(event.target);
+				$('body').css({'cursor':'default'});
 			};
 
 			marker.onClick = function(event) {
@@ -299,14 +300,10 @@ function showGraphUtils(location) {
 	var markers = thisGroup.markers;
 	var line = thisGroup;
 	var ticks = thisGroup.ticks;
-	// var loadUtils = function onFrame(event) {
 	for(var i = 0; i < markers.children.length; i ++) {
-		markers.children[i].opacity = 1;
+		markers.children[i].opacity = 0;
 	}
-	// line.opacity = 1;
 	papers[location].view.draw();
-	// };
-	// papers[location].view.on('frame', loadUtils);
 }
 
 function hideGraphUtils(location) {
@@ -326,14 +323,18 @@ function hideGraphUtils(location) {
 }
 
 
-// $(window).resize(function() {
-// 	graph.children['background'].set({
-// 		width: w(),
-// 		height: graphHeight
-// 	});
-// 	graphContent.children['mask'].set({
-// 		width: w(),
-// 		height: graphHeight
-// 	});
-// 	papers[location].view.draw();
-// });
+$(window).resize(function() {
+	// graph.children['background'].set({
+	// 	width: w(),
+	// 	height: graphHeight
+	// });
+	// graphContent.children['mask'].set({
+	// 	width: w(),
+	// 	height: graphHeight
+	// });
+	console.log(w() - 60)
+	$('.easel').css({
+		width: w() - 60
+	});
+	// papers[location].view.draw();
+});

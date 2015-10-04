@@ -12,7 +12,6 @@ slug.defaults.modes['pretty'] = {
     multicharmap: slug.multicharmap
 };
 router.get('/', function(req, res, next) {  
-  console.log("!!!!!");
   var db = req.db;
   var collection = db.get('locations');
   var locations = [];

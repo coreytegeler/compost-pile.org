@@ -23,53 +23,47 @@ function createLogo() {
 	logoPaper.setup(logoCanvas);
 	papers['logo'] = logoPaper;
 	canvases['logo'] = logoCanvas;
-
+	var hovering = false;
 	var logoUrl = '../images/logo.svg';
 	$.get(logoUrl, null, function(data) {
 		var logoSvg = new XMLSerializer().serializeToString(data.documentElement);
-		// var inlineLogpSvg = $('#logo').append(logoSvg);
-		// var logoLayers = $($(inlineLogpSvg).children()[0]).children();
-		// $.each(logoLayers, function(i, layer) {
-		// 	$(layer).hover(function(event) {
-		// 		var obj = event.target
-		// 		$(obj).css({scale:'0'});
-		// 		$(this).css({cursor:'pointer'});
-		// 	});
-		// });
 		logo = logoPaper.project.importSVG(logoSvg);
 		logo.position.x = headerWidth/2;
 		logo.position.y = headerHeight/2;
 		logoObjs = logo.children;
 		groups['logo'] = new papers['logo'].Group();
 		for(var i = 0; i < logoObjs.length; i++) {
-			var hovering = false;
 			var logoObj = logoObjs[i];
-			var newGroup = new papers['logo'].Group();
-			newGroup.addChildren(logoObj);
-			groups['logo'].addChildren(newGroup);
-
-			var jiggle = function onFrame(event) {
-				if(hovering) {
-					hoverObj.rotation = Math.sin((event.count + i) / 2) * 3;	
-				} else if(hoverObj.rotation != 0) {
-					hoverObj.rotation = Math.sin((event.count + i) / 2) * 3;
-				}
-			};
-			logoObj.on('mouseenter', function(event) {
-				hovering = true;
-				$('body').css({'cursor':'pointer'});
-				papers['logo'].view.on('frame', jiggle);
-				hoverObj = this;
-			});
-			logoObj.on('mouseleave', function(event){
-				hovering = false;
-				$('body').css({'cursor':'default'});
-				papers['logo'].view.off('frame', jiggle);	
-				hoverObj = null;
-			});
+			logoObj.center = 'center';
+			var logoGroup = new papers['logo'].Group();
+			logoGroup.addChildren(logoObj);
+			groups['logo'].addChildren(logoGroup);
 		}
 		logoPaper.view.draw();
 	}, 'xml').done(function() {
+		var jiggle = function onFrame(event) {
+			if(hovering) {
+				for(var i = 0; i < logoObjs.length; i++){
+					wiggleAmount = (Math.random() * 2) + 6;
+					logoObjs[i].rotation = Math.sin((event.count + i) / 3) * wiggleAmount;
+				}
+			}
+		};
+		$('canvas#logo').on('mouseenter', function(event) {
+			hovering = true;
+			var wiggleSpeed;
+			var wiggleAmount;
+			$('body').css({'cursor':'pointer'});
+			papers['logo'].view.on('frame', jiggle);
+		});
+		$('canvas#logo').on('mouseleave', function(event){
+			hovering = false;
+			$('body').css({'cursor':'default'});
+			papers['logo'].view.off('frame', jiggle);
+			for(var i = 0; i < logoObjs.length; i++){
+				logoObjs[i].rotation = 0;
+			}	
+		});
 		keepScrollin();
 		fillSections();
 	});

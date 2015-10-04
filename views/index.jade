@@ -9,20 +9,18 @@ block content
 			-for(var i in locations)
 				-var location = locations[i]
 				section.location(id= location.slug, data-slug= location.slug)
-					a.open(href= location.slug)
-						.content
-							header
-								h1 #{location.name}
-								.close
-							.graph
-								.easel
-								.popup
-									.row.date
-										.cell.title='Date'
-										.cell.data
-									.row.value
-										.cell.title
-										.cell.data
-							//- if pageType == 'single'
+					.content
+						header
+							h1 #{location.name}
+							.close
+						.graph
+							.easel
+							.popup
+								.row.date
+									.cell.title='Date'
+									.cell.data
+								.row.value
+									.cell.title
+									.cell.data
 					include info.jade
 	footer
