@@ -4,6 +4,7 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var lessMiddleware = require('less-middleware');
 var monk = require('monk');
 var db = monk('localhost:27017/compost');
 
@@ -32,6 +33,11 @@ app.use(function(req,res,next){
 app.use('/admin/', admin);
 app.use('/', routes);
 
+app.use(lessMiddleware('/stylesheets/less', {
+  dest: '/stylesheets',
+  pathRoot: path.join(__dirname, 'public')
+}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
