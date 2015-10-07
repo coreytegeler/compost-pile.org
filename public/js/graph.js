@@ -7,7 +7,6 @@ function handleLogs(location) {
 	function stretchCanvas() {
 		papers[location] = new paper.PaperScope();
 		canvases[location] = document.createElement('canvas');
-		context = canvases[location].getContext('2d');
 		width = w();
 		height = graphHeight;
 		$('.easel').css({
@@ -20,7 +19,7 @@ function handleLogs(location) {
 			height: height
 		});
 		$(canvases[location]).attr('resize', true).attr('id',location); 
-		$(canvases[location]).appendTo($('section#'+location+'  .graph .easel'));
+		$(canvases[location]).appendTo($('#'+location+'  .graph .easel'));
 		papers[location].setup(canvases[location]);
 		groups[location] = new papers[location].Group();
 		var groupNames = [
@@ -118,7 +117,7 @@ function handleLogs(location) {
 	}
 
 	function createLogList(logs) {
-		var $logList = $('section#'+location+' .info .logList');
+		var $logList = $('#'+location+' .info .logList');
 		$(logs).each(function(i, row) {
 			var id = row._id;
 			var date = moment(row.date).format('MMMM Do, YYYY'),
@@ -207,20 +206,20 @@ function handleLogs(location) {
 		var markers = groups[location].markers;
 		var marker = markers.children[id];
 		marker.fillColor = green;
-		$('section#'+location+' a').css({cursor: 'pointer'});
+		$('#'+location+' a').css({cursor: 'pointer'});
 		var x = marker.x;
 		var y = marker.y;
 		var date = marker.data.date;
 		var valueType = marker.data.valueType;
 		var value = marker.data.value;
-		$('section#'+location+' .popup .row.date .data').html(date);
-		$('section#'+location+' .popup .row.value .title').html(valueType);
-		$('section#'+location+' .popup .row.value .data').html(value+' lbs.');
-		$('section#'+location+' .popup').css({
+		$('#'+location+' .popup .row.date .data').html(date);
+		$('#'+location+' .popup .row.value .title').html(valueType);
+		$('#'+location+' .popup .row.value .data').html(value+' lbs.');
+		$('#'+location+' .popup').css({
 			display: 'block'
 		}).css({
-			left: x - $('section#'+location+' .popup')[0].offsetWidth/2,
-			top: y - $('section#'+location+' .popup')[0].offsetHeight - 20,
+			left: x - $('#'+location+' .popup')[0].offsetWidth/2,
+			top: y - $('#'+location+' .popup')[0].offsetHeight - 20,
 		}).addClass('show');
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
 	}
@@ -231,11 +230,11 @@ function handleLogs(location) {
 		$(groups[location].markers).each(function(i, marker) {
 			marker.fillColor = white;
 		});
-		$('section#'+location+' a').css({cursor: 'default'});
-		$('section#'+location+' .popup').removeClass('show');
-		$('section#'+location+' .popup').one('webkitTransitionEnd transitionend', function(e) {
-			if(!$('section#'+location+' .popup').hasClass('show')) {
-				$('section#'+location+' .popup').css({'display':'none'});
+		$('#'+location+' a').css({cursor: 'default'});
+		$('#'+location+' .popup').removeClass('show');
+		$('#'+location+' .popup').one('webkitTransitionEnd transitionend', function(e) {
+			if(!$('#'+location+' .popup').hasClass('show')) {
+				$('#'+location+' .popup').css({'display':'none'});
 			}
 		});
 		$('.logList li[data-id="'+id+'"]').removeClass('hover');
@@ -345,9 +344,9 @@ function handleLogs(location) {
 
 	function showGraph(location) {
 		$('.graph').addClass('show');
-		var section = $('section.location#'+location);
-		if($(section).hasClass('opened')) {
-			var id = section[0].id;
+		var wrapper = $('.location#'+location);
+		if($(wrapper).hasClass('opened')) {
+			var id = wrapper[0].id;
 			showGraphUtils(id);
 		}
 	}

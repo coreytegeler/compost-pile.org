@@ -24,9 +24,6 @@ header#logo a#logoLink {
 	display: table;
 	margin: auto;
 }
-header#logo canvas#logo {
-
-}
 aside {
 	height: 100%;
     width: 200px;
@@ -36,33 +33,17 @@ aside {
 main {
 	width: 100%;
 }
-#locations {
+section {
 	width: calc(~'100% - 40px');
     padding: 20px;
 	display: block;
 }
-section.location {
-	width: calc(~'100% - 20px');
-	color: @light;
-	position: relative;
-	overflow: hidden;
-	border: 10px solid @dark;
-}
-section.location .content {
-	width: 100%;
-	height: 100%;
-	overflow: hidden;
-	background: @light;
-	transition: all 200ms ease-in-out;
-	-moz-transition: all 200ms ease-in-out;
-	-webkit-transition: all 200ms ease-in-out;
-}
-section.location header {
+section header {
 	width: 100%;
 	height: auto;
 	padding: 17px 0;
 }
-section.location header h1 {
+section header h1 {
 	color: @dark;
 	display: table;
     margin: auto;
@@ -73,6 +54,22 @@ section.location header h1 {
     white-space: nowrap;
     cursor: default;
     transition: all 200ms ease-in-out;
+	-moz-transition: all 200ms ease-in-out;
+	-webkit-transition: all 200ms ease-in-out;
+}
+.location {
+	width: calc(~'100% - 20px');
+	color: @light;
+	position: relative;
+	overflow: hidden;
+	border: 10px solid @dark;
+}
+.location .content {
+	width: 100%;
+	height: 100%;
+	overflow: hidden;
+	background: @light;
+	transition: all 200ms ease-in-out;
 	-moz-transition: all 200ms ease-in-out;
 	-webkit-transition: all 200ms ease-in-out;
 }
@@ -144,7 +141,7 @@ section.location header h1 {
 .popup .row .data {
 }
 
-section.location .info {
+.location .info {
 	width: 100%;
 	height: 400px;
 	overflow: hidden;
@@ -154,25 +151,25 @@ section.location .info {
 	-moz-transition: all 500ms cubic-bezier(.42,.15,.03,1);
 	-webkit-transition: all 500ms cubic-bezier(.42,.15,.03,1);
 }
-section.location .info .inner {
+.location .info .inner {
 	width: 100%;
 	display: table;
 }
-section.location .info .box {
+.location .info .box {
 	width: calc(~'50% - 5px');
 	height: 400px;
 	overflow-y: scroll;
 	float: left;
 	border: 0px solid @dark;
 }
-section.location .info .box:first-child {
+.location .info .box:first-child {
 	border-right-width: 5px;
 }
-section.location .info .box:last-child {
+.location .info .box:last-child {
 	border-left-width: 5px;
 	overflow: hidden;
 }
-section.location .info .box .inner {
+.location .info .box .inner {
 	width: calc(~'100% - 50px');
 	width: -moz-calc(~'100% - 50px');
 	width: -webkit-calc(~'100% - 50px');
@@ -182,48 +179,48 @@ section.location .info .box .inner {
 	display: table;
 	margin: auto;
 }
-section.location .info .box h2 {
+.location .info .box h2 {
 	font-size: 30px;
 	line-height: 40px;
 	font-weight: 700;
 	margin: 0;
 }
-section.location .info .box .text {
+.location .info .box .text {
 	font-size: 20px;
 	line-height: 30px;
 	font-weight: 700;
 }
-section.location .info .box .inner .contact {
+.location .info .box .inner .contact {
 	width: 100%;
 	border-top: 5px solid @dark;
 	margin: 10px 0 0 0;
 	padding: 10px 0 0 0;
 }
-section.location .info .box .inner .contact a {
+.location .info .box .inner .contact a {
 	text-decoration: underline;
 	font-size: 20px;
 	line-height: 30px;
 	font-weight: 700;
 }
-section.location .info .box .inner .labels {
+.location .info .box .inner .labels {
 	width: 100%;
 	display: table;
 	border-bottom:	5px solid @dark; 
 }
-section.location .info .box .inner .labels .label,
-section.location .info .box .inner .cell {
+.location .info .box .inner .labels .label,
+.location .info .box .inner .cell {
 	float: left;
 	display: table;
 }
-section.location .info .box .inner .date {
+.location .info .box .inner .date {
 	width: 50%;
 }
-section.location .info .box .inner .input,
-section.location .info .box .inner .output {
+.location .info .box .inner .input,
+.location .info .box .inner .output {
 	width: 25%;
 	text-align: right;
 }
-section.location .info .box .inner .logList {
+.location .info .box .inner .logList {
 	height: calc(~'100% - 15px');
 	padding-bottom: 30px;
 	overflow-y: auto;
@@ -232,15 +229,67 @@ section.location .info .box .inner .logList {
 	font-weight: 700; 
 	clear: both;
 }
-section.location .info .box .inner .logList li {
+.location .info .box .inner .logList li {
 	width: 100%;
 	display: table;
 	padding: 5px 0 5px 0;
 	border-bottom:	2px solid @dark; 
 	display: table;
 }
-section.location .info .box .inner .logList li:hover,
-section.location .info .box .inner .logList li.hover {
+.location .info .box .inner .logList li:hover,
+.location .info .box .inner .logList li.hover {
 	background-color: @medium;
 	cursor: pointer;
+}
+
+#compostables {
+
+}
+#compostables header {
+}
+#compostables header h1 {
+}
+#compostables .illustration {
+	width: 100%;
+	height: 600px;
+	display: table;
+	background-image: url(../images/compostables.svg);
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: contain;
+}
+#compostables .text {
+	width: 100%;
+	font-size: 20px;
+	display: table-cell;
+	vertical-align: middle;
+    line-height: 30px;
+    font-weight: 700;
+}
+#compostables .text .inner {
+	width: 500px;
+	display: table;
+	padding: 20px;
+	margin: auto;
+	border: 5px solid @dark;
+	background-color: @light;
+}
+footer {
+
+}
+footer .top {
+	width: 100%;
+	height: 100px;
+	background-image: url(../images/compost.svg);
+	background-size: cover;
+	background-position: top;
+}
+footer .dirt {
+	width: 100%;
+	background-color: @brown;
+	padding: 50px 0;
+}
+footer .dirt .inner {
+	width: calc(~'100% - 60px');
+	height: 200px;
 }

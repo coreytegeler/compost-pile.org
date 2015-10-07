@@ -16,7 +16,7 @@ function createLogo() {
 	$('header#logo a#logoLink').append(logoCanvas);
 	$('header#logo a#logoLink').click(function(event) {
 		event.preventDefault();
-		if($('section.location.opened')) {
+		if($('.location.opened')) {
 			closeSection();
 		}
 	});
@@ -89,20 +89,20 @@ function keepScrollin() {
 
 
 function fillSections() {
-	$('#locations section.location').each(function(i, section) {
+	$('#locations .location').each(function(i, wrapper) {
 		groups[location] = {};
-		var location = $(section).data('slug');
-		$(section).attr('data-location', location);
-		$(section).attr('id', location);
-		$(section).appendTo('#locations');
+		var location = $(wrapper).data('slug');
+		$(wrapper).attr('data-location', location);
+		$(wrapper).attr('id', location);
+		$(wrapper).appendTo('#locations');
 		if(selected != undefined) {
 			if (location == selected) {
 				openSection(selected, '', false);
 			}
 		}
-		$(section).children('a').click(function(event) {
+		$(wrapper).children('a').click(function(event) {
 			event.preventDefault();
-			if(!$(section).hasClass('opened')) {
+			if(!$(wrapper).hasClass('opened')) {
 				openSection(location, this.href, true);
 			}
 		});
@@ -113,8 +113,8 @@ function fillSections() {
 function openSection(id, url, anim) {
 	var speed = 500;
 	history.pushState(null, null, url);
-	var section = $('section.location#'+id)[0];
-	var content = $('section.location#'+id+' a .content')[0];
+	var wrapper = $('.location#'+id)[0];
+	var content = $('.location#'+id+' a .content')[0];
 	var width = $(content).width();
 	var height = $(content).height();
 
@@ -122,21 +122,21 @@ function openSection(id, url, anim) {
 		var speed = 0;
 	}
 
-	var previousSibling = $(section)[0].previousSibling;
-	var nextSibling = $(section)[0].nextSibling;
-	if($(section).is(':last-child')) {
+	var previousSibling = $(wrapper)[0].previousSibling;
+	var nextSibling = $(wrapper)[0].nextSibling;
+	if($(wrapper).is(':last-child')) {
 		if(!$(previousSibling).hasClass('opened')) {
 			var sibling = previousSibling;
 		}
 	}
-	else if($(section).is(':nth-child(odd)')) {
+	else if($(wrapper).is(':nth-child(odd)')) {
 		if($(nextSibling).hasClass('opened')) {
 			var sibling = previousSibling;
 		} else {
 			var sibling = nextSibling;
 		}
 	}
-	else if($(section).is(':nth-child(even)')) {
+	else if($(wrapper).is(':nth-child(even)')) {
 		if($(previousSibling).hasClass('opened')) {
 			var sibling = nextSibling;
 		} else {
@@ -148,20 +148,20 @@ function openSection(id, url, anim) {
 		$(sibling).css({width:'50%'});
 	});	
 
-	var hidden = $('section.location.hidden');
+	var hidden = $('.location.hidden');
 	$(hidden).removeClass('hidden')
 	$(hidden).transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
 	
-	// var top = $(section).offset().top;
+	// var top = $(wrapper).offset().top;
 	// $('html, body').animate({
 	// 	scrollTop: top
 	// }, speed);
 
-	var openedId = $('section.location.opened').attr('id');
-	$(section).addClass('opened');
-	$(section).transition({'width':'calc(100% - 20px)'}, speed, 'cubic-bezier(.42,.15,.03,1)', function() {
-		if($('section.location#'+openedId)) {
-			var opened = $('section.location#'+openedId);
+	var openedId = $('.location.opened').attr('id');
+	$(wrapper).addClass('opened');
+	$(wrapper).transition({'width':'calc(100% - 20px)'}, speed, 'cubic-bezier(.42,.15,.03,1)', function() {
+		if($('.location#'+openedId)) {
+			var opened = $('.location#'+openedId);
 			$(opened).removeClass('opened');
 			$(opened).transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)', function() {
 				hideGraphUtils(openedId);
@@ -176,7 +176,7 @@ function openSection(id, url, anim) {
 			
 		// });
 
-		$('#locations').prepend($(section));
+		$('#locations').prepend($(wrapper));
 		if(anim) {
 			showGraphUtils(id);		
 		}
@@ -188,21 +188,21 @@ function openSection(id, url, anim) {
 function closeSection() {
 	var speed = 500;
 	history.pushState(null, null, '/');
-	var section = $('section.location.opened');
-	var hidden = $('section.location.hidden');
+	var wrapper = $('.location.opened');
+	var hidden = $('.location.hidden');
 	$(hidden).removeClass('hidden').transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
 
-	if($(section).is(':nth-child(odd)')) {
-		var sibling = $(section)[0].nextSibling;
-	} else if($(section).is(':nth-child(even)')) {
-		var sibling = $(section)[0].previousSibling;
+	if($(wrapper).is(':nth-child(odd)')) {
+		var sibling = $(wrapper)[0].nextSibling;
+	} else if($(wrapper).is(':nth-child(even)')) {
+		var sibling = $(wrapper)[0].previousSibling;
 		
 	}
 	$(sibling).css({'width':'0%'});
-	$(section).removeClass('opened').transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
+	$(wrapper).removeClass('opened').transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
 	$(sibling).transition({width:'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
 	$('body').removeClass('single').addClass('multiple');
 
-	var id = $(section).attr('id');
+	var id = $(wrapper).attr('id');
 	hideGraphUtils(id);
 }

@@ -5,22 +5,26 @@ block content
 	header#logo
 		a#logoLink(href= '/')
 	main
-		#locations
+		section#locations
 			-for(var i in locations)
 				-var location = locations[i]
-				section.location(id= location.slug, data-slug= location.slug)
-					.content
-						header
-							h1 #{location.name}
-							.close
-						.graph
-							.easel
-							.popup
-								.row.date
-									.cell.title='Date'
-									.cell.data
-								.row.value
-									.cell.title
-									.cell.data
-					include info.jade
+					.location(id= location.slug, data-slug= location.slug)
+						.content
+							header
+								h1 #{location.name}
+								.close
+							.graph
+								.easel
+								.popup
+									.row.date
+										.cell.title='Date'
+										.cell.data
+									.row.value
+										.cell.title
+										.cell.data
+						include info.jade
+		include compostables.jade
 	footer
+		.top
+		.dirt
+			.inner

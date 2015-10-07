@@ -43,6 +43,7 @@ router.get('/logs/:slug', function(req, res) {
   var db = req.db;
   var collection = db.get(collectionName);
   collection.find({}, {sort: {'date': 1}}, function(e, logs) {
+    console.log(logs);
     res.json(logs);
   });
 });
