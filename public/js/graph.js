@@ -12,10 +12,10 @@ function handleLogs(location) {
 		$('.easel').css({
 			width: width - 60
 		});
-		canvases[location].width = width;
-		canvases[location].height = height;
+		// canvases[location].width = width;
+		// canvases[location].height = height;
 		$(canvases[location]).css({
-			width: width * 10,
+			width: width,
 			height: height
 		});
 		$(canvases[location]).attr('resize', true).attr('id',location); 
@@ -27,6 +27,7 @@ function handleLogs(location) {
 			'graphContent',
 			'clippedGraphContent',
 			'markers',
+			'markerHovers',
 			'fillSymbols',
 			'ticks',
 			'horzTicks',
@@ -57,13 +58,14 @@ function handleLogs(location) {
 			// });
 			var mask = groups[location].graphContent.children['mask'];
 			var width = w() - 60;
-			$('.easel').css({
-				width: width
-			});
-			// canvases[location].width = width;
-			// $(canvases[location]).css({
-			// 	width: width
-			// });
+			if(width >= 800) {
+				$('.easel').css({
+					width: width
+				});
+				$(canvases[location]).css({
+					width: width
+				});
+			}
 			papers[location].view.draw();
 		});
 	}
@@ -124,8 +126,8 @@ function handleLogs(location) {
 				input = row.input,
 				output = row.output;
 			var dateHtml = '<div class="cell date">' + date + '</div>',
-				inputHtml = '<div class="cell input">' + input + '</div>',
-				outputHtml = '<div class="cell output">' + output + '</div>';
+				inputHtml = '<div class="cell input">' + input + ' lbs.</div>',
+				outputHtml = '<div class="cell output">' + output + ' lbs.</div>';
 			var html = '<li data-id="'+id+'">'+dateHtml+inputHtml+outputHtml+'</li>';
 			$logList.append(html);
 		});
@@ -136,6 +138,10 @@ function handleLogs(location) {
 		$logList.on('mouseleave', 'li', function (event) {
 			var id = $(this).attr('data-id');
 			hidePopUp(id);
+		});
+		$logList.on('click', 'li', function (event) {
+			var id = $(this).attr('data-id');
+			// scrollToMarker(id);
 		});
 	}
 
@@ -180,22 +186,29 @@ function handleLogs(location) {
 				data: data,
 				opacity: 1
 			});
+			var markerHover = marker.clone().set({
+				radius: 25,
+				strokeWidth: 0,
+				opacity: 0
+			});
 			groups[location].markers.addChild(marker);
+			groups[location].markerHovers.addChild(markerHover);
 
-			marker.onMouseEnter = function(event) {
+			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
 				showPopUp(id);
 				$('body').css({'cursor':'pointer'});
 			};
 
-			marker.onMouseLeave = function(event) {
+			markerHover.onMouseLeave = function(event) {
 				var id = event.target.data.id;
 				hidePopUp(id);
 				$('body').css({'cursor':'default'});
 			};
 
-			marker.onClick = function(event) {
-
+			markerHover.onClick = function(event) {
+				var id = event.target.data.id;
+				scrollToListItem(id);
 			};
 		}
 		line.sendToBack().simplify();
@@ -239,6 +252,18 @@ function handleLogs(location) {
 		});
 		$('.logList li[data-id="'+id+'"]').removeClass('hover');
 	}
+
+	function scrollToListItem(id) {
+		var logList = $('.logList');
+		var logListItem = $(logList).children('[data-id="'+id+'"]');
+		var scrollTo = logListItem[0].childElementCount * $(logListItem).outerHeight();
+		console.log(scrollTo);
+		$(logList).animate({
+        	scrollTop: scrollTo
+    	}, 200);
+	}
+
+
 	var svgs = {};
 	var compostables = [
 		'apple',
@@ -270,7 +295,7 @@ function handleLogs(location) {
 			name: 'mask',
 			x: 0,
 			y: 0,
-			width: w() * 900,
+			width: w(),
 			height: h(),
 			clipMask: true
 		});
@@ -335,7 +360,7 @@ function handleLogs(location) {
 			}
 		}
 		groups[location].fillContent.addChildren([fill, fillMask, groups[location].fillSymbols]);
-		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers]);
+		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers, groups[location].markerHovers]);
 		groups[location].graphContent.addChildren([mask, groups[location].clippedGraphContent, groups[location].ticks]);
 		groups[location].graph.addChild(groups[location].graphContent);
 		papers[location].view.draw();
