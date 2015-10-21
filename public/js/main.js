@@ -49,6 +49,9 @@ function createLogo() {
 				}
 			}
 		};
+
+		$('header#logo').addClass('show');
+		$('section#locations').addClass('show');
 		$('canvas#logo').on('mouseenter', function(event) {
 			hovering = true;
 			var wiggleSpeed;

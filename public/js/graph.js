@@ -13,9 +13,9 @@ function handleLogs(location) {
 			width: width - 60
 		});
 		// canvases[location].width = width;
-		// canvases[location].height = height;
+		canvases[location].height = height;
 		$(canvases[location]).css({
-			width: width,
+			// width: width,
 			height: height
 		});
 		$(canvases[location]).attr('resize', true).attr('id',location); 
@@ -56,8 +56,10 @@ function handleLogs(location) {
 			// 	width: w(),
 			// 	height: graphHeight
 			// });
-			var mask = groups[location].graphContent.children['mask'];
 			var width = w() - 60;
+			var mask = groups[location].graphContent.children['mask'];
+			mask.width = width;
+			
 			if(width >= 800) {
 				$('.easel').css({
 					width: width
@@ -232,7 +234,7 @@ function handleLogs(location) {
 			display: 'block'
 		}).css({
 			left: x - $('#'+location+' .popup')[0].offsetWidth/2,
-			top: y - $('#'+location+' .popup')[0].offsetHeight - 20,
+			top: y - $('#'+location+' .popup')[0].offsetHeight - 30,
 		}).addClass('show');
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
 	}
