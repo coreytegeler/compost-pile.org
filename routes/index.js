@@ -10,7 +10,9 @@ router.get('/', function(req, res, next) {
     console.log('docs: '+locationsDoc);
     if (err) {
       console.log(err);
-      return res.render('error');
+      return res.render('error', {
+        error: err
+      });
     } else {
       if(locationsDoc) {
         for (var i=0; i<locationsDoc.length; i++) {
