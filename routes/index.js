@@ -9,6 +9,7 @@ router.get('/', function(req, res, next) {
   return collection.find({}, {}, function (err, locationsDoc) {
     console.log('docs: '+locationsDoc);
     if (err) {
+      console.log(err);
       return res.render('/error');
     } else {
       if(locationsDoc) {
