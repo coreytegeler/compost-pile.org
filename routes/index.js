@@ -7,35 +7,32 @@ router.get('/', function(req, res, next) {
   var collection = db.get('locations');
   var locations = [];
   return collection.find({}, {}, function (err, locationsDoc) {
-    if (err) {
+    for (var i=0; i<locationsDoc.length; i++) {
+      var slug = locationsDoc[i].slug;
+      var name = locationsDoc[i].name;
+      var email = locationsDoc[i].email;
+      var who = locationsDoc[i].who;
+      var how = locationsDoc[i].how;
+      var what = locationsDoc[i].what;
+      var location = {};
+      location.slug = slug;
+      location.name = name;
+      location.email = email;
+      location.who = who;
+      location.how = how;
+      location.what = what;
+      locations.push(location);
+    }
+    if (err || !locationsDoc) {
       return res.render('/');
     } else {
-      console.log(locationsDoc);
-      if(locationsDoc == undefined) return;
-      for (var i=0; i<locationsDoc.length; i++) {
-        var slug = locationsDoc[i].slug;
-        var name = locationsDoc[i].name;
-        var email = locationsDoc[i].email;
-        var who = locationsDoc[i].who;
-        var how = locationsDoc[i].how;
-        var what = locationsDoc[i].what;
-        var location = {};
-        location.slug = slug;
-        location.name = name;
-        location.email = email;
-        location.who = who;
-        location.how = how;
-        location.what = what;
-        locations.push(location);
-
-        return res.render('index', {
-          pageType: 'multiple',
-          locations: locations,
-          scripts: ['paper','moment','main','graph'],
-          styles: ['public'],
-          errors: err
-        });
-      }
+      return res.render('index', {
+        pageType: 'multiple',
+        locations: locations,
+        scripts: ['paper','moment','main','graph'],
+        styles: ['public'],
+        errors: err
+      });
     }  
   });
 });
