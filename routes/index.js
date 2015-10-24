@@ -10,6 +10,8 @@ router.get('/', function(req, res, next) {
     if (err) {
       return res.render('/');
     } else {
+      console.log(locationsDoc);
+      if(locationsDoc == undefined) return;
       for (var i=0; i<locationsDoc.length; i++) {
         var slug = locationsDoc[i].slug;
         var name = locationsDoc[i].name;
