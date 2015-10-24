@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   return collection.find({}, {}, function (err, locationsDoc) {
     console.log('docs: '+locationsDoc);
     if (err) {
-      return res.render('/');
+      return res.render('/error');
     } else {
       if(locationsDoc) {
         for (var i=0; i<locationsDoc.length; i++) {
