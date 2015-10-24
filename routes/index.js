@@ -7,6 +7,9 @@ router.get('/', function(req, res, next) {
   var collection = db.get('locations');
   var locations = [];
   return collection.find({}, {}, function (err, locationsDoc) {
+    if (err) {
+      return res.render('/');
+    } else {
     for (var i=0; i<locationsDoc.length; i++) {
       var slug = locationsDoc[i].slug;
       var name = locationsDoc[i].name;
@@ -22,10 +25,7 @@ router.get('/', function(req, res, next) {
       location.how = how;
       location.what = what;
       locations.push(location);
-    }
-    if (err) {
-      return res.render('/');
-    } else {
+
       return res.render('index', {
         pageType: 'multiple',
         locations: locations,
