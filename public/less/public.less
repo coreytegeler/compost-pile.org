@@ -68,13 +68,13 @@ section#locations {
 	opacity: 0;
 	-webkit-transform: translate3d(0, -2000px, 0);
     transform: translate3d(0, -2000px, 0);
-	-webkit-transition: opacity 200ms ease-in-out 450ms;
-	-moz-transition: opacity 200ms ease-in-out 450ms;
-	transition: opacity 200ms ease-in-out 450ms;
+	-webkit-transition: opacity 200ms ease-in-out 950ms;
+	-moz-transition: opacity 200ms ease-in-out 950ms;
+	transition: opacity 200ms ease-in-out 950ms;
 }
 section#locations.show {
-	-webkit-animation: bounceInUp 900ms forwards 300ms;
-	animation: bounceInUp 900ms forwards 300ms;
+	-webkit-animation: bounceInUp 900ms forwards 600ms;
+	animation: bounceInUp 900ms forwards 600ms;
 	opacity: 1;
 }
 section#locations.show header {
@@ -138,6 +138,40 @@ section#locations header h1 {
 	-moz-transform: translateY(0px);
 	transform: translateY(0px);
 }
+.graph .arrow {
+	display: none;
+	width: auto;
+	height: 50px;
+	position: absolute;
+	top: 50%;
+	margin-top: -25px;
+	-webkit-transition: -webkit-transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	-moz-transition: -moz-transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+	transition: transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
+}
+.graph .arrow.left {
+	left: 40px;
+	-webkit-transform: translateX(-220px);
+	-moz-transform: translateX(-220px);
+	transform: translateX(-220px);
+}
+.graph .arrow.right {
+	right: 40px;
+	-webkit-transform: translateX(220px);
+	-moz-transform: translateX(220px);
+	transform: translateX(220px);
+}
+section#locations .content:hover {
+	// -webkit-transform: translateX(0px);
+	// -moz-transform: translateX(0px);
+	// transform: translateX(0px);
+	cursor: left;
+	cursor: url(../images/left.png) 170 75, left;
+}
+.graph .arrow img {
+	width: auto;
+	height: 100%;
+}
 .popup {
 	position: absolute;
 	display: none;
@@ -165,7 +199,7 @@ section#locations header h1 {
 	-moz-transition: opacity 100ms ease-in-out 50ms, -moz-transform 150ms ease-in-out;
 	-webkit-transition: opacity 100ms ease-in-out 50ms, -webkit-transform 150ms ease-in-out;
 }
-.popup .arrow {
+.popup .point {
 	width: 20px;
 	height: 20px;
 	display: table;

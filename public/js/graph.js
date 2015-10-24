@@ -149,7 +149,7 @@ function handleLogs(location) {
 
 	var startGraphing = 0;
 	function graphPoints(type) {
-		var zoom = 50;
+		var zoom = 100;
 		var line = new papers[location].Path({
 			name: 'line',
 			strokeWidth: 4,
@@ -158,8 +158,8 @@ function handleLogs(location) {
 			strokeColor: green,
 			opacity: 1
 		});
-
-		line.add(0, height);
+		var width = w() - 60;
+		line.add(width, height);
 		var firstDay = moment(logs[0].date).dayOfYear();
 		for(var i = startGraphing; i < logs.length; i++) {
 			var log = logs[i];
@@ -174,8 +174,10 @@ function handleLogs(location) {
 				valueType: type,
 				value: log[type]
 			};
-			var x = (doy - firstDay) * zoom;
-			var y = height - parseInt(log[type])*5;
+			var since = doy-firstDay 
+			var x = width+since*zoom;
+			console.log(x);
+			var y = height-parseInt(log[type])*5;
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
 				name: id,
