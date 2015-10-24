@@ -7,6 +7,8 @@ router.get('/', function(req, res, next) {
   var collection = db.get('locations');
   var locations = [];
   return collection.find({}, {}, function (err, locationsDoc) {
+    console.log('docs: '+locationsDoc);
+    if(!locationsDoc) return;
     for (var i=0; i<locationsDoc.length; i++) {
       var slug = locationsDoc[i].slug;
       var name = locationsDoc[i].name;
