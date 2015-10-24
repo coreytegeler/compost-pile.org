@@ -11,7 +11,8 @@ router.get('/', function(req, res, next) {
     if (err) {
       console.log(err);
       return res.render('error', {
-        error: err
+        error: err,
+        styles: ['public']
       });
     } else {
       if(locationsDoc) {

@@ -6,7 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var lessMiddleware = require('less-middleware');
 var monk = require('monk');
-var db = monk('localhost:27017/compost');
+// var db = monk('localhost:27017/compost');
+var db = monk('mongodb://heroku_z28551tz:i6b2adudtmtreh9uv2c99faept@ds051913.mongolab.com:51913/heroku_z28551tz');
+
 
 var admin = require('./routes/admin');
 var routes = require('./routes/index');
