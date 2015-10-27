@@ -23,15 +23,19 @@ block content
 					textarea#how(type='textarea', rows='10')
 					h2 What can be composted here?
 					textarea#what(type='textarea', rows='10')
-					//What do you do with your compost?
+					
+				form(role='form', action='/admin/upload', method='post', enctype='multipart/form-data')
+					input(type='file', name='csv')
+					input(type='submit')
+
 				table#log
 					thead
 						tr.titles
 							th.title.month Month
 							th.title.day Day
 							th.title.year Year
-							th.title.input Input
-							th.title.output Output
+							th.title.scraps Scraps
+							th.title.compost Compost
 							th.title.buttons 
 					tbody
 						tr.row
@@ -41,10 +45,10 @@ block content
 								select.date.day(type='text', data-type='day')
 							td.cell.date.year(label='year')
 								select.date.year(type='text', data-type='year')
-							td.cell.data.input(label='input')
-								input.text(type='text', placeholder='0', data-type='input')
-							td.cell.data.output(label='output')
-								input.text(type='text', placeholder='0', data-type='output')
+							td.cell.data.scraps(label='scraps')
+								input.text(type='text', placeholder='0', data-type='scraps')
+							td.cell.data.compost(label='compost')
+								input.text(type='text', placeholder='0', data-type='compost')
 							td.cell.buttons(label='buttons')
 								input.save.submit(type='submit', value='')
 								input.delete.submit(type='submit', value='')

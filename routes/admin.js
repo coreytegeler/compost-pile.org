@@ -2,6 +2,9 @@ var express = require('express');
 var router = express.Router();
 var slug = require('slug');
 var moment = require('moment');
+var path = require('path');
+var Converter = require("csvtojson").Converter;
+var converter = new Converter({});
 
 slug.defaults.modes['pretty'] = {
     replacement: '-',
@@ -73,7 +76,7 @@ router.get('/new', function(req, res, next) {
   });
 });
 
-router.get('/:slug', function(req, res, next) {
+router.get('/:slug', function(req, res, next) {  
   var db = req.db;
   var collection = db.get('locations');
   var slug = req.params.slug;
@@ -94,6 +97,22 @@ router.get('/:slug', function(req, res, next) {
     }  
   });
 });
+
+function importCsv(db, collection, slug) {
+  converter.on("end_parsed", function (json) {
+      var slug = 'purchase-college';
+      var collectionName = slug.replace(/-/g, '_') + '_logs';
+      var collectionLogs = db.get(collectionName);
+      var data = json;
+      data.createdAt = moment().toJSON();
+      data.updatedAt = moment().toJSON();
+      collectionLogs.insert(data, function(err, result){
+        console.log(result);
+      });
+  });
+   
+  require("fs").createReadStream("./data.csv").pipe(converter);
+}
 
 router.post('/create/location', function(req, res) {
     var db = req.db;
@@ -179,7 +198,6 @@ router.delete('/delete/log/:slug/:id', function(req, res) {
         res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
     });
 });
-
 
 
 module.exports = router;

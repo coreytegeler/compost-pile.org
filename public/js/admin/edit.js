@@ -113,6 +113,7 @@ function fillLog() {
     var newRow = $('.row')[0];
     $.getJSON('/admin/logs/' + localData.slug, function(logs) {
         if(logs) {
+            console.log(logs);
             $.each(logs, function(i, log) {
                 var row = $(newRow).clone().addClass('saved').appendTo('table#log tbody')
                 .attr('data-id',log._id)
