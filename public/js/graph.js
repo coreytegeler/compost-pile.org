@@ -80,7 +80,7 @@ function handleLogs(location) {
 				logs = response;
 				createGraph(logs);
 				createLogList(logs);
-	        	graphPoints('input');
+	        	graphPoints('scraps');
 	        }
 	    });
 	}
@@ -125,12 +125,12 @@ function handleLogs(location) {
 		$(logs).each(function(i, row) {
 			var id = row._id;
 			var date = moment(row.date).format('MMMM Do, YYYY'),
-				input = row.input,
-				output = row.output;
+				scraps = row.scraps,
+				compost = row.compost;
 			var dateHtml = '<div class="cell date">' + date + '</div>',
-				inputHtml = '<div class="cell input">' + input + ' lbs.</div>',
-				outputHtml = '<div class="cell output">' + output + ' lbs.</div>';
-			var html = '<li data-id="'+id+'">'+dateHtml+inputHtml+outputHtml+'</li>';
+				scrapsHtml = '<div class="cell scraps">' + scraps + ' lbs.</div>',
+				compostHtml = '<div class="cell compost">' + compost + ' lbs.</div>';
+			var html = '<li data-id="'+id+'">'+dateHtml+scrapsHtml+compostHtml+'</li>';
 			$logList.append(html);
 		});
 		$logList.on('mouseenter', 'li', function (event) {
@@ -161,10 +161,12 @@ function handleLogs(location) {
 		var width = w() - 60;
 		line.add(width, height);
 		var firstDay = moment(logs[0].date).dayOfYear();
-		for(var i = startGraphing; i < logs.length; i++) {
+		var lastDay = moment(logs[10].date).dayOfYear();
+		for(var i = 10; i > 0; i--) {
 			var log = logs[i];
 			var date = moment(log.date);
 			var humanDate = date.format('MMMM Do, YYYY');
+			console.log(humanDate);
 			var doy = date.dayOfYear();
 			var id = log._id;
 			var data = {
@@ -174,8 +176,8 @@ function handleLogs(location) {
 				valueType: type,
 				value: log[type]
 			};
-			var since = doy-firstDay 
-			var x = width+since*zoom;
+			// var since = 
+			var x = width;
 			console.log(x);
 			var y = height-parseInt(log[type])*5;
 			line.add(x, y);
@@ -215,6 +217,7 @@ function handleLogs(location) {
 				scrollToListItem(id);
 			};
 		}
+		// line.add();
 		line.sendToBack().simplify();
 		loadFillSymbols(line);
 	}
