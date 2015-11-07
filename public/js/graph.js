@@ -159,14 +159,13 @@ function handleLogs(location) {
 			opacity: 1
 		});
 		var width = w() - 60;
-		line.add(width, height);
+		line.add(0, height);
+
 		var firstDay = moment(logs[0].date).dayOfYear();
-		var lastDay = moment(logs[10].date).dayOfYear();
-		for(var i = 10; i > 0; i--) {
+		for(var i = 0; i < logs.length; i++) {
 			var log = logs[i];
 			var date = moment(log.date);
 			var humanDate = date.format('MMMM Do, YYYY');
-			console.log(humanDate);
 			var doy = date.dayOfYear();
 			var id = log._id;
 			var data = {
@@ -176,9 +175,8 @@ function handleLogs(location) {
 				valueType: type,
 				value: log[type]
 			};
-			// var since = 
-			var x = width;
-			console.log(x);
+			var since = firstDay-doy;
+			var x = since*zoom;
 			var y = height-parseInt(log[type])*5;
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
@@ -216,10 +214,14 @@ function handleLogs(location) {
 				var id = event.target.data.id;
 				scrollToListItem(id);
 			};
+			if(i==logs.length-1) {
+				line.add(x, height);
+				line.add(0, height);
+				line.sendToBack().simplify();
+				loadFillSymbols(line);
+			}
 		}
-		// line.add();
-		line.sendToBack().simplify();
-		loadFillSymbols(line);
+		
 	}
 
 	function showPopUp(id) {
