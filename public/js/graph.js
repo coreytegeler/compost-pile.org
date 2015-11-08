@@ -45,12 +45,7 @@ function handleLogs(location) {
 		}
 
 
-		$(window).on('resize', function() {
-			var mask = groups[location].graphContent.children['mask'];
-			var clipped = groups[location].graphContent.children['clippedGraphContent'];
-			// mask.set({ width: w() });
-			// clipped.set({ width: w() });
-		});
+		
 		getData(location);
 	}
 
@@ -125,7 +120,7 @@ function handleLogs(location) {
 		});
 		$logList.on('click', 'li', function (event) {
 			var id = $(this).attr('data-id');
-			// scrollToMarker(id);
+			slideToMarker(id);
 		});
 	}
 
@@ -142,9 +137,9 @@ function handleLogs(location) {
 		});
 		var width = w() - 60;
 		line.add(0, height);
-
+		var edge = 400;
 		var firstDay = moment(logs[0].date).dayOfYear();
-		for(var i = 0; i < logs.length; i++) {
+		for(var i = 0; i < 20; i++) {
 			var log = logs[i];
 			var date = moment(log.date);
 			var humanDate = date.format('MMMM Do, YYYY');
@@ -158,7 +153,7 @@ function handleLogs(location) {
 				value: log[type]
 			};
 			var since = firstDay-doy;
-			var x = since*zoom;
+			var x = edge+since*zoom;
 			var y = height-parseInt(log[type])*5;
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
@@ -207,9 +202,9 @@ function handleLogs(location) {
 				console.log(id);
 				scrollToListItem(id);
 			};
-			if(i==logs.length-1) {
-				line.add(x, height);
-				line.add(0, height);
+			// if(i==logs.length-1) {
+			if(i == 19) {
+				line.add(x+edge, height);
 				line.sendToBack().simplify();
 				loadFillSymbols(line);
 			}
@@ -218,13 +213,16 @@ function handleLogs(location) {
 	}
 
 	function showPopUp(id) {
+		var pile = groups[location]['graphContent'];
+		var pileX = pile.bounds.x;
+
 		var markers = groups[location].markers;
 		var marker = markers.children[id];
 		marker.fillColor = dark;
 
 		var popup = $('#'+location+' .popup[data-id='+id+']');
 
-		var x = marker.x - $(popup)[0].offsetWidth/2;
+		var x = marker.x - $(popup)[0].offsetWidth/2 + pileX;
 		var y = marker.y - $(popup)[0].offsetHeight - 30;
 		$(popup).css({
 			display: 'block'
@@ -260,11 +258,23 @@ function handleLogs(location) {
 		var logList = $('.logList');
 		var logListItem = $('.logList li[data-id="'+id+'"]');
 		var scrollTo = $(logListItem).index() * $(logListItem).outerHeight();
-		// var scrollTo = $(logListItem).index();
-		console.log(scrollTo);
 		$(logList).animate({
         	scrollTop: scrollTo
     	}, 200);
+	}
+
+	function slideToMarker(id) {
+		var markers = groups[location].markers;
+		var marker = markers.children[id];
+		var markerX = marker.position.x;
+
+		var pile = groups[location]['graphContent'];
+		var pileX = pile.bounds.x;
+		var pileWidth = pile.bounds.width;
+
+		pile.position.x = -markerX;
+
+		console.log(markerX, pileX, pileWidth);
 	}
 
 
@@ -378,12 +388,60 @@ function handleLogs(location) {
 			var id = wrapper[0].id;
 			showGraphUtils(id);
 		}
-		handleHands();
 	}
 
 	stretchCanvas();
 
+	$('body').on('mousemove', '.graph canvas', function(event) {
+		var graph = event.currentTarget;
+		var pile = groups[location]['graphContent'];
+		var x = event.offsetX;
+		var width = graph.clientWidth;
+		var cursor;
+		if(x >= width - 200) {
+			cursor = 'e-resize';
+		} else if (x <= 200) {
+			cursor = 'w-resize';
+		} else {
+			cursor = 'default';
+		}
+		$(graph).css({
+			'cursor' : cursor
+		});
+	});
+
+	$('body').on('click', '.graph canvas', function(event) {
+		var graph = event.currentTarget;
+		var x = event.offsetX;
+		var width = graph.clientWidth;
+		var pile = groups[location]['graphContent'];
+
+		if (x <= 200 && !isStart(pile)) {
+			pile.position.x += width;
+		} else if(x >= width - 200 && !isEnd(pile)) {
+			pile.position.x -= width;
+		}
+		console.log(pile.bounds.x);
+	});
+
 }
+
+
+function isStart(pile) {
+	if(pile.bounds.x + 200 > 0) {
+		return true;
+	} else {
+		return false;
+	}
+}
+function isEnd(pile) {
+	if(pile.bounds.width + pile.bounds.x < w()) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
 
 function showGraphUtils(location) {
 	var thisGroup = groups[location];
@@ -412,6 +470,3 @@ function hideGraphUtils(location) {
 	// papers[location].view.on('frame', loadUtils);
 }
 
-function handleHands() {
-	
-}
