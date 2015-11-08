@@ -1,7 +1,7 @@
 var graphOffset = 100;
-var white = '#e9ffea';
-var green = '#73db71';
-var graphHeight = 300;
+var light = '#e9ffea';
+var dark = '#73db71';
+var graphHeight = 400;
 var moveLeft;
 function handleLogs(location) {
 	function stretchCanvas() {
@@ -9,17 +9,15 @@ function handleLogs(location) {
 		canvases[location] = document.createElement('canvas');
 		width = w();
 		height = graphHeight;
-		$('.easel').css({
-			width: width - 60
-		});
-		// canvases[location].width = width;
+
 		canvases[location].height = height;
 		$(canvases[location]).css({
-			// width: width,
 			height: height
 		});
-		$(canvases[location]).attr('resize', true).attr('id',location); 
+
+		$(canvases[location]).attr('resize', false).attr('id',location); 
 		$(canvases[location]).appendTo($('#'+location+'  .graph .easel'));
+
 		papers[location].setup(canvases[location]);
 		groups[location] = new papers[location].Group();
 		var groupNames = [
@@ -45,31 +43,15 @@ function handleLogs(location) {
 			thisGroup[groupName] = newGroup;
 			groups[location].addChildren(thisGroup[groupName]);
 		}
-		getData(location);
+
 
 		$(window).on('resize', function() {
-			// graph.children['background'].set({
-			// 	width: w(),
-			// 	height: graphHeight
-			// });
-			// graphContent.children['mask'].set({
-			// 	width: w(),
-			// 	height: graphHeight
-			// });
-			var width = w() - 60;
 			var mask = groups[location].graphContent.children['mask'];
-			mask.width = width;
-			
-			if(width >= 800) {
-				$('.easel').css({
-					width: width
-				});
-				$(canvases[location]).css({
-					width: width
-				});
-			}
-			papers[location].view.draw();
+			var clipped = groups[location].graphContent.children['clippedGraphContent'];
+			// mask.set({ width: w() });
+			// clipped.set({ width: w() });
 		});
+		getData(location);
 	}
 
 	function getData(location) {
@@ -96,7 +78,7 @@ function handleLogs(location) {
 				to: [tickSize, graphHeight - i],
 				strokeWidth: 6,
 				strokeCap: 'round',
-				strokeColor: white,
+				strokeColor: light,
 				opacity: 0
 			});
 			groups[location].vertTicks.addChild(tick);
@@ -155,7 +137,7 @@ function handleLogs(location) {
 			strokeWidth: 4,
 			strokeCap: 'round',
 			strokeJoin: 'round',
-			strokeColor: green,
+			strokeColor: dark,
 			opacity: 1
 		});
 		var width = w() - 60;
@@ -185,8 +167,8 @@ function handleLogs(location) {
 				y: y,
 				radius: 8,
 				strokeWidth: 3,
-				strokeColor: green,
-				fillColor: white,
+				strokeColor: dark,
+				fillColor: light,
 				data: data,
 				opacity: 1
 			});
@@ -197,6 +179,16 @@ function handleLogs(location) {
 			});
 			groups[location].markers.addChild(marker);
 			groups[location].markerHovers.addChild(markerHover);
+
+			var popupModel = $('.popup.model');
+			var popup = $(popupModel).clone();
+			$(popup).removeClass('model')
+			$(popup).attr('data-id', id);
+			$(popup).css({top:'1000px'});
+			$(popup).children('.date').children('.data').html(humanDate)
+			$(popup).children('.value').children('.title').html(type)
+			$(popup).children('.value').children('.data').html(log[type]+' lbs.');
+			$(popup).insertAfter($(popupModel));
 
 			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
@@ -212,6 +204,7 @@ function handleLogs(location) {
 
 			markerHover.onClick = function(event) {
 				var id = event.target.data.id;
+				console.log(id);
 				scrollToListItem(id);
 			};
 			if(i==logs.length-1) {
@@ -227,36 +220,37 @@ function handleLogs(location) {
 	function showPopUp(id) {
 		var markers = groups[location].markers;
 		var marker = markers.children[id];
-		marker.fillColor = green;
-		$('#'+location+' a').css({cursor: 'pointer'});
-		var x = marker.x;
-		var y = marker.y;
-		var date = marker.data.date;
-		var valueType = marker.data.valueType;
-		var value = marker.data.value;
-		$('#'+location+' .popup .row.date .data').html(date);
-		$('#'+location+' .popup .row.value .title').html(valueType);
-		$('#'+location+' .popup .row.value .data').html(value+' lbs.');
-		$('#'+location+' .popup').css({
+		marker.fillColor = dark;
+
+		var popup = $('#'+location+' .popup[data-id='+id+']');
+
+		var x = marker.x - $(popup)[0].offsetWidth/2;
+		var y = marker.y - $(popup)[0].offsetHeight - 30;
+		$(popup).css({
 			display: 'block'
-		}).css({
-			left: x - $('#'+location+' .popup')[0].offsetWidth/2,
-			top: y - $('#'+location+' .popup')[0].offsetHeight - 30,
+		});
+		$(popup).css({
+			left: x,
+			top: y,
 		}).addClass('show');
+
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
 	}
 
 	function hidePopUp(id) {
 		var markers = groups[location].markers;
 		var marker = markers.children[id];
+		marker.fillColor = light;
+
+		var popup = $('#'+location+' .popup[data-id='+id+']');
 		$(groups[location].markers).each(function(i, marker) {
-			marker.fillColor = white;
+			marker.fillColor = light;
 		});
-		$('#'+location+' a').css({cursor: 'default'});
-		$('#'+location+' .popup').removeClass('show');
-		$('#'+location+' .popup').one('webkitTransitionEnd transitionend', function(e) {
-			if(!$('#'+location+' .popup').hasClass('show')) {
-				$('#'+location+' .popup').css({'display':'none'});
+
+		$(popup).removeClass('show');
+		$(popup).one('webkitTransitionEnd transitionend', function(e) {
+			if(!$(popup).hasClass('show')) {
+				$(popup).css({top:'1000px'});
 			}
 		});
 		$('.logList li[data-id="'+id+'"]').removeClass('hover');
@@ -264,8 +258,9 @@ function handleLogs(location) {
 
 	function scrollToListItem(id) {
 		var logList = $('.logList');
-		var logListItem = $(logList).children('[data-id="'+id+'"]');
-		var scrollTo = logListItem[0].childElementCount * $(logListItem).outerHeight();
+		var logListItem = $('.logList li[data-id="'+id+'"]');
+		var scrollTo = $(logListItem).index() * $(logListItem).outerHeight();
+		// var scrollTo = $(logListItem).index();
 		console.log(scrollTo);
 		$(logList).animate({
         	scrollTop: scrollTo
@@ -306,7 +301,7 @@ function handleLogs(location) {
 			y: 0,
 			width: w(),
 			height: h(),
-			clipMask: true
+			clipMask: false
 		});
 
 		var endPile;
@@ -383,6 +378,7 @@ function handleLogs(location) {
 			var id = wrapper[0].id;
 			showGraphUtils(id);
 		}
+		handleHands();
 	}
 
 	stretchCanvas();
@@ -414,4 +410,8 @@ function hideGraphUtils(location) {
 	papers[location].view.draw();
 	// };
 	// papers[location].view.on('frame', loadUtils);
+}
+
+function handleHands() {
+	
 }

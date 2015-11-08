@@ -15,6 +15,7 @@ function createLogo() {
 	logoCanvas.height = headerHeight;
 	$('header#logo a#logoLink').append(logoCanvas);
 	$('header#logo a#logoLink').click(function(event) {
+		return;
 		event.preventDefault();
 		if($('.location.opened')) {
 			closeSection();
