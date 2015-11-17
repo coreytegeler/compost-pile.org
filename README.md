@@ -4,6 +4,7 @@
     mongod --dbpath data
     
     ps aux | grep mysqld
+    ps aux | grep mongod
     sudo kill PID
     mysql.server start
     
