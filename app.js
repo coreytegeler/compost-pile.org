@@ -4,8 +4,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var lessMiddleware = require('less-middleware');
 var monk = require('monk');
-var db = monk('localhost:27017/compost');
+// var db = monk('localhost:27017/compost');
+var db = monk('mongodb://heroku_z28551tz:i6b2adudtmtreh9uv2c99faept@ds051913.mongolab.com:51913/heroku_z28551tz');
+
 
 var admin = require('./routes/admin');
 var routes = require('./routes/index');
@@ -32,9 +35,15 @@ app.use(function(req,res,next){
 app.use('/admin/', admin);
 app.use('/', routes);
 
+app.use(lessMiddleware('/stylesheets/less', {
+  dest: '/stylesheets',
+  pathRoot: path.join(__dirname, 'public')
+}));
+app.use(express.static(path.join(__dirname, 'public')));
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
+  console.log(req);
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
@@ -57,6 +66,7 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
+  console.log(req);
   res.status(err.status || 500);
   res.render('error', {
     message: err.message,

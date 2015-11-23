@@ -2,21 +2,20 @@ doctype html
 html
 	head
 		title= title
-		link(rel='stylesheet', href='/stylesheets/reset.css')
-		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/css/reset.css')
 		if styles
 			each style in styles
-				link(rel='stylesheet', href='/stylesheets/' + style + '.css')
-		script(src='/javascripts/jquery-2.1.4.min.js')
-		script(src='/javascripts/helpers.js')
-		script(src='/javascripts/transit.js')
+				link(rel='stylesheet', href='/css/' + style + '.css')
+		script(src='/js/jquery-2.1.4.min.js')
+		script(src='/js/helpers.js')
+		script(src='/js/transit.js')
 
 		if data
 			script(type='text/javascript').
 				var localData =!{JSON.stringify(data)}
 		if scripts
 			each script in scripts
-				script(type='text/javascript' src='/javascripts/' + script + '.js')
+				script(type='text/javascript' src='/js/' + script + '.js')
 		
 		if selected	
 			script(type='text/javascript').

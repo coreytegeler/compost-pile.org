@@ -7,17 +7,30 @@ router.get('/', function(req, res, next) {
   var collection = db.get('locations');
   var locations = [];
   return collection.find({}, {}, function (err, locationsDoc) {
-    for (var i=0; i<locationsDoc.length; i++) {
-      var slug = locationsDoc[i].slug;
-      var name = locationsDoc[i].name;
-      var location = {};
-      location.slug = slug;
-      location.name = name;
-      locations.push(location);
-    }
     if (err) {
-      return res.render('/');
+      return res.render('error', {
+        error: err,
+        styles: ['public']
+      });
     } else {
+      if(locationsDoc) {
+        for (var i=0; i<locationsDoc.length; i++) {
+          var slug = locationsDoc[i].slug;
+          var name = locationsDoc[i].name;
+          var email = locationsDoc[i].email;
+          var who = locationsDoc[i].who;
+          var how = locationsDoc[i].how;
+          var what = locationsDoc[i].what;
+          var location = {};
+          location.slug = slug;
+          location.name = name;
+          location.email = email;
+          location.who = who;
+          location.how = how;
+          location.what = what;
+          locations.push(location);
+        }
+      }
       return res.render('index', {
         pageType: 'multiple',
         locations: locations,
@@ -28,44 +41,6 @@ router.get('/', function(req, res, next) {
     }  
   });
 });
-
-
-router.get('/:slug', function(req, res, next) {
-  var db = req.db;
-  var collection = db.get('locations');
-  var pageSlug = req.params.slug;
-  var locations = [];
-  return collection.find({}, {}, function (err, locationsDoc) {
-    for (var i=0; i<locationsDoc.length; i++) {
-      var slug = locationsDoc[i].slug;
-      var name = locationsDoc[i].name;
-      var location = {};
-      location.slug = slug;
-      location.name = name;
-      locations.push(location);
-    }
-    if (err) {
-      return res.render('/');
-    } else {
-      return res.render('index', {
-        pageType: 'single',
-        selected: pageSlug,
-        locations: locations,
-        scripts: ['paper','moment','main','graph'],
-        styles: ['public'],
-        errors: err
-      });
-    }  
-  });
-});
-
-// router.get('/admin', function(req, res, next) {
-//   res.render('admin', {
-//     title: 'Locations',
-//     scripts: ['admin/index'],
-//     styles: ['admin']
-//   });
-// });
 
 router.get('/logs/:slug', function(req, res) {
   var slug = req.params.slug;

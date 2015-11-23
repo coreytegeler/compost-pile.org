@@ -7,7 +7,6 @@ block content
 				h1#title= title
 				.buttons
 					a.submit.square.save
-					a.submit.square.delete
 					a.submit.square.view
 					a.submit.square.home(href="/admin")
 
@@ -18,18 +17,20 @@ block content
 					input.text#email(type='text', placeholder='Email Address')
 					input.text#confirmpassword(type='password', placeholder='Password')
 
-					textarea#how(type='textarea', rows='10', placeholder='Tell us about how you compost.')
-					textarea#who(type='textarea', rows='10', placeholder='Who is involved in the composting process at your school?')
-					
+					h2 Who is involved in the composting process at your school?
+					textarea#who(type='textarea', rows='10')
+					h2 Tell us about how you compost.
+					textarea#how(type='textarea', rows='10')
+					h2 What can be composted here?
+					textarea#what(type='textarea', rows='10')
 				table#log
 					thead
 						tr.titles
 							th.title.month Month
 							th.title.day Day
 							th.title.year Year
-							th.title.total Total
-							th.title.input Input
-							th.title.output Output
+							th.title.scraps Scraps
+							th.title.compost Compost
 							th.title.buttons 
 					tbody
 						tr.row
@@ -39,12 +40,10 @@ block content
 								select.date.day(type='text', data-type='day')
 							td.cell.date.year(label='year')
 								select.date.year(type='text', data-type='year')
-							td.cell.data.total(label='total')
-								input.text(type='text', placeholder='0', data-type='total')
-							td.cell.data.input(label='input')
-								input.text(type='text', placeholder='0', data-type='input')
-							td.cell.data.output(label='output')
-								input.text(type='text', placeholder='0', data-type='output')
+							td.cell.data.scraps(label='scraps')
+								input.text(type='text', placeholder='0', data-type='scraps')
+							td.cell.data.compost(label='compost')
+								input.text(type='text', placeholder='0', data-type='compost')
 							td.cell.buttons(label='buttons')
-								input.save.square(type='submit', value='')
-								input.delete.square(type='submit', value='')
+								input.save.submit(type='submit', value='')
+								input.delete.submit(type='submit', value='')
