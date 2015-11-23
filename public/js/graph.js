@@ -2,7 +2,8 @@ var graphOffset = 100;
 var light = '#e9ffea';
 var dark = '#73db71';
 var graphHeight = 400;
-var moveLeft;
+var ease = 400;
+var logs, pile;
 function handleLogs(location) {
 	function stretchCanvas() {
 		papers[location] = new paper.PaperScope();
@@ -42,10 +43,7 @@ function handleLogs(location) {
 			var thisGroup = groups[location];
 			thisGroup[groupName] = newGroup;
 			groups[location].addChildren(thisGroup[groupName]);
-		}
-
-
-		
+		}		
 		getData(location);
 	}
 
@@ -55,51 +53,16 @@ function handleLogs(location) {
 			dataType: 'json',
 			success: function(response) {
 				logs = response;
-				createGraph(logs);
 				createLogList(logs);
-	        	graphPoints('scraps');
+	        	graphPoints(logs, 'scraps');
 	        }
 	    });
 	}
 
-	function createGraph(logs) {
-		groups[location].ticks.addChildren([groups[location].horzTicks, groups[location].vertTicks]);
-		// groups[location].graphContent.addChild(groups[location].ticks);
-		var tickSize = 30;
-		var tickInterval = 30;
-		for(var i = graphHeight - tickInterval; i > 0; i-=tickInterval) {
-			var tick = papers[location].Path.Line({
-				from: [0, graphHeight - i],
-				to: [tickSize, graphHeight - i],
-				strokeWidth: 6,
-				strokeCap: 'round',
-				strokeColor: light,
-				opacity: 0
-			});
-			groups[location].vertTicks.addChild(tick);
-		}
-		// tick.onMouseEnter = function(event) {
-		// 	$('body').css({cursor: 'pointer'});
-		// 	var y = this.segments[1].point.y;
-		// 	this.insert(2, [w(), y]);
-		// 	this.opacity = 1;
-		// };
-
-		// tick.onMouseLeave = function(event) {
-		// 	$('body').css({cursor: 'default'});
-		// 	this.removeSegment(2);
-		// 	if(this.data.visibility === false) {
-		// 		this.opacity = 0;
-		// 	} else {
-		// 		this.opacity = 1;
-		// 	}
-		// };
-		papers[location].view.draw();
-	}
-
 	function createLogList(logs) {
 		var $logList = $('#'+location+' .info .logList');
-		$(logs).each(function(i, row) {
+		for(var i = 0; i < logs.length; i++ ) {
+			var row = logs[i];
 			var id = row._id;
 			var date = moment(row.date).format('MMMM Do, YYYY'),
 				scraps = row.scraps,
@@ -108,8 +71,8 @@ function handleLogs(location) {
 				scrapsHtml = '<div class="cell scraps">' + scraps + ' lbs.</div>',
 				compostHtml = '<div class="cell compost">' + compost + ' lbs.</div>';
 			var html = '<li data-id="'+id+'">'+dateHtml+scrapsHtml+compostHtml+'</li>';
-			$logList.append(html);
-		});
+			$logList.prepend(html);
+		}
 		$logList.on('mouseenter', 'li', function (event) {
 			var id = $(this).attr('data-id');
 			showPopUp(id);
@@ -125,8 +88,8 @@ function handleLogs(location) {
 	}
 
 	var startGraphing = 0;
-	function graphPoints(type) {
-		var zoom = 100;
+	function graphPoints(logs, type) {
+		var zoom = 300;
 		var line = new papers[location].Path({
 			name: 'line',
 			strokeWidth: 4,
@@ -136,25 +99,29 @@ function handleLogs(location) {
 			opacity: 1
 		});
 		var width = w() - 60;
-		line.add(0, height);
-		var edge = 400;
-		var firstDay = moment(logs[0].date).dayOfYear();
-		for(var i = 0; i < 20; i++) {
+		line.add(0, height+5);
+		var firstDayUnix = moment(logs[0].date).unix();
+		var lastX;
+		for(var i = 0; i < logs.length; i++) {
 			var log = logs[i];
 			var date = moment(log.date);
 			var humanDate = date.format('MMMM Do, YYYY');
-			var doy = date.dayOfYear();
+			var thisDayUnix = moment(date).unix();
 			var id = log._id;
+
+			var since = (thisDayUnix-firstDayUnix)/250000;
+			var x = ease+(since*zoom);
+			var y = height-parseInt(log[type])*5;
+
 			var data = {
 				date: humanDate,
 				id: id,
 				index: i,
 				valueType: type,
-				value: log[type]
+				value: log[type],
+				x, x
 			};
-			var since = firstDay-doy;
-			var x = edge+since*zoom;
-			var y = height-parseInt(log[type])*5;
+			
 			line.add(x, y);
 			var marker = new papers[location].Shape.Circle({
 				name: id,
@@ -199,21 +166,19 @@ function handleLogs(location) {
 
 			markerHover.onClick = function(event) {
 				var id = event.target.data.id;
-				console.log(id);
 				scrollToListItem(id);
 			};
-			// if(i==logs.length-1) {
-			if(i == 19) {
-				line.add(x+edge, height);
+			lastX = x;
+			if(i == logs.length - 1) {
+				line.add(lastX+ease, height+5);
 				line.sendToBack().simplify();
-				loadFillSymbols(line);
+				loadFillSymbols(line);	
 			}
 		}
 		
 	}
 
 	function showPopUp(id) {
-		var pile = groups[location]['graphContent'];
 		var pileX = pile.bounds.x;
 
 		var markers = groups[location].markers;
@@ -257,24 +222,40 @@ function handleLogs(location) {
 	function scrollToListItem(id) {
 		var logList = $('.logList');
 		var logListItem = $('.logList li[data-id="'+id+'"]');
+		var logListHeight = $(logList).height();
 		var scrollTo = $(logListItem).index() * $(logListItem).outerHeight();
+		var lastListItem = $(logList).children('li:last-child');
+		$(lastListItem).css({marginBottom:scrollTo});
 		$(logList).animate({
         	scrollTop: scrollTo
-    	}, 200);
+    	}, 200, function() {
+	    	$(logList).on('scroll', function (event) {
+				var lastListItem = $(this).children('li:last-child');
+				var distance = $(lastListItem).index() * $(lastListItem).outerHeight() + $(lastListItem).outerHeight() + 30 - $(this).outerHeight();
+				var scrollTop = $(this).scrollTop();
+				if(scrollTop <= distance) {
+					$(lastListItem).css({'marginBottom':'5px'});
+				}
+			});
+    	});
 	}
 
 	function slideToMarker(id) {
-		var markers = groups[location].markers;
-		var marker = markers.children[id];
-		var markerX = marker.position.x;
-
-		var pile = groups[location]['graphContent'];
-		var pileX = pile.bounds.x;
+		pile = groups[location].graphContent;
 		var pileWidth = pile.bounds.width;
-
-		pile.position.x = -markerX;
-
-		console.log(markerX, pileX, pileWidth);
+		var pileX = pile.position.x;
+		var canvasWidth = $('.graph canvas').innerWidth();
+		var thisGroup = groups[location];
+		var markers = thisGroup.markers.children;
+		var thisMarkerIndex = markers[id];
+		var thisMarker = markers[id];
+		console.log(thisMarker);
+		var thisMarkerX = thisMarker.position.x;
+		var newPileX = pileX - thisMarkerX + canvasWidth/2;
+		pile.position.x = newPileX;
+		// $('.popup.show').removeClass('show');
+		showPopUp(id);
+		papers[location].view.draw();
 	}
 
 
@@ -288,6 +269,7 @@ function handleLogs(location) {
 		'tomato',
 		'dirt'
 	];
+
 	function loadFillSymbols(line) {
 		$.each(compostables, function(i,compostable) {
 			var imgUrl = '../images/compost/'+compostable+'.svg';
@@ -351,32 +333,45 @@ function handleLogs(location) {
 				var randInt = random(0, compostables.length - 1);
 				var compostable = compostables[randInt];
 				var fillSymbol = svgs[compostable];
-				var newSymbol = fillSymbol.place({
-					x: limit.x + shift,
-					y: height-ii + shift
-				});
-				newSymbol.scale(0.25);
-				newSymbol.rotate(random(0,360));
-				newSymbol.sendToBack();
-				newSymbol.onMouseDown = function(event) {
-					if($('body').hasClass('single')) {
-						var compostable = event.target.symbol.data.name;
-						console.log(compostable);	
+				if(fillSymbol != undefined) {
+					var newSymbol = fillSymbol.place({
+						x: limit.x + shift,
+						y: height-ii + shift
+					});
+					newSymbol.scale(0.25);
+					newSymbol.rotate(random(0,360));
+					newSymbol.sendToBack();
+					newSymbol.onMouseDown = function(event) {
+						if($('body').hasClass('single')) {
+							var compostable = event.target.symbol.data.name;
+						}
 					}
+					newSymbol.onMouseEnter = function(event) {
+						
+					}
+					newSymbol.onMouseLeave = function(event) {
+						
+					}
+					groups[location].fillSymbols.addChild(newSymbol);
 				}
-				newSymbol.onMouseEnter = function(event) {
-					
-				}
-				newSymbol.onMouseLeave = function(event) {
-					
-				}
-				groups[location].fillSymbols.addChild(newSymbol);
 			}
 		}
 		groups[location].fillContent.addChildren([fill, fillMask, groups[location].fillSymbols]);
 		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers, groups[location].markerHovers]);
 		groups[location].graphContent.addChildren([mask, groups[location].clippedGraphContent, groups[location].ticks]);
 		groups[location].graph.addChild(groups[location].graphContent);
+
+		pile = groups[location].graphContent;
+		var pileWidth = pile.bounds.width;
+		var pileX = pile.position.x;
+		var canvasWidth = $('.graph canvas').innerWidth();
+		var thisGroup = groups[location];
+		var markers = thisGroup.markers;
+		var lastMarkerIndex = markers.children.length - 1;
+		var lastMarker = markers.children[lastMarkerIndex];
+		var lastMarkerX = lastMarker.position.x;
+		var newPileX = pileX - lastMarkerX + canvasWidth - ease/4;
+		pile.position.x = newPileX; 
 		papers[location].view.draw();
 		showGraph(location);
 	}
@@ -408,7 +403,7 @@ function handleLogs(location) {
 		$(graph).css({
 			'cursor' : cursor
 		});
-	});
+	});	
 
 	$('body').on('click', '.graph canvas', function(event) {
 		var graph = event.currentTarget;
@@ -417,15 +412,16 @@ function handleLogs(location) {
 		var pile = groups[location]['graphContent'];
 
 		if (x <= 200 && !isStart(pile)) {
-			pile.position.x += width;
+			var newPosition = pile.position.x + width;
 		} else if(x >= width - 200 && !isEnd(pile)) {
-			pile.position.x -= width;
+			var newPosition = pile.position.x - width;
+		} else {
+			return;
 		}
-		console.log(pile.bounds.x);
-	});
+		pile.position.x = newPosition;
+	});	
 
 }
-
 
 function isStart(pile) {
 	if(pile.bounds.x + 200 > 0) {
@@ -455,7 +451,6 @@ function showGraphUtils(location) {
 }
 
 function hideGraphUtils(location) {
-	console.log(location);
 	var thisGroup = groups[location];
 	var markers = thisGroup.markers;
 	var line = papers[location];

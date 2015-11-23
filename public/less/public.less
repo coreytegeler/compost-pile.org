@@ -166,8 +166,6 @@ section#locations .content:hover {
 	// -webkit-transform: translateX(0px);
 	// -moz-transform: translateX(0px);
 	// transform: translateX(0px);
-	cursor: left;
-	cursor: url(../images/left.png) 170 75, left;
 }
 .graph .arrow img {
 	width: auto;
@@ -224,7 +222,7 @@ section#locations .content:hover {
 	padding-bottom: 5px;
 	margin-bottom: 5px;
 	text-transform: uppercase;
-	font-family: 'GT Walsheim Bold';
+	font-family: 'Work Sans', sans-serif;
 }
 .popup .row .data {
 }
@@ -279,7 +277,7 @@ section#locations .content:hover {
 	border-bottom: 5px solid @dark;
 	font-size: 20px;
 	line-height: 30px;
-	font-weight: 700;
+	font-weight: 500;
 }
 .location .info .box .inner .contact {
 	width: 100%;
@@ -315,13 +313,16 @@ section#locations .content:hover {
 .location .info .box .inner .compost h2 {
 
 }
+.location .info .box .inner img {
+	width: 100%;
+	padding: 5px 0;
+}
 .location .info .box .inner .logList {
 	height: calc(~'100% - 15px');
 	padding-bottom: 30px;
 	overflow-y: auto;
 	font-size: 20px;
 	line-height: 20px;
-	font-weight: 700; 
 	clear: both;
 }
 .location .info .box .inner .logList li {
@@ -359,12 +360,16 @@ section#locations .content:hover {
 	font-size: 20px;
 	display: table-cell;
 	vertical-align: middle;
-    line-height: 30px;
-    font-weight: 700;
+	font-size: 25px;
+    line-height: 35px;
+    font-weight: 600;
 }
 #compostables .text .inner {
-	width: 500px;
-	display: table;
+	width: 80%;
+	max-width: 700px;
+	height: 300px;
+	overflow: auto;
+	display: block;
 	padding: 20px;
 	margin: auto;
 	border: 5px solid @dark;
