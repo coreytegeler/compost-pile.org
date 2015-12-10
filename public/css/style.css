@@ -1,1 +1,185 @@
-@import url(https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700,800,900);@-webkit-keyframes bounceInDown{from,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215, .61, .355, 1);animation-timing-function:cubic-bezier(.215, .61, .355, 1)}0%{-webkit-transform:translate3d(0, -2000px, 0);transform:translate3d(0, -2000px, 0)}60%{-webkit-transform:translate3d(0, 25px, 0);transform:translate3d(0, 25px, 0)}75%{-webkit-transform:translate3d(0, -10px, 0);transform:translate3d(0, -10px, 0)}90%{-webkit-transform:translate3d(0, 5px, 0);transform:translate3d(0, 5px, 0)}to{-webkit-transform:none;transform:none}}@keyframes bounceInDown{from,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215, .61, .355, 1);animation-timing-function:cubic-bezier(.215, .61, .355, 1)}0%{-webkit-transform:translate3d(0, -2000px, 0);transform:translate3d(0, -2000px, 0)}60%{-webkit-transform:translate3d(0, 25px, 0);transform:translate3d(0, 25px, 0)}75%{-webkit-transform:translate3d(0, -10px, 0);transform:translate3d(0, -10px, 0)}90%{-webkit-transform:translate3d(0, 5px, 0);transform:translate3d(0, 5px, 0)}to{-webkit-transform:none;transform:none}}@-webkit-keyframes bounceInUp{from,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215, .61, .355, 1);animation-timing-function:cubic-bezier(.215, .61, .355, 1)}from{-webkit-transform:translate3d(0, 2000px, 0);transform:translate3d(0, 2000px, 0)}60%{-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}75%{-webkit-transform:translate3d(0, 10px, 0);transform:translate3d(0, 10px, 0)}90%{-webkit-transform:translate3d(0, -5px, 0);transform:translate3d(0, -5px, 0)}to{-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}@keyframes bounceInUp{from,60%,75%,90%,to{-webkit-animation-timing-function:cubic-bezier(.215, .61, .355, 1);animation-timing-function:cubic-bezier(.215, .61, .355, 1)}from{-webkit-transform:translate3d(0, 2000px, 0);transform:translate3d(0, 2000px, 0)}60%{-webkit-transform:translate3d(0, -20px, 0);transform:translate3d(0, -20px, 0)}75%{-webkit-transform:translate3d(0, 10px, 0);transform:translate3d(0, 10px, 0)}90%{-webkit-transform:translate3d(0, -5px, 0);transform:translate3d(0, -5px, 0)}to{-webkit-transform:translate3d(0, 0, 0);transform:translate3d(0, 0, 0)}}@font-face{font-family:'GT Walsheim';src:url('../fonts/gt-walsheim-web.eot');src:url('../fonts/gt-walsheim-web.eot?#iefix') format('embedded-opentype'),url('../fonts/gt-walsheim-web.ttf') format('truetype')}@font-face{font-family:'GT Walsheim Oblique';src:url('../fonts/gt-walsheim-regular-oblique-web.eot');src:url('../fonts/gt-walsheim-regular-oblique-web.eot?#iefix') format('embedded-opentype'),url('../fonts/gt-walsheim-regular-oblique-web.ttf') format('truetype')}@font-face{font-family:'GT Walsheim Bold';src:url('../fonts/gt-walsheim-bold-web.eot');src:url('../fonts/gt-walsheim-bold-web.eot?#iefix') format('embedded-opentype'),url('../fonts/gt-walsheim-bold-web.ttf') format('truetype')}@font-face{font-family:'GT Walsheim Bold Oblique';src:url('../fonts/gt-walsheim-bold-oblique-web.eot');src:url('../fonts/gt-walsheim-bold-oblique-web.eot?#iefix') format('embedded-opentype'),url('../fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype')}html,body{width:100%;height:100%;display:table;background-color:#e9ffea;color:#73db71;font-family:'Work Sans',sans-serif;font-weight:500;font-size:16px;margin:0}main{display:table;margin:auto;min-width:800px}#about{width:100%;height:300px;background:#73db71}header{font-size:100px;font-weight:800;display:table}header svg{display:table;margin:auto}h1{font-size:50px;font-weight:800}a,a:visited{color:#73db71;text-decoration:none}
+@import url(https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700,800,900);
+@-webkit-keyframes bounceInDown {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    -webkit-transform: translate3d(0, -2000px, 0);
+    transform: translate3d(0, -2000px, 0);
+  }
+  60% {
+    -webkit-transform: translate3d(0, 25px, 0);
+    transform: translate3d(0, 25px, 0);
+  }
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0);
+  }
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@keyframes bounceInDown {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  0% {
+    -webkit-transform: translate3d(0, -2000px, 0);
+    transform: translate3d(0, -2000px, 0);
+  }
+  60% {
+    -webkit-transform: translate3d(0, 25px, 0);
+    transform: translate3d(0, 25px, 0);
+  }
+  75% {
+    -webkit-transform: translate3d(0, -10px, 0);
+    transform: translate3d(0, -10px, 0);
+  }
+  90% {
+    -webkit-transform: translate3d(0, 5px, 0);
+    transform: translate3d(0, 5px, 0);
+  }
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+@-webkit-keyframes bounceInUp {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  from {
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+  60% {
+    -webkit-transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -20px, 0);
+  }
+  75% {
+    -webkit-transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 10px, 0);
+  }
+  90% {
+    -webkit-transform: translate3d(0, -5px, 0);
+    transform: translate3d(0, -5px, 0);
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+@keyframes bounceInUp {
+  from,
+  60%,
+  75%,
+  90%,
+  to {
+    -webkit-animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+    animation-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1);
+  }
+  from {
+    -webkit-transform: translate3d(0, 2000px, 0);
+    transform: translate3d(0, 2000px, 0);
+  }
+  60% {
+    -webkit-transform: translate3d(0, -20px, 0);
+    transform: translate3d(0, -20px, 0);
+  }
+  75% {
+    -webkit-transform: translate3d(0, 10px, 0);
+    transform: translate3d(0, 10px, 0);
+  }
+  90% {
+    -webkit-transform: translate3d(0, -5px, 0);
+    transform: translate3d(0, -5px, 0);
+  }
+  to {
+    -webkit-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+  }
+}
+/*yellow: #fdd700*/
+/*light blue: #2ca0ff*/
+@font-face {
+  font-family: 'GT Walsheim';
+  src: url('../fonts/gt-walsheim-web.eot');
+  src: url('../fonts/gt-walsheim-web.eot?#iefix') format('embedded-opentype'), url('../fonts/gt-walsheim-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Oblique';
+  src: url('../fonts/gt-walsheim-regular-oblique-web.eot');
+  src: url('../fonts/gt-walsheim-regular-oblique-web.eot?#iefix') format('embedded-opentype'), url('../fonts/gt-walsheim-regular-oblique-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Bold';
+  src: url('../fonts/gt-walsheim-bold-web.eot');
+  src: url('../fonts/gt-walsheim-bold-web.eot?#iefix') format('embedded-opentype'), url('../fonts/gt-walsheim-bold-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Bold Oblique';
+  src: url('../fonts/gt-walsheim-bold-oblique-web.eot');
+  src: url('../fonts/gt-walsheim-bold-oblique-web.eot?#iefix') format('embedded-opentype'), url('../fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
+}
+html,
+body {
+  width: 100%;
+  height: 100%;
+  display: table;
+  background-color: #f3fff3;
+  color: #73db71;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+main {
+  display: table;
+  margin: auto;
+  min-width: 800px;
+}
+#about {
+  width: 100%;
+  height: 300px;
+  background: #73db71;
+}
+header {
+  font-size: 100px;
+  font-weight: 800;
+  display: table;
+}
+header svg {
+  display: table;
+  margin: auto;
+}
+h1 {
+  font-size: 50px;
+  font-weight: 800;
+}
+a,
+a:visited {
+  color: #73db71;
+  text-decoration: none;
+}

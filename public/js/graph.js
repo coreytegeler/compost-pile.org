@@ -1,21 +1,20 @@
 var graphOffset = 100;
-var light = '#e9ffea';
+var light = '#f3fff3';
 var dark = '#73db71';
 var graphHeight = 400;
 var ease = 400;
 var logs, pile;
+var type = 'compost';
 function handleLogs(location) {
 	function stretchCanvas() {
 		papers[location] = new paper.PaperScope();
 		canvases[location] = document.createElement('canvas');
 		width = w();
 		height = graphHeight;
-
 		canvases[location].height = height;
 		$(canvases[location]).css({
 			height: height
 		});
-
 		$(canvases[location]).attr('resize', false).attr('id',location); 
 		$(canvases[location]).appendTo($('#'+location+'  .graph .easel'));
 
@@ -54,7 +53,7 @@ function handleLogs(location) {
 			success: function(response) {
 				logs = response;
 				createLogList(logs);
-	        	graphPoints(logs, 'scraps');
+	        	graphPoints(logs, type);
 	        }
 	    });
 	}
@@ -155,13 +154,13 @@ function handleLogs(location) {
 			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
 				showPopUp(id);
-				$('body').css({'cursor':'pointer'});
+				$('.graph').css({'cursor':'pointer'});
 			};
 
 			markerHover.onMouseLeave = function(event) {
 				var id = event.target.data.id;
 				hidePopUp(id);
-				$('body').css({'cursor':'default'});
+				$('.graph').css({'cursor':'default'});
 			};
 
 			markerHover.onClick = function(event) {
@@ -190,13 +189,10 @@ function handleLogs(location) {
 		var x = marker.x - $(popup)[0].offsetWidth/2 + pileX;
 		var y = marker.y - $(popup)[0].offsetHeight - 30;
 		$(popup).css({
-			display: 'block'
-		});
-		$(popup).css({
+			display: 'block',
 			left: x,
 			top: y,
 		}).addClass('show');
-
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
 	}
 
@@ -253,7 +249,7 @@ function handleLogs(location) {
 		var thisMarkerX = thisMarker.position.x;
 		var newPileX = pileX - thisMarkerX + canvasWidth/2;
 		pile.position.x = newPileX;
-		// $('.popup.show').removeClass('show');
+		$('.popup.show').removeClass('show');
 		showPopUp(id);
 		papers[location].view.draw();
 	}
@@ -419,9 +415,19 @@ function handleLogs(location) {
 			return;
 		}
 		pile.position.x = newPosition;
+		papers[location].view.draw();
 	});	
 
+	var typeSelect = $('.select.type');
+	$('.type').on('click', '.option:not(.selected)', function() {
+		var type = $(this).attr('data-type');
+		$(typeSelect).find('.selected').removeClass('selected');
+		$(this).addClass('selected');
+		graphPoints(logs, type);
+	});
+
 }
+
 
 function isStart(pile) {
 	if(pile.bounds.x + 200 > 0) {

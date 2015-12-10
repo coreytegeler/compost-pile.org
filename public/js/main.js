@@ -199,8 +199,7 @@ function closeSection() {
 	if($(wrapper).is(':nth-child(odd)')) {
 		var sibling = $(wrapper)[0].nextSibling;
 	} else if($(wrapper).is(':nth-child(even)')) {
-		var sibling = $(wrapper)[0].previousSibling;
-		
+		var sibling = $(wrapper)[0].previousSibling;	
 	}
 	$(sibling).css({'width':'0%'});
 	$(wrapper).removeClass('opened').transition({'width':'50%'}, speed, 'cubic-bezier(.42,.15,.03,1)');
