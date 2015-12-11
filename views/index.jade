@@ -1,32 +1,28 @@
 extends layout
-
 block content
+	-var location = locations[0]
 	aside
 	header#logo
 		a#logoLink(href= '/')
+		h1.where #{location.name}
 	main
 		section#locations
-			-for(var i in locations)
-				-var location = locations[i]
-					.location(id= location.slug, data-slug= location.slug)
-						.content
-							header
-								h1 #{location.name}
-								.close
-							.graph
-								.easel
-								.arrow.left
-									img(src ='images/left.svg')
-								.arrow.right
-									img(src ='images/right.svg')
-								.popup.model
-									.row.date
-										.cell.title='Date'
-										.cell.data
-									.row.value
-										.cell.title
-										.cell.data
-									.point
-						include info.jade
+			.location(id= location.slug, data-slug= location.slug)
+				.content
+					.graph
+						.easel
+						.arrow.left
+							img(src ='images/left.svg')
+						.arrow.right
+							img(src ='images/right.svg')
+						.popup.model
+							.row.date
+								.cell.title='Date'
+								.cell.data
+							.row.value
+								.cell.title
+								.cell.data
+							.point
+				include info.jade
 		include compostables.jade
 	include footer.jade

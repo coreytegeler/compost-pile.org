@@ -178,34 +178,33 @@ function handleLogs(location) {
 	}
 
 	function showPopUp(id) {
-		var pileX = pile.bounds.x;
-
-		var markers = groups[location].markers;
-		var marker = markers.children[id];
+		var markers = groups[location].markers.children;
+		var marker = markers[id];
+		for(var i = 0; i < markers.length; i++) {
+			markers[i].fillColor = light;
+		}
 		marker.fillColor = dark;
 
+		var pileX = pile.bounds.x;
 		var popup = $('#'+location+' .popup[data-id='+id+']');
-
 		var x = marker.x - $(popup)[0].offsetWidth/2 + pileX;
 		var y = marker.y - $(popup)[0].offsetHeight - 30;
+		$('.popup.show').removeClass('show');
 		$(popup).css({
 			display: 'block',
 			left: x,
 			top: y,
 		}).addClass('show');
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
+		papers[location].view.draw();
 	}
 
 	function hidePopUp(id) {
-		var markers = groups[location].markers;
-		var marker = markers.children[id];
+		var markers = groups[location].markers.children;
+		var marker = markers[id];
 		marker.fillColor = light;
 
 		var popup = $('#'+location+' .popup[data-id='+id+']');
-		$(groups[location].markers).each(function(i, marker) {
-			marker.fillColor = light;
-		});
-
 		$(popup).removeClass('show');
 		$(popup).one('webkitTransitionEnd transitionend', function(e) {
 			if(!$(popup).hasClass('show')) {
@@ -213,6 +212,7 @@ function handleLogs(location) {
 			}
 		});
 		$('.logList li[data-id="'+id+'"]').removeClass('hover');
+		papers[location].view.draw();
 	}
 
 	function scrollToListItem(id) {
@@ -245,7 +245,6 @@ function handleLogs(location) {
 		var markers = thisGroup.markers.children;
 		var thisMarkerIndex = markers[id];
 		var thisMarker = markers[id];
-		console.log(thisMarker);
 		var thisMarkerX = thisMarker.position.x;
 		var newPileX = pileX - thisMarkerX + canvasWidth/2;
 		pile.position.x = newPileX;
@@ -396,17 +395,24 @@ function handleLogs(location) {
 		} else {
 			cursor = 'default';
 		}
+
+		if($('.popup.show').length >= 1) {
+			cursor = 'pointer';
+		}
+
 		$(graph).css({
 			'cursor' : cursor
 		});
 	});	
 
 	$('body').on('click', '.graph canvas', function(event) {
+		if($('.popup.show').length >= 1) {
+			return
+		}
 		var graph = event.currentTarget;
 		var x = event.offsetX;
 		var width = graph.clientWidth;
 		var pile = groups[location]['graphContent'];
-
 		if (x <= 200 && !isStart(pile)) {
 			var newPosition = pile.position.x + width;
 		} else if(x >= width - 200 && !isEnd(pile)) {
