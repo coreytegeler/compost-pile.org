@@ -4,6 +4,8 @@ var groups = {};
 var logoPaper = new paper.PaperScope();
 $(function() {
 	createLogo();
+	setSliderWidth();
+	setUpSlider();
 });
 
 function createLogo() {
@@ -209,4 +211,83 @@ function closeSection() {
 
 	var id = $(wrapper).attr('id');
 	hideGraphUtils(id);
+}
+
+
+
+
+
+
+function setUpSlider() {
+	var slider = $('.slider');
+	var sliderWidth = $(slider).innerWidth();
+	var slideWrapper = $(slider).find('.slides');
+	var slides = $(slideWrapper).find('.slide');
+	var slidesLength = $(slides).length;
+	var arrow = $(slider).find('.arrow');
+	var left_arrow = $(arrow).filter('.left');
+	var right_arrow = $(arrow).filter('.right');
+
+	var showingImage = $(slides)[0];
+
+	$(showingImage).addClass('show');
+
+	setSliderWidth();
+
+	$(arrow).click(function() {
+		var sliderWidth = $(slider).innerWidth();
+		var showingSlide = $('.slide.show');
+		var showingCaption = $('.caption.show');
+		var showIndex = $(showingSlide).index();
+		var shift = $(slideWrapper).css('left');
+		var margin;
+		if($(this).is('.left')) {
+			var nextIndex = showIndex - 1;
+			margin = 0;
+			if(nextIndex == -1) {
+				nextIndex = slidesLength - 1;
+			}
+		} else if($(this).is('.right')) {
+			var nextIndex = showIndex + 1;
+			margin = 0;
+			if(nextIndex == slidesLength) {
+				nextIndex = 0;
+				margin = 0;
+			}
+		}
+		var nextSlide = $(slides).eq(nextIndex);
+		$(showingSlide).removeClass('show');
+		$(nextSlide).addClass('show');
+		var newLeft = -sliderWidth * nextIndex + margin;
+		$(slideWrapper).removeClass('static').css({
+			'left' : newLeft
+		});
+	});
+}
+
+function setSliderWidth() {
+	var slider = $('.slider');
+	var sliderWidth = $(slider).innerWidth();
+	var slideWrapper = $(slider).find('.slides');
+	var slides = $(slideWrapper).find('.slide');
+	var slidesLength = $(slides).length;
+	var newSliderWidth = (sliderWidth+50)*slidesLength;
+	//size slide wrapper to fit all slides
+	$(slideWrapper).css({width:newSliderWidth});
+	//size all slides to fit in viewport
+	$(slides).each(function() {
+		$(this).css({width:sliderWidth});
+	});
+
+	//don't allow transition on size
+	$(slideWrapper).addClass('static');
+	var showingSlide = $('.slide.show');
+	var showIndex = $(showingSlide).index();
+	$(slideWrapper).css({
+		'left' : -sliderWidth * showIndex
+	}, 600);
+}
+
+function winW() {
+	return window.innerWidth;
 }

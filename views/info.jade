@@ -1,8 +1,8 @@
 .tools
 	.tool.type
 		.select.type
-			.option.compost.selected(data-value='compost') Compost
-			.option.scraps(data-value='scraps') Scraps
+			.option.compost.selected(data-type='compost') Compost
+			.option.scraps(data-type='scraps') Scraps
 .info
 	.inner
 		.box.left
@@ -13,7 +13,6 @@
 				h2 How do you compost?
 				.text
 					p #{location.how}
-				img(src="../images/rocket.jpg")
 		.box.right
 			.inner
 				.labels

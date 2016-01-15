@@ -4,7 +4,6 @@ var dark = '#73db71';
 var graphHeight = 400;
 var ease = 400;
 var logs, pile;
-var type = 'compost';
 function handleLogs(location) {
 	function stretchCanvas() {
 		papers[location] = new paper.PaperScope();
@@ -17,32 +16,7 @@ function handleLogs(location) {
 		});
 		$(canvases[location]).attr('resize', false).attr('id',location); 
 		$(canvases[location]).appendTo($('#'+location+'  .graph .easel'));
-
 		papers[location].setup(canvases[location]);
-		groups[location] = new papers[location].Group();
-		var groupNames = [
-			'graph',
-			'graphContent',
-			'clippedGraphContent',
-			'markers',
-			'markerHovers',
-			'fillSymbols',
-			'ticks',
-			'horzTicks',
-			'vertTicks',
-			'horzAxis',
-			'vertAxis',
-			'fillContent',
-			'axes',
-			'graphUtils'
-		];
-		for(var i = 0; i < groupNames.length; i++) {
-			var groupName = groupNames[i];
-			var newGroup = new papers[location].Group({name: groupName});
-			var thisGroup = groups[location];
-			thisGroup[groupName] = newGroup;
-			groups[location].addChildren(thisGroup[groupName]);
-		}		
 		getData(location);
 	}
 
@@ -53,7 +27,7 @@ function handleLogs(location) {
 			success: function(response) {
 				logs = response;
 				createLogList(logs);
-	        	graphPoints(logs, type);
+	        	graphPoints(logs, 'compost');
 	        }
 	    });
 	}
@@ -88,6 +62,31 @@ function handleLogs(location) {
 
 	var startGraphing = 0;
 	function graphPoints(logs, type) {
+		groups[location] = new papers[location].Group();
+		var groupNames = [
+			'graph',
+			'graphContent',
+			'clippedGraphContent',
+			'markers',
+			'markerHovers',
+			'fillSymbols',
+			'ticks',
+			'horzTicks',
+			'vertTicks',
+			'horzAxis',
+			'vertAxis',
+			'fillContent',
+			'axes',
+			'graphUtils'
+		];
+		for(var i = 0; i < groupNames.length; i++) {
+			var groupName = groupNames[i];
+			var newGroup = new papers[location].Group({name: groupName});
+			var thisGroup = groups[location];
+			console.log(thisGroup);
+			thisGroup[groupName] = newGroup;
+			groups[location].addChildren(thisGroup[groupName]);
+		}		
 		var zoom = 300;
 		var line = new papers[location].Path({
 			name: 'line',
@@ -387,35 +386,32 @@ function handleLogs(location) {
 		var pile = groups[location]['graphContent'];
 		var x = event.offsetX;
 		var width = graph.clientWidth;
-		var cursor;
+		var arrow;
 		if(x >= width - 200) {
-			cursor = 'e-resize';
+			arrow = $('.graph .arrow.right')[0];
 		} else if (x <= 200) {
-			cursor = 'w-resize';
+			arrow = $('.graph .arrow.left')[0];
 		} else {
-			cursor = 'default';
+			arrow = null;
 		}
 
-		if($('.popup.show').length >= 1) {
-			cursor = 'pointer';
+		if(arrow && $('.popup.show').length < 1) {
+			$(arrow).addClass('show');
+		} else {
+			$('.graph .arrow').removeClass('show');
 		}
-
-		$(graph).css({
-			'cursor' : cursor
-		});
 	});	
 
-	$('body').on('click', '.graph canvas', function(event) {
+	$('body').on('click', '.graph .arrow', function(event) {
 		if($('.popup.show').length >= 1) {
 			return
 		}
-		var graph = event.currentTarget;
-		var x = event.offsetX;
+		var graph = $(this).parent('.graph')[0];
 		var width = graph.clientWidth;
 		var pile = groups[location]['graphContent'];
-		if (x <= 200 && !isStart(pile)) {
+		if ($(this).hasClass('left') && !isStart(pile)) {
 			var newPosition = pile.position.x + width;
-		} else if(x >= width - 200 && !isEnd(pile)) {
+		} else if($(this).hasClass('right') && !isEnd(pile)) {
 			var newPosition = pile.position.x - width;
 		} else {
 			return;
@@ -429,7 +425,10 @@ function handleLogs(location) {
 		var type = $(this).attr('data-type');
 		$(typeSelect).find('.selected').removeClass('selected');
 		$(this).addClass('selected');
-		graphPoints(logs, type);
+
+		$('.popup').remove();
+		delete groups[location];
+	    graphPoints(logs, type);
 	});
 
 }
