@@ -155,13 +155,11 @@ function handleLogs(type) {
 			$(popup).children('.value').children('.title').html(type)
 			$(popup).children('.value').children('.data').html(log[type]+' lbs.');
 			$(popup).insertAfter($(popupModel));
-
 			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
 				showPopUp(id, type);
 				$('.graph').css({'cursor':'pointer'});
 			};
-
 			markerHover.onMouseLeave = function(event) {
 				var id = event.target.data.id;
 				hidePopUp(id, type);
@@ -183,6 +181,7 @@ function handleLogs(type) {
 	}
 
 	function showPopUp(id, type) {
+		console.log(id, type);
 		var markers = groups[type].markers.children;
 		var marker = markers[id];
 		for(var i = 0; i < markers.length; i++) {
@@ -207,8 +206,7 @@ function handleLogs(type) {
 		var markers = groups[type].markers.children;
 		var marker = markers[id];
 		marker.fillColor = light;
-
-		var popup = $('#'+type+' .popup[data-id='+id+']');
+		var popup = $('.popup[data-id='+id+']');
 		$(popup).removeClass('show');
 		$(popup).one('webkitTransitionEnd transitionend', function(e) {
 			if(!$(popup).hasClass('show')) {
@@ -386,6 +384,7 @@ function handleLogs(type) {
 	getData(type);
 
 	$('body').on('mousemove', '.graph canvas', function(event) {
+		var type = $('canvas.show').attr('id');
 		var graph = event.currentTarget;
 		var pile = groups[type]['graphContent'];
 		var x = event.offsetX;
@@ -407,6 +406,7 @@ function handleLogs(type) {
 	});	
 
 	$('body').on('click', '.graph .arrow', function(event) {
+		var type = $('canvas.show').attr('id');
 		if($('.popup.show').length >= 1) {
 			return
 		}
@@ -434,8 +434,6 @@ function handleLogs(type) {
 	});
 
 }
-
-
 function isStart(pile) {
 	if(pile.bounds.x + 200 > 0) {
 		return true;
