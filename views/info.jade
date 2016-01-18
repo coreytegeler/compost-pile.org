@@ -1,11 +1,9 @@
-.tools
-	.tool.type
-		.select.type
-			.option.compost.selected(data-type='compost') Compost
-			.option.scraps(data-type='scraps') Scraps
 .info
 	.inner
 		.box.left
+			.buttons.types
+				.button.type.compost.selected(data-type='compost') Compost
+				.button.type.scraps(data-type='scraps') Scraps
 			.inner
 				h2 Who composts at Purchase?
 				.text
@@ -14,12 +12,9 @@
 				.text
 					p #{location.how}
 		.box.right
+			.buttons.filters 
+				.button.filter.date Date
+				.button.filter.compost Compost
+				.button.filter.scraps Scraps
 			.inner
-				.labels
-					.label.date 
-						h2 Date
-					.label.scraps 
-						h2 Scraps
-					.label.compost 
-						h2 Compost
 				ul.logList

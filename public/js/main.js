@@ -113,7 +113,7 @@ function fillSections() {
 				openSection(location, this.href, true);
 			}
 		});
-		handleLogs(location);
+		handleLogs();
 	});
 }
 

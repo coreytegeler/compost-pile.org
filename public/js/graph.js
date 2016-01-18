@@ -4,36 +4,40 @@ var dark = '#73db71';
 var graphHeight = 400;
 var ease = 400;
 var logs, pile;
-function handleLogs(location) {
-	function stretchCanvas() {
-		papers[location] = new paper.PaperScope();
-		canvases[location] = document.createElement('canvas');
-		width = w();
-		height = graphHeight;
-		canvases[location].height = height;
-		$(canvases[location]).css({
-			height: height
-		});
-		$(canvases[location]).attr('resize', false).attr('id',location); 
-		$(canvases[location]).appendTo($('#'+location+'  .graph .easel'));
-		papers[location].setup(canvases[location]);
-		getData(location);
-	}
-
-	function getData(location) {
+function handleLogs(type) {
+	function getData(type) {
 		$.ajax({
-			url: '/logs/' + location,
+			url: '/logs/purchase-college',
 			dataType: 'json',
 			success: function(response) {
 				logs = response;
 				createLogList(logs);
-	        	graphPoints(logs, 'compost');
+				stretchCanvas('compost');
+				stretchCanvas('scraps');
 	        }
 	    });
 	}
 
+	function stretchCanvas(type) {
+		papers[type] = new paper.PaperScope();
+		canvases[type] = document.createElement('canvas');
+		width = w();
+		height = graphHeight;
+		canvases[type].height = height;
+		$(canvases[type]).css({
+			height: height
+		});
+		$(canvases[type]).attr('resize', false).attr('id',type); 
+		$(canvases[type]).appendTo($('#purchase-college .easel'));
+		if(type == 'compost') {
+			$(canvases[type]).addClass('show');
+		}
+		papers[type].setup(canvases[type]);
+		graphPoints(logs, type);
+	}
+
 	function createLogList(logs) {
-		var $logList = $('#'+location+' .info .logList');
+		var $logList = $('.info .logList');
 		for(var i = 0; i < logs.length; i++ ) {
 			var row = logs[i];
 			var id = row._id;
@@ -48,21 +52,24 @@ function handleLogs(location) {
 		}
 		$logList.on('mouseenter', 'li', function (event) {
 			var id = $(this).attr('data-id');
-			showPopUp(id);
+			var type = $('canvas.show').attr('id');
+			showPopUp(id, type);
 		});
 		$logList.on('mouseleave', 'li', function (event) {
 			var id = $(this).attr('data-id');
-			hidePopUp(id);
+			var type = $('canvas.show').attr('id');
+			hidePopUp(id, type);
 		});
 		$logList.on('click', 'li', function (event) {
 			var id = $(this).attr('data-id');
-			slideToMarker(id);
+			var type = $('canvas.show').attr('id');
+			slideToMarker(id, type);
 		});
 	}
 
 	var startGraphing = 0;
 	function graphPoints(logs, type) {
-		groups[location] = new papers[location].Group();
+		groups[type] = new papers[type].Group();
 		var groupNames = [
 			'graph',
 			'graphContent',
@@ -81,14 +88,13 @@ function handleLogs(location) {
 		];
 		for(var i = 0; i < groupNames.length; i++) {
 			var groupName = groupNames[i];
-			var newGroup = new papers[location].Group({name: groupName});
-			var thisGroup = groups[location];
-			console.log(thisGroup);
+			var newGroup = new papers[type].Group({name: groupName});
+			var thisGroup = groups[type];
 			thisGroup[groupName] = newGroup;
-			groups[location].addChildren(thisGroup[groupName]);
+			groups[type].addChildren(thisGroup[groupName]);
 		}		
 		var zoom = 300;
-		var line = new papers[location].Path({
+		var line = new papers[type].Path({
 			name: 'line',
 			strokeWidth: 4,
 			strokeCap: 'round',
@@ -121,7 +127,7 @@ function handleLogs(location) {
 			};
 			
 			line.add(x, y);
-			var marker = new papers[location].Shape.Circle({
+			var marker = new papers[type].Shape.Circle({
 				name: id,
 				x: x,
 				y: y,
@@ -137,8 +143,8 @@ function handleLogs(location) {
 				strokeWidth: 0,
 				opacity: 0
 			});
-			groups[location].markers.addChild(marker);
-			groups[location].markerHovers.addChild(markerHover);
+			groups[type].markers.addChild(marker);
+			groups[type].markerHovers.addChild(markerHover);
 
 			var popupModel = $('.popup.model');
 			var popup = $(popupModel).clone();
@@ -152,13 +158,13 @@ function handleLogs(location) {
 
 			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
-				showPopUp(id);
+				showPopUp(id, type);
 				$('.graph').css({'cursor':'pointer'});
 			};
 
 			markerHover.onMouseLeave = function(event) {
 				var id = event.target.data.id;
-				hidePopUp(id);
+				hidePopUp(id, type);
 				$('.graph').css({'cursor':'default'});
 			};
 
@@ -170,22 +176,21 @@ function handleLogs(location) {
 			if(i == logs.length - 1) {
 				line.add(lastX+ease, height+5);
 				line.sendToBack().simplify();
-				loadFillSymbols(line);	
+				loadFillSymbols(line, type);	
 			}
 		}
 		
 	}
 
-	function showPopUp(id) {
-		var markers = groups[location].markers.children;
+	function showPopUp(id, type) {
+		var markers = groups[type].markers.children;
 		var marker = markers[id];
 		for(var i = 0; i < markers.length; i++) {
 			markers[i].fillColor = light;
 		}
 		marker.fillColor = dark;
-
 		var pileX = pile.bounds.x;
-		var popup = $('#'+location+' .popup[data-id='+id+']');
+		var popup = $('.popup[data-id='+id+']');
 		var x = marker.x - $(popup)[0].offsetWidth/2 + pileX;
 		var y = marker.y - $(popup)[0].offsetHeight - 30;
 		$('.popup.show').removeClass('show');
@@ -195,15 +200,15 @@ function handleLogs(location) {
 			top: y,
 		}).addClass('show');
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
-		papers[location].view.draw();
+		papers[type].view.draw();
 	}
 
-	function hidePopUp(id) {
-		var markers = groups[location].markers.children;
+	function hidePopUp(id, type) {
+		var markers = groups[type].markers.children;
 		var marker = markers[id];
 		marker.fillColor = light;
 
-		var popup = $('#'+location+' .popup[data-id='+id+']');
+		var popup = $('#'+type+' .popup[data-id='+id+']');
 		$(popup).removeClass('show');
 		$(popup).one('webkitTransitionEnd transitionend', function(e) {
 			if(!$(popup).hasClass('show')) {
@@ -211,7 +216,7 @@ function handleLogs(location) {
 			}
 		});
 		$('.logList li[data-id="'+id+'"]').removeClass('hover');
-		papers[location].view.draw();
+		papers[type].view.draw();
 	}
 
 	function scrollToListItem(id) {
@@ -235,12 +240,12 @@ function handleLogs(location) {
     	});
 	}
 
-	function slideToMarker(id) {
-		pile = groups[location].graphContent;
+	function slideToMarker(id, type) {
+		pile = groups[type].graphContent;
 		var pileWidth = pile.bounds.width;
 		var pileX = pile.position.x;
 		var canvasWidth = $('.graph canvas').innerWidth();
-		var thisGroup = groups[location];
+		var thisGroup = groups[type];
 		var markers = thisGroup.markers.children;
 		var thisMarkerIndex = markers[id];
 		var thisMarker = markers[id];
@@ -248,10 +253,9 @@ function handleLogs(location) {
 		var newPileX = pileX - thisMarkerX + canvasWidth/2;
 		pile.position.x = newPileX;
 		$('.popup.show').removeClass('show');
-		showPopUp(id);
-		papers[location].view.draw();
+		showPopUp(id, type);
+		papers[type].view.draw();
 	}
-
 
 	var svgs = {};
 	var compostables = [
@@ -264,24 +268,24 @@ function handleLogs(location) {
 		'dirt'
 	];
 
-	function loadFillSymbols(line) {
+	function loadFillSymbols(line, type) {
 		$.each(compostables, function(i,compostable) {
 			var imgUrl = '../images/compost/'+compostable+'.svg';
 			$.get(imgUrl, null, function(svg) {
-				importedSvg = papers[location].project.importSVG(svg);
-				var symbol = new papers[location].Symbol(importedSvg);
+				importedSvg = papers[type].project.importSVG(svg);
+				var symbol = new papers[type].Symbol(importedSvg);
 				symbol.data = {'name':compostable};
 				svgs[compostable] = symbol;
 			}, 'xml').done(function() {
 				if(i == compostables.length-1) {
-					fillGraphWithSymbols(line);
+					fillGraphWithSymbols(line, type);
 				}
 			});
 		});
 	}
 
-	function fillGraphWithSymbols(line) {
-		var mask = new papers[location].Path.Rectangle({
+	function fillGraphWithSymbols(line, type) {
+		var mask = new papers[type].Path.Rectangle({
 			name: 'mask',
 			x: 0,
 			y: 0,
@@ -346,44 +350,44 @@ function handleLogs(location) {
 					newSymbol.onMouseLeave = function(event) {
 						
 					}
-					groups[location].fillSymbols.addChild(newSymbol);
+					groups[type].fillSymbols.addChild(newSymbol);
 				}
 			}
 		}
-		groups[location].fillContent.addChildren([fill, fillMask, groups[location].fillSymbols]);
-		groups[location].clippedGraphContent.addChildren([groups[location].fillContent, line, groups[location].markers, groups[location].markerHovers]);
-		groups[location].graphContent.addChildren([mask, groups[location].clippedGraphContent, groups[location].ticks]);
-		groups[location].graph.addChild(groups[location].graphContent);
+		groups[type].fillContent.addChildren([fill, fillMask, groups[type].fillSymbols]);
+		groups[type].clippedGraphContent.addChildren([groups[type].fillContent, line, groups[type].markers, groups[type].markerHovers]);
+		groups[type].graphContent.addChildren([mask, groups[type].clippedGraphContent, groups[type].ticks]);
+		groups[type].graph.addChild(groups[type].graphContent);
 
-		pile = groups[location].graphContent;
+		pile = groups[type].graphContent;
 		var pileWidth = pile.bounds.width;
 		var pileX = pile.position.x;
 		var canvasWidth = $('.graph canvas').innerWidth();
-		var thisGroup = groups[location];
+		var thisGroup = groups[type];
 		var markers = thisGroup.markers;
 		var lastMarkerIndex = markers.children.length - 1;
 		var lastMarker = markers.children[lastMarkerIndex];
 		var lastMarkerX = lastMarker.position.x;
 		var newPileX = pileX - lastMarkerX + canvasWidth - ease/4;
 		pile.position.x = newPileX; 
-		papers[location].view.draw();
-		showGraph(location);
+		papers[type].view.draw();
+		showGraph(type);
 	}
 
-	function showGraph(location) {
+	function showGraph(type) {
 		$('.graph').addClass('show');
-		var wrapper = $('.location#'+location);
+		var wrapper = $('.location#'+type);
 		if($(wrapper).hasClass('opened')) {
 			var id = wrapper[0].id;
 			showGraphUtils(id);
 		}
 	}
 
-	stretchCanvas();
+	getData(type);
 
 	$('body').on('mousemove', '.graph canvas', function(event) {
 		var graph = event.currentTarget;
-		var pile = groups[location]['graphContent'];
+		var pile = groups[type]['graphContent'];
 		var x = event.offsetX;
 		var width = graph.clientWidth;
 		var arrow;
@@ -408,7 +412,7 @@ function handleLogs(location) {
 		}
 		var graph = $(this).parent('.graph')[0];
 		var width = graph.clientWidth;
-		var pile = groups[location]['graphContent'];
+		var pile = groups[type]['graphContent'];
 		if ($(this).hasClass('left') && !isStart(pile)) {
 			var newPosition = pile.position.x + width;
 		} else if($(this).hasClass('right') && !isEnd(pile)) {
@@ -417,18 +421,16 @@ function handleLogs(location) {
 			return;
 		}
 		pile.position.x = newPosition;
-		papers[location].view.draw();
+		papers[type].view.draw();
 	});	
 
-	var typeSelect = $('.select.type');
-	$('.type').on('click', '.option:not(.selected)', function() {
+	$('.buttons').on('click', '.button:not(.selected)', function() {
 		var type = $(this).attr('data-type');
-		$(typeSelect).find('.selected').removeClass('selected');
+		$('.box.left').find('.selected').removeClass('selected');
 		$(this).addClass('selected');
-
-		$('.popup').remove();
-		delete groups[location];
-	    graphPoints(logs, type);
+		$('canvas.show').removeClass('show');
+		$('canvas#'+type).addClass('show');
+		$('.popup').removeClass('show');
 	});
 
 }
@@ -450,29 +452,29 @@ function isEnd(pile) {
 }
 
 
-function showGraphUtils(location) {
-	var thisGroup = groups[location];
+function showGraphUtils(type) {
+	var thisGroup = groups[type];
 	var markers = thisGroup.markers;
 	var line = thisGroup;
 	var ticks = thisGroup.ticks;
 	for(var i = 0; i < markers.children.length; i ++) {
 		markers.children[i].opacity = 0;
 	}
-	papers[location].view.draw();
+	papers[type].view.draw();
 }
 
-function hideGraphUtils(location) {
-	var thisGroup = groups[location];
+function hideGraphUtils(type) {
+	var thisGroup = groups[type];
 	var markers = thisGroup.markers;
-	var line = papers[location];
+	var line = papers[type];
 	var ticks = thisGroup.ticks;
 	var markerCount = markers.children.length;
 	// var loadUtils = function onFrame(event) {
 	for(var i = 0; i < markers.children.length; i ++) {
 		markers.children[i].opacity = 0;
 	}
-	papers[location].view.draw();
+	papers[type].view.draw();
 	// };
-	// papers[location].view.on('frame', loadUtils);
+	// papers[type].view.on('frame', loadUtils);
 }
 
