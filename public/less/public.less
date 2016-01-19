@@ -76,21 +76,22 @@ main {
 	}
 }
 section {
-	width: calc(~'100% - 40px');
-    padding: 20px;
+	width: 100%;
 	display: block;
+	opacity: 0;
+	-webkit-transform: translate3d(0, -2000px, 0);
+    transform: translate3d(0, -2000px, 0);
+	-webkit-transition: opacity 200ms ease-in-out 950ms;
+	-moz-transition: opacity 200ms ease-in-out 950ms;
+	transition: opacity 200ms ease-in-out 950ms;
+	&.show {
+		-webkit-animation: bounceInUp 900ms forwards 600ms;
+		animation: bounceInUp 900ms forwards 600ms;
+		opacity: 1;
+	}
 	&#locations {
-		opacity: 0;
-		-webkit-transform: translate3d(0, -2000px, 0);
-	    transform: translate3d(0, -2000px, 0);
-		-webkit-transition: opacity 200ms ease-in-out 950ms;
-		-moz-transition: opacity 200ms ease-in-out 950ms;
-		transition: opacity 200ms ease-in-out 950ms;
-		&.show {
-			-webkit-animation: bounceInUp 900ms forwards 600ms;
-			animation: bounceInUp 900ms forwards 600ms;
-			opacity: 1;
-		}
+		width: calc(~'100% - 40px');
+    	padding: 20px;
 	}
 	.location {
 		width: calc(~'100% - 20px');
@@ -265,8 +266,14 @@ section {
 						}
 					}
 				}
-				&.filter {
-					left: 50%;
+				&.filters {
+					@media (max-width: 1000px) {
+						position: relative;
+						display: table;
+					}
+				}
+				@media (max-width: 1000px) {
+					width: 100%;
 				}
 			}
 			.inner {
@@ -302,6 +309,16 @@ section {
 					&:last-child {
 						border-left-width: 0px;
 						overflow: visible;
+						.inner {
+							padding-top: 25px;
+							.logList {
+								overflow: hidden;
+								height: auto;
+								li:first-child {
+									margin-top: 10px;
+								}
+							}
+						}
 					}
 				}
 				.inner {
@@ -411,7 +428,7 @@ section {
 			background-image: url(../images/compostables.svg);
 			background-position: center;
 			background-repeat: no-repeat;
-			background-size: contain;
+			background-size: auto 100%;
 		}
 		.text {
 			width: 100%;
@@ -455,6 +472,14 @@ section {
 	    		}
 	    		&.right {
 	    			right: -150px;
+	    		}
+	    		@media (max-width: 1000px) {
+	    			&.left {
+		    			left: -50px;
+		    		}
+		    		&.right {
+		    			right: -50px;
+		    		}
 	    		}
 	    	}
 	    	.inner {

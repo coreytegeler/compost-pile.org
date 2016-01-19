@@ -112,11 +112,9 @@ function handleLogs(type) {
 			var humanDate = date.format('MMMM Do, YYYY');
 			var thisDayUnix = moment(date).unix();
 			var id = log._id;
-
 			var since = (thisDayUnix-firstDayUnix)/250000;
 			var x = ease+(since*zoom);
 			var y = height-parseInt(log[type])*5;
-
 			var data = {
 				date: humanDate,
 				id: id,
@@ -181,9 +179,9 @@ function handleLogs(type) {
 	}
 
 	function showPopUp(id, type) {
-		console.log(id, type);
 		var markers = groups[type].markers.children;
 		var marker = markers[id];
+		if(marker == undefined) {return}
 		for(var i = 0; i < markers.length; i++) {
 			markers[i].fillColor = light;
 		}
@@ -205,6 +203,7 @@ function handleLogs(type) {
 	function hidePopUp(id, type) {
 		var markers = groups[type].markers.children;
 		var marker = markers[id];
+		if(marker == undefined) {return}
 		marker.fillColor = light;
 		var popup = $('.popup[data-id='+id+']');
 		$(popup).removeClass('show');

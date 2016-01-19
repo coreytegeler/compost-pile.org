@@ -189,9 +189,9 @@ function saveLog(event) {
         postUrl = '/admin/create/log/'+localData.slug;
     }
 
-    $(row).children('.cell.data').each(function(index, val) {
-        if($(this).children('input').val() === '') { errorCount++; }
-    });
+    // $(row).children('.cell.data').each(function(index, val) {
+    //     if($(this).children('input').val() === '') { errorCount++; }
+    // });
 
     if(errorCount === 0) {
 

@@ -54,7 +54,7 @@ function createLogo() {
 		};
 
 		$('header#logo').addClass('show');
-		$('section#locations').addClass('show');
+		$('section').addClass('show');
 		$('header.where').addClass('show');
 		$('canvas#logo').on('mouseenter', function(event) {
 			hovering = true;
@@ -124,11 +124,9 @@ function openSection(id, url, anim) {
 	var content = $('.location#'+id+' a .content')[0];
 	var width = $(content).width();
 	var height = $(content).height();
-
 	if(anim == false) {
 		var speed = 0;
 	}
-
 	var previousSibling = $(wrapper)[0].previousSibling;
 	var nextSibling = $(wrapper)[0].nextSibling;
 	if($(wrapper).is(':last-child')) {
@@ -212,11 +210,6 @@ function closeSection() {
 	var id = $(wrapper).attr('id');
 	hideGraphUtils(id);
 }
-
-
-
-
-
 
 function setUpSlider() {
 	var slider = $('.slider');
