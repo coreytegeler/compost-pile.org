@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
         }
       }
       return res.render('index', {
-        pageType: 'multiple',
+        pageType: 'single',
         locations: locations,
         scripts: ['paper','moment','main','graph'],
         styles: ['public'],

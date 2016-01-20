@@ -1,20 +1,23 @@
 .info
 	.inner
 		.box.left
-			.buttons.types
-				.button.type.compost.selected(data-type='compost') Compost
-				.button.type.scraps(data-type='scraps') Scraps
 			.inner
+				h2 What is this?
+				.text
+					p #{location.what}
 				h2 Who composts at Purchase?
 				.text
 					p #{location.who}
-				h2 How do you compost?
+				h2 How do we compost?
 				.text
 					p #{location.how}
 		.box.right
-			.buttons.filters 
-				.button.filter.date Date
-				.button.filter.compost Compost
-				.button.filter.scraps Scraps
 			.inner
+				.labels.sort 
+					.label.value.date 
+						h2 Date
+					.label.value.scraps 
+						h2 Scraps
+					.label.value.compost 
+						h2 Compost
 				ul.logList

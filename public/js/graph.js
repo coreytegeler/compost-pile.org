@@ -423,9 +423,9 @@ function handleLogs(type) {
 		papers[type].view.draw();
 	});	
 
-	$('.buttons').on('click', '.button:not(.selected)', function() {
+	$('.buttons').on('click', '.button.type:not(.selected)', function() {
 		var type = $(this).attr('data-type');
-		$('.box.left').find('.selected').removeClass('selected');
+		$('.button.selected').removeClass('selected');
 		$(this).addClass('selected');
 		$('canvas.show').removeClass('show');
 		$('canvas#'+type).addClass('show');
