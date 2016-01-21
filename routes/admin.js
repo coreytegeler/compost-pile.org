@@ -59,7 +59,6 @@ router.get('/data/:slug', function(req, res) {
 });
 
 router.get('/login', function(req, res, next) {
-  console.log(req);
   res.render('admin/login', {
     title: 'Login',
     scripts: ['admin/login'],
@@ -68,7 +67,6 @@ router.get('/login', function(req, res, next) {
 });
 
 router.get('/new', function(req, res, next) {
-  console.log(req);
   res.render('admin/new', {
     title: 'New Location',
     scripts: ['admin/new'],

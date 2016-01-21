@@ -22,9 +22,6 @@ main {
 .list .cell a.delete {
 	border: none;
 }
-#location header {
-
-}
 #location header h1 {
 	float: left;	
 	display: table;
@@ -58,7 +55,7 @@ input, select, textarea {
 	display: block;
 	padding: 2px 0 2px 6px;
 	/*background: rgba(34,139,224,0.1);*/
-	background: @medium;
+	background: fade(@medium, 30%);
 	color: @dark;
 	font-size: 25px;
 	border: 0;
@@ -80,7 +77,7 @@ input[type="submit"], a.submit {
 	float: left;
 	/*border: 3px solid rgba(34,139,224,1);*/
 	cursor: pointer;
-	background-color: @medium;
+	background: fade(@medium, 30%);
 }
 input[type="submit"].submit, a.submit.submit {
 	width: 40px;
