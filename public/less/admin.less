@@ -14,13 +14,13 @@ main {
 	margin: 0 10px 10px 0;
 }
 .list .cell a {
-	border-bottom: 5px solid @dark;
+	border: 5px solid @dark;
 }
 .list .cell:last-child {
 	margin-right: 0;
 }
 .list .cell a.delete {
-	border: none;
+	// border: none;
 }
 #location header h1 {
 	float: left;	
@@ -54,12 +54,11 @@ input, select, textarea {
 	font-family: "GT Walsheim Bold";
 	display: block;
 	padding: 2px 0 2px 6px;
-	/*background: rgba(34,139,224,0.1);*/
-	background: fade(@medium, 30%);
+	background: @light;
 	color: @dark;
 	font-size: 25px;
-	border: 0;
 	outline: none;
+	border: 5px solid @dark;
 }
 input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
     background-color: rgb(250, 255, 189);
@@ -69,19 +68,16 @@ input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
 
 input.text {
 	height: 33px;
-	border-bottom: 5px solid @dark;
 }
 input[type="submit"], a.submit {
 	margin: 0;
 	display: block;
 	float: left;
-	/*border: 3px solid rgba(34,139,224,1);*/
 	cursor: pointer;
-	background: fade(@medium, 30%);
 }
 input[type="submit"].submit, a.submit.submit {
-	width: 40px;
-	height: 40px;
+	width: 47px;
+	height: 47px;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: 30px;
@@ -108,10 +104,9 @@ input[type="submit"].submit, a.submit.submit {
 textarea {
 	resize: none;
 	width: 100%;
-	border-top: 5px solid @dark;
 }
 select {
-	height: 40px;
+	height: 47px;
 	-webkit-appearance: none;
   	-webkit-border-radius: 0px;
   	background-image:url(../images/drop.svg);
@@ -124,7 +119,7 @@ form#info input {
 	float: left;
 }
 form#info input.text {
-	width: calc(~'50% - 16px');
+	width: calc(~'50% - 26px');
 	margin: 0 20px 20px 0;
 }
 form#info input.text:nth-child(even),
@@ -168,11 +163,21 @@ table#log td.cell.year {
 	width: 15%;
 }
 table#log td.cell.data {
-	width: 12%;
+	width: 17%;
+	input {
+		width: calc(~'100% - 16px');
+	}
 }
 table#log .row input.text, table#log .row select {
 	width: 100%;
 }
 table#log .row input[type="submit"] {
-	float: left;
+	width: 47px;
+	height: 47px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 30px;
+	background-color: @lightest;
+	margin-left: 20px;
+	border: none;
 }

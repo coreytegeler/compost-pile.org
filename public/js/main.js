@@ -2,6 +2,7 @@ var papers = {};
 var canvases = {};
 var groups = {};
 var logoPaper = new paper.PaperScope();
+var dirtPaper = new paper.PaperScope();
 $(function() {
 	createLogo();
 	setSliderWidth();
@@ -73,6 +74,7 @@ function createLogo() {
 		});
 		keepScrollin();
 		fillSections();
+		createDirt();
 	});
 }
 
@@ -279,6 +281,66 @@ function setSliderWidth() {
 	$(slideWrapper).css({
 		'left' : -sliderWidth * showIndex
 	}, 600);
+}
+
+dirtSvgs = [0,1,2,3,4,5];
+function createDirt() {
+	dirtCanvas = document.createElement('canvas');
+	var footerWidth = w();
+	var footerHeight = 300;
+	$(dirtCanvas).attr('id','dirt').attr('resize', true).css({width:footerWidth,height:footerHeight});
+	dirtCanvas.width = footerWidth;
+	dirtCanvas.height = footerHeight;
+	$('footer .dirt').append(dirtCanvas);
+	dirtPaper.setup(dirtCanvas);
+	papers['dirt'] = dirtPaper;
+	canvases['dirt'] = dirtCanvas;
+	$(dirtSvgs).each(function(i) {
+		var imgUrl = '../images/dirt/'+i+'.svg';
+		$.ajax({
+			type: "GET",
+			async: false,
+			url: imgUrl,
+			success: function(svg){
+		       	var index = i;
+				var importedSvg = papers['dirt'].project.importSVG(svg);
+				var symbol = new papers['dirt'].Symbol(importedSvg);
+				symbol.data = {'name':i};
+				dirtSvgs[index] = symbol;
+				scatterDirt();
+			}
+	    });
+	});
+}
+
+function scatterDirt() {
+	// var dirtMask = new papers['dirt'].Path.Rectangle({
+	// 	name: 'dirtMask',
+	// 	x: 0,
+	// 	y: 0,
+	// 	width: winW(),
+	// 	height: 200,
+	// 	clipMask: false
+	// });
+
+	for(var y = 0; y < 310; y += 50) {
+		for(var x = 0; x < winW(); x += 50) {
+			var index = Math.floor((Math.random() * 5) + 0);
+			var dirtSvg = dirtSvgs[index];
+			var shiftX = random(-90,90);
+			var shiftY = random(-90,90);
+			console.log(dirtSvg);
+			if(dirtSvg != undefined) {
+				var newDirt = dirtSvg.place({
+					x: x + shiftX,
+					y: y + shiftY
+				});
+				newDirt.rotate(random(0,360));
+				newDirt.sendToBack();
+			}
+		}
+	}
+	papers['dirt'].view.draw();
 }
 
 function winW() {

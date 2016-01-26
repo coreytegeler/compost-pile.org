@@ -185,12 +185,12 @@ section {
 				    float: left;
 				    text-transform: uppercase;
 				    cursor: pointer;
-				    background-color: fade(@dark, 10%);	
+				    background-color: @light;
 					&:hover {
-						background-color: fade(@dark, 20%);	
+						color: fade(@dark, 70%);
 					}
 					&.selected {
-						background-color: fade(@dark, 45%);	
+						background-color: @medium;
 					}
 				}
 			}
@@ -515,52 +515,72 @@ footer {
 	position: relative;
 	color: @light !important;
 	font-size: 19px;
-	.top {
-		position: absolute;
-		top: -100px;
-		left: 0;
-		width: 100%;
-		height: 100px;
-		background-image: url(../images/compost.svg);
-		background-size: auto 100px;
-		background-position: left bottom;
-		background-repeat: repeat;
-	}
 	.dirt {
+		-webkit-mask-box-image: url(../images/compost.svg);
+  		mask-border: url(../images/compost.svg);
+		mask-repeat: space;
 		width: 100%;
+		height: 300px;
 		background-color: @brown;
-		padding: 0 0 60px 0;
+		position: relative;
+		display: table;
+		canvas {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			pointer-events: none;
+		}
 		.inner {
 			max-width: calc(~'100% - 60px');
-			display: table;
+			display: table-cell;
 			margin: auto;
-			.block {
-				padding: 0 10px;
-				float: left;
-				&.credits {
-					h3 {
-						// margin-bottom: 7px;
-					}
-					a {
-						// font-size: 18px;
-						margin-top: 3px;
-						width: 100%;
-						display: block;
-					}
-					.tomato {
-						color: #ff5b29;
-					}
-					.banana {
-						color: #ffe045;
-					}
-					.beet {
-						color: #e23c7b;
-					}
-					.egg {
-						color: #f6af82;
-					}
-					.leaf {
-						color: #52a76c;
+			vertical-align: middle;
+			.logo {
+				width: 100%;
+				img {
+					width: 450px;
+				    display: table;
+				    margin: 0 auto 5px auto;
+				}
+			}
+			.blocks {
+				display: table;
+				margin: auto;
+				.block {
+					width: 180px;
+					float: left;
+					&.credits {
+						&:first-child {
+							padding-right: 30px;
+						}
+						&:last-child {
+							padding-left: 30px;
+						}
+						h3 {
+							// margin-bottom: 7px;
+						}
+						a {
+							// font-size: 18px;
+							margin-top: 3px;
+							width: 100%;
+							display: block;
+						}
+						.tomato {
+							color: #ff5b29;
+						}
+						.banana {
+							color: #ffe045;
+						}
+						.beet {
+							color: #e23c7b;
+						}
+						.egg {
+							color: #f6af82;
+						}
+						.leaf {
+							color: #52a76c;
+						}
 					}
 				}
 			}

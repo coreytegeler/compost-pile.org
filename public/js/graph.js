@@ -69,6 +69,9 @@ function handleLogs(type) {
 
 	var startGraphing = 0;
 	function graphPoints(logs, type) {
+		if(logs.length == 0) {
+			return;
+		}
 		groups[type] = new papers[type].Group();
 		var groupNames = [
 			'graph',

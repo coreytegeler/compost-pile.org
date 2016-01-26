@@ -130,6 +130,7 @@ router.post('/update/location/:id', function(req, res) {
     var id = req.params.id;
     var data = req.body;
     data.slug = slug(req.body.name);
+    console.log(data);
     collection.update({'_id':id}, data, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
@@ -178,6 +179,7 @@ router.post('/update/log/:slug/:id', function(req, res) {
     var db = req.db;
     var collection = db.get(collectionName);
     var data = req.body;
+    console.log('!!');
     data.updatedAt = moment().toJSON();
     collection.update({'_id':id}, data, function(err, result){
       res.send(
