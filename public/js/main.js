@@ -314,22 +314,12 @@ function createDirt() {
 }
 
 function scatterDirt() {
-	// var dirtMask = new papers['dirt'].Path.Rectangle({
-	// 	name: 'dirtMask',
-	// 	x: 0,
-	// 	y: 0,
-	// 	width: winW(),
-	// 	height: 200,
-	// 	clipMask: false
-	// });
-
 	for(var y = 0; y < 310; y += 50) {
 		for(var x = 0; x < winW(); x += 50) {
 			var index = Math.floor((Math.random() * 5) + 0);
 			var dirtSvg = dirtSvgs[index];
 			var shiftX = random(-90,90);
 			var shiftY = random(-90,90);
-			console.log(dirtSvg);
 			if(dirtSvg != undefined) {
 				var newDirt = dirtSvg.place({
 					x: x + shiftX,

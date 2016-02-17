@@ -70,7 +70,7 @@ function fillDates(row,month,day,year) {
     var daySelect = $(row).children('.cell.day').children('select');
     var yearSelect = $(row).children('.cell.year').children('select');
 
-    var days = moment(year+'-'+month+1, "YYYY-MM").daysInMonth();
+    var days = 31;
     var dayCounter = 1;
     while (dayCounter <= days) {
         $(daySelect).append('<option value="'+dayCounter+'">'+dayCounter+'</option>');        
@@ -114,24 +114,15 @@ function fillLog() {
     $.getJSON('/admin/logs/' + localData.slug, function(logs) {
         if(logs) {
             $.each(logs, function(i, log) {
-                if($('.row[data-id="' + log._id + '"]').length == 0) {
-                    var id = log._id;
-                    var date = log.date;
+                var id = log._id;
+                var date = log.date;
+                if(!$('.row[data-id="' + id + '"]').length || $('.row[data-id="' + id + '"]').is('.updated')) {
+                    if($('.row[data-id="' + id + '"]').is('.updated') && $('.row[data-id="' + id + '"]').is('.saved')) {
+                        $('.row.updated').remove();
+                    }
                     var newRow = $(firstRow).clone().addClass('saved')
                     .attr('data-id', id)
                     .attr('data-date', date);
-                    $('.row').each(function(ii, row) {
-                        // var rowDate = moment($(row).attr('data-date'));
-                        // var nextRow = $(row).next();
-                        // var nextRowDate = moment($(nextRow).attr('data-date'));
-                        // var thisDate = moment(date);
-                        // if($(nextRow).length == 0) {
-                        // } else if(thisDate.isBefore(rowDate)) {
-                        //     $(newRow).insertBefore($(row));
-                        // }
-                        $(newRow).appendTo('table#log tbody');
-                    });
-
                     var date = moment(log['date']);
                     date = {
                         'month' : date.month(), 
@@ -151,6 +142,43 @@ function fillLog() {
                     $(newRow).children('.buttons').children('input[type="submit"]').each(function(ii, button) {
                         $(button).attr('data-id',log['_id']);
                     });
+
+                    var newRowDate = moment($(newRow).attr('data-date'));
+                    if(!$('.row.saved').length) {
+                        $(newRow).insertAfter($('.row:first-child'));
+                    }
+                    $('.row.saved').each(function() {
+                        var thisRow = $(this);
+                        var thisRowDate = moment($(thisRow).attr('data-date'));
+                        var nextRow = $(this).next();
+                        var nextRowDate = moment($(nextRow).attr('data-date'));
+                        var prevRow = $(this).prev();
+                        if(newRowDate.isSame(thisRowDate)) {
+                            console.log('!');
+                            $(newRow).insertAfter(thisRow);
+                            return false;
+                        }
+                        if(newRowDate.isBefore(thisRowDate)) {
+                            if(newRowDate.isAfter(nextRowDate) || !$(nextRow).length) {
+                                console.log('!');
+                                $(newRow).insertAfter(thisRow);
+                                return false;
+                            }
+                        }
+                        if(!$(nextRow).length) {
+                            if($(prevRow).is(':not(.saved)')) {
+                                console.log('!');
+                                $(newRow).insertBefore(thisRow);
+                                return false;
+                            } else {
+                                console.log('!');
+                                $(newRow).insertAfter(thisRow);
+                                return false;
+                            }
+                        }
+                    });
+                } else {
+                    
                 }
             });
         }
@@ -158,45 +186,33 @@ function fillLog() {
 }
 
 function updateLog(row) {
-    // newRow = newRow[0];
-    // var newRowDate = newRow.dataset.date;
-    // var newRowIndex = newRow.rowIndex - 1;
-    // var putAfter;
-    // $('.row.saved').each(function(i,thisRow) {
-    //     var thisDate = thisRow.dataset.date;
-    //     var difference = moment(newRowDate).diff(thisDate);
-    //     if(difference < 0) {
-    //         putAfter = newRow;
-    //     }
-    // });
-
-    // if($('.row.saved').length == 0) {
-    //     putAfter = $('.row')[0];
-    //     console.log($(newRow));
-    // }
-    // $(putAfter).after(newRow);
-    // $('.row.saved').remove();
-    // console.log(newRow);
-    var newRow = (row).clone();
-    $(row).remove();
+    fillLog();
+    return;
+    var newRow = (row).clone().addClass('saved');
+    var rowDate = moment($(newRow).attr('data-date'));
+    $(row).find('select').each(function(i, input) {
+        console.log($(input).val());
+        $(newRow).find('select').eq(i).val($(input).val());
+    });
     $('.row.saved').each(function() {
-        var rowDate = moment($(row).attr('data-date'));
-        var thisRow = $(this).next();
+        var thisRow = $(this);
         var thisRowDate = moment($(thisRow).attr('data-date'));
-        // console.log(rowDate.format('YYYY-MM-DD'), thisRowDate.format('YYYY-MM-DD'))
-        // console.log(rowDate.isBefore(thisRowDate));
-        // console.log($(thisRow).index() + 1, $('.row.saved').length);
-        // if($(thisRow).index() + 1 == $('.row.saved').length) {
-        //     $(row).appendTo('table#log tbody');
-        //     return false;
-        // }
-        console.log(rowDate.isBefore(thisRowDate));
-        if(rowDate.isAfter(thisRowDate)) {
-            $(row).insertBefore(thisRow);
+        var nextRow = $(this).next();
+        var nextRowDate = moment($(nextRow).attr('data-date'));
+        var prevRow = $(this).prev();
+        if(rowDate.isBefore(thisRowDate)) {
+            if(rowDate.isAfter(nextRowDate) || !$(nextRow).length) {
+                $(newRow).insertAfter(thisRow);
+                return false;
+            }
+        } else if($(prevRow).is(':not(.saved):first-child')) {
+            $(newRow).insertAfter(prevRow);
+            return false;
+        } else if(!$(nextRow).length) {
+            $(newRow).insertAfter(thisRow);
             return false;
         }
     });
-    // fillLog();
 }
 
 function clearLog(event) {
@@ -240,12 +256,19 @@ function saveLog(event) {
         $(row).attr('data-date', date);
         logData['date'] = date;
 
+        var isEmpty;
         $(row).children('.cell.data').each(function(i, cell) {
             var input = $(cell).children('input');
             var type = input.data('type');
             var value = input.val();
+            if(!value.length) {
+                isEmpty = true;
+            }
             logData[type] = value;
         });
+        if(isEmpty) {
+            return;
+        }
 
         logData['createdAt'] = $(row).data('created');
 
@@ -256,8 +279,8 @@ function saveLog(event) {
             dataType: 'JSON'
         }).done(function( response ) {
             if (response.msg === '') {
-                clearLog();
-                updateLog(row);
+                $(row).addClass('updated');
+                fillLog(row);
             }
             else {
                 

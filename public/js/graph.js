@@ -4,6 +4,7 @@ var dark = '#73db71';
 var graphHeight = 400;
 var ease = 400;
 var logs, pile;
+var transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
 function handleLogs(type) {
 	function getData(type) {
 		$.ajax({
@@ -210,7 +211,7 @@ function handleLogs(type) {
 		marker.fillColor = light;
 		var popup = $('.popup[data-id='+id+']');
 		$(popup).removeClass('show');
-		$(popup).one('webkitTransitionEnd transitionend', function(e) {
+		$(popup).one(transitionEnd, function(e) {
 			if(!$(popup).hasClass('show')) {
 				$(popup).css({top:'1000px'});
 			}
@@ -426,12 +427,15 @@ function handleLogs(type) {
 		papers[type].view.draw();
 	});	
 
-	$('.buttons').on('click', '.button.type:not(.selected)', function() {
+	$('body').on('click', '.button.type:not(.selected)', function() {
 		var type = $(this).attr('data-type');
 		$('.button.selected').removeClass('selected');
 		$(this).addClass('selected');
-		$('canvas.show').removeClass('show');
-		$('canvas#'+type).addClass('show');
+		$('canvas.show').one(transitionEnd, function(){
+			$('canvas#'+type).addClass('show');
+			$('canvas.show').off(transitionEnd);
+		});
+		$('canvas.show').removeClass('show')
 		$('.popup').removeClass('show');
 	});
 
@@ -477,4 +481,3 @@ function hideGraphUtils(type) {
 	// };
 	// papers[type].view.on('frame', loadUtils);
 }
-
