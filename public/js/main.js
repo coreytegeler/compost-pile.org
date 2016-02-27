@@ -283,7 +283,7 @@ function setSliderWidth() {
 	}, 600);
 }
 
-dirtSvgs = [0,1,2,3,4,5];
+dirtSvgs = [];
 function createDirt() {
 	dirtCanvas = document.createElement('canvas');
 	var footerWidth = w();
@@ -295,37 +295,38 @@ function createDirt() {
 	dirtPaper.setup(dirtCanvas);
 	papers['dirt'] = dirtPaper;
 	canvases['dirt'] = dirtCanvas;
-	$(dirtSvgs).each(function(i) {
-		var imgUrl = '../images/dirt/'+i+'.svg';
+	for(var i = 0; i < 6; i++) {
+		var imgUrl = '../images/compost/'+i+'.svg';
 		$.ajax({
 			type: "GET",
 			async: false,
 			url: imgUrl,
 			success: function(svg){
-		       	var index = i;
 				var importedSvg = papers['dirt'].project.importSVG(svg);
 				var symbol = new papers['dirt'].Symbol(importedSvg);
 				symbol.data = {'name':i};
-				dirtSvgs[index] = symbol;
+				dirtSvgs[i] = symbol;
 				scatterDirt();
 			}
 	    });
-	});
+	}
 }
 
 function scatterDirt() {
-	for(var y = 0; y < 310; y += 50) {
-		for(var x = 0; x < winW(); x += 50) {
+	for(var y = 0; y < 310; y += 80) {
+		for(var x = 0; x < winW(); x += 80) {
 			var index = Math.floor((Math.random() * 5) + 0);
 			var dirtSvg = dirtSvgs[index];
 			var shiftX = random(-90,90);
 			var shiftY = random(-90,90);
+			// console.log(dirtSvg);
 			if(dirtSvg != undefined) {
 				var newDirt = dirtSvg.place({
 					x: x + shiftX,
 					y: y + shiftY
 				});
 				newDirt.rotate(random(0,360));
+				newDirt.scale(0.25);
 				newDirt.sendToBack();
 			}
 		}

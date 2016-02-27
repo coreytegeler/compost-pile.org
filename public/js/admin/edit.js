@@ -147,31 +147,33 @@ function fillLog() {
                     if(!$('.row.saved').length) {
                         $(newRow).insertAfter($('.row:first-child'));
                     }
-                    $('.row.saved').each(function() {
+                    $('.row.saved').each(function(i, row) {
                         var thisRow = $(this);
                         var thisRowDate = moment($(thisRow).attr('data-date'));
                         var nextRow = $(this).next();
                         var nextRowDate = moment($(nextRow).attr('data-date'));
                         var prevRow = $(this).prev();
                         if(newRowDate.isSame(thisRowDate)) {
-                            console.log('!');
                             $(newRow).insertAfter(thisRow);
                             return false;
                         }
+
+                        if(newRowDate.isAfter(thisRowDate)) {
+                            $(newRow).insertBefore(thisRow);
+                            return false;
+                        }
+                        
                         if(newRowDate.isBefore(thisRowDate)) {
                             if(newRowDate.isAfter(nextRowDate) || !$(nextRow).length) {
-                                console.log('!');
                                 $(newRow).insertAfter(thisRow);
                                 return false;
                             }
                         }
                         if(!$(nextRow).length) {
                             if($(prevRow).is(':not(.saved)')) {
-                                console.log('!');
                                 $(newRow).insertBefore(thisRow);
                                 return false;
                             } else {
-                                console.log('!');
                                 $(newRow).insertAfter(thisRow);
                                 return false;
                             }
@@ -191,7 +193,6 @@ function updateLog(row) {
     var newRow = (row).clone().addClass('saved');
     var rowDate = moment($(newRow).attr('data-date'));
     $(row).find('select').each(function(i, input) {
-        console.log($(input).val());
         $(newRow).find('select').eq(i).val($(input).val());
     });
     $('.row.saved').each(function() {

@@ -13,8 +13,8 @@ function handleLogs(type) {
 			success: function(response) {
 				logs = response;
 				createLogList(logs);
-				stretchCanvas('compost');
 				stretchCanvas('scraps');
+				stretchCanvas('compost');
 	        }
 	    });
 	}
@@ -30,9 +30,6 @@ function handleLogs(type) {
 		});
 		$(canvases[type]).attr('resize', false).attr('id',type); 
 		$(canvases[type]).appendTo($('#purchase-college .easel'));
-		if(type == 'compost') {
-			$(canvases[type]).addClass('show');
-		}
 		papers[type].setup(canvases[type]);
 		graphPoints(logs, type);
 	}
@@ -179,8 +176,137 @@ function handleLogs(type) {
 				loadFillSymbols(line, type);	
 			}
 		}
-		
 	}
+
+	var svgs = {
+		scraps: {},
+		compost: {}
+	};
+	console.log(svgs);
+	var svgNames = {
+		scraps: ['apple','banana','beet','egg1','egg2','peanut','tomato','carrot','dirt0','dirt1','dirt2','dirt3','dirt5','dirt5'],
+		compost: [1,2,3,4,5,6]
+	};
+
+	function loadFillSymbols(line, type) {
+		$.each(svgNames[type], function(i,svgName) {
+			var imgUrl = '../images/'+type+'/'+svgName+'.svg';
+			$.get(imgUrl, null, function(svg) {
+			}, 'xml').done(function(svg) {
+				importedSvg = papers[type].project.importSVG(svg);
+				var symbol = new papers[type].Symbol(importedSvg);
+				symbol.data = {'name':svgName};
+				svgs[type][svgName] = symbol;
+				if(i == svgNames[type].length-1) {
+					fillGraphWithSymbols(line, type);
+				}
+			});
+		});
+	}
+
+	function fillGraphWithSymbols(line, type) {
+		var mask = new papers[type].Path.Rectangle({
+			name: 'mask',
+			x: 0,
+			y: 0,
+			width: w(),
+			height: h(),
+			clipMask: false
+		});
+
+		var endPile;
+		var lineLength = line.segments.length;
+		var lastSeg = line.segments[lineLength-1];
+		var lastPointX = lastSeg.point.x;
+
+		var fill = line.clone().set({
+			name: 'fill',
+			fillColor: '#754e34',
+			strokeCap: '',
+			strokeJoin: '',
+			strokeColor: '',
+			strokeWidth: '',
+			closed: true,
+			opacity: 1
+		});
+		fill.add(lastPointX+200, height);
+		var fillMask = fill.clone().set({
+			name: 'fillMask',
+			clipMask: true
+		});
+		var limits = [];
+		for(var i=0; i<fillMask.length; i+=50) {
+			var point = fillMask.getLocationAt(i).point;
+			var coords = {
+				x:point.x,
+				y:point.y
+			};
+			limits.push(coords);
+		}
+		for(var i = 0; i < limits.length; i++) {
+			var limit = limits[i];
+			var size = 25;
+			for(var ii = 0; ii < height-limit.y; ii += 20) {
+				var shift = random(20,-20);
+				var randInt = random(0, svgNames[type].length - 1);
+				var svgName = svgNames[type][randInt];
+				var fillSymbol = svgs[type][svgName];
+				if(fillSymbol != undefined) {
+					var newSymbol = fillSymbol.place({
+						x: limit.x + shift,
+						y: height-ii + shift
+					});
+					newSymbol.scale(0.25);
+					newSymbol.rotate(random(0,360));
+					newSymbol.sendToBack();
+					newSymbol.onMouseDown = function(event) {
+						if($('body').hasClass('single')) {
+							var svgName = event.target.symbol.data.name;
+						}
+					}
+					newSymbol.onMouseEnter = function(event) {
+						
+					}
+					newSymbol.onMouseLeave = function(event) {
+						
+					}
+					groups[type].fillSymbols.addChild(newSymbol);
+				}
+			}
+		}
+		groups[type].fillContent.addChildren([fill, fillMask, groups[type].fillSymbols]);
+		groups[type].clippedGraphContent.addChildren([groups[type].fillContent, line, groups[type].markers, groups[type].markerHovers]);
+		groups[type].graphContent.addChildren([mask, groups[type].clippedGraphContent, groups[type].ticks]);
+		groups[type].graph.addChild(groups[type].graphContent);
+
+		pile = groups[type].graphContent;
+		var pileWidth = pile.bounds.width;
+		var pileX = pile.position.x;
+		var canvasWidth = $('.graph canvas').innerWidth();
+		var thisGroup = groups[type];
+		var markers = thisGroup.markers;
+		var lastMarkerIndex = markers.children.length - 1;
+		var lastMarker = markers.children[lastMarkerIndex];
+		var lastMarkerX = lastMarker.position.x;
+		var newPileX = pileX - lastMarkerX + canvasWidth - ease/4;
+		pile.position.x = newPileX; 
+		papers[type].view.draw();
+		showGraph(type);
+	}
+
+	function showGraph(type) {
+		$('.graph').addClass('show');
+		var wrapper = $('.location#'+type);
+		if($(wrapper).hasClass('opened')) {
+			var id = wrapper[0].id;
+			showGraphUtils(id);
+		}
+		if(type == 'scraps') {
+			$(canvases[type]).addClass('show');
+		}
+	}
+
+	getData(type);
 
 	function showPopUp(id, type) {
 		var markers = groups[type].markers.children;
@@ -258,133 +384,6 @@ function handleLogs(type) {
 		papers[type].view.draw();
 	}
 
-	var svgs = {};
-	var compostables = [
-		'apple',
-		'banana',
-		'beet',
-		'eggshell',
-		'peanut',
-		'tomato',
-		'dirt'
-	];
-
-	function loadFillSymbols(line, type) {
-		$.each(compostables, function(i,compostable) {
-			var imgUrl = '../images/compost/'+compostable+'.svg';
-			$.get(imgUrl, null, function(svg) {
-				importedSvg = papers[type].project.importSVG(svg);
-				var symbol = new papers[type].Symbol(importedSvg);
-				symbol.data = {'name':compostable};
-				svgs[compostable] = symbol;
-			}, 'xml').done(function() {
-				if(i == compostables.length-1) {
-					fillGraphWithSymbols(line, type);
-				}
-			});
-		});
-	}
-
-	function fillGraphWithSymbols(line, type) {
-		var mask = new papers[type].Path.Rectangle({
-			name: 'mask',
-			x: 0,
-			y: 0,
-			width: w(),
-			height: h(),
-			clipMask: false
-		});
-
-		var endPile;
-		var lineLength = line.segments.length;
-		var lastSeg = line.segments[lineLength-1];
-		var lastPointX = lastSeg.point.x;
-
-		var fill = line.clone().set({
-			name: 'fill',
-			fillColor: '#754e34',
-			strokeCap: '',
-			strokeJoin: '',
-			strokeColor: '',
-			strokeWidth: '',
-			closed: true,
-			opacity: 1
-		});
-		fill.add(lastPointX+200, height);
-		var fillMask = fill.clone().set({
-			name: 'fillMask',
-			clipMask: true
-		});
-		var limits = [];
-		for(var i=0; i<fillMask.length; i+=50) {
-			var point = fillMask.getLocationAt(i).point;
-			var coords = {
-				x:point.x,
-				y:point.y
-			};
-			limits.push(coords);
-		}
-		for(var i = 0; i < limits.length; i++) {
-			var limit = limits[i];
-			var size = 25;
-			for(var ii = 0; ii < height-limit.y; ii += 20) {
-				var shift = random(10,-10);
-				var randInt = random(0, compostables.length - 1);
-				var compostable = compostables[randInt];
-				var fillSymbol = svgs[compostable];
-				if(fillSymbol != undefined) {
-					var newSymbol = fillSymbol.place({
-						x: limit.x + shift,
-						y: height-ii + shift
-					});
-					newSymbol.scale(0.25);
-					newSymbol.rotate(random(0,360));
-					newSymbol.sendToBack();
-					newSymbol.onMouseDown = function(event) {
-						if($('body').hasClass('single')) {
-							var compostable = event.target.symbol.data.name;
-						}
-					}
-					newSymbol.onMouseEnter = function(event) {
-						
-					}
-					newSymbol.onMouseLeave = function(event) {
-						
-					}
-					groups[type].fillSymbols.addChild(newSymbol);
-				}
-			}
-		}
-		groups[type].fillContent.addChildren([fill, fillMask, groups[type].fillSymbols]);
-		groups[type].clippedGraphContent.addChildren([groups[type].fillContent, line, groups[type].markers, groups[type].markerHovers]);
-		groups[type].graphContent.addChildren([mask, groups[type].clippedGraphContent, groups[type].ticks]);
-		groups[type].graph.addChild(groups[type].graphContent);
-
-		pile = groups[type].graphContent;
-		var pileWidth = pile.bounds.width;
-		var pileX = pile.position.x;
-		var canvasWidth = $('.graph canvas').innerWidth();
-		var thisGroup = groups[type];
-		var markers = thisGroup.markers;
-		var lastMarkerIndex = markers.children.length - 1;
-		var lastMarker = markers.children[lastMarkerIndex];
-		var lastMarkerX = lastMarker.position.x;
-		var newPileX = pileX - lastMarkerX + canvasWidth - ease/4;
-		pile.position.x = newPileX; 
-		papers[type].view.draw();
-		showGraph(type);
-	}
-
-	function showGraph(type) {
-		$('.graph').addClass('show');
-		var wrapper = $('.location#'+type);
-		if($(wrapper).hasClass('opened')) {
-			var id = wrapper[0].id;
-			showGraphUtils(id);
-		}
-	}
-
-	getData(type);
 
 	$('body').on('mousemove', '.graph canvas', function(event) {
 		var type = $('canvas.show').attr('id');
