@@ -78,6 +78,7 @@ router.get('/:slug', function(req, res, next) {
   var db = req.db;
   var collection = db.get('locations');
   var slug = req.params.slug;
+  // importCsv(db, collection, slug);
   return collection.findOne({ 'slug' : slug }, function (err, location) {
     if (err) {
       return res.render('admin');
@@ -99,13 +100,22 @@ router.get('/:slug', function(req, res, next) {
 function importCsv(db, collection, slug) {
   converter.on("end_parsed", function (json) {
       var slug = 'purchase-college';
+      var data = json;
+      for(var i = 0; i< data.length; i++) {
+        var date = data[i].date.split(/\//g);
+        var m = date[0];
+        var d = date[1];
+        var y = date[2];
+        var validDate = y+' '+m+' '+d;
+        var ISODate = moment(validDate, "YYYY MM DD").toISOString();
+        data[i].date = ISODate;
+        data[i].createdAt = moment().toJSON();
+        data[i].updatedAt = moment().toJSON();
+      }
       var collectionName = slug.replace(/-/g, '_') + '_logs';
       var collectionLogs = db.get(collectionName);
-      var data = json;
-      data.createdAt = moment().toJSON();
-      data.updatedAt = moment().toJSON();
       collectionLogs.insert(data, function(err, result){
-        console.log(result);
+        
       });
   });
    
@@ -130,7 +140,6 @@ router.post('/update/location/:id', function(req, res) {
     var id = req.params.id;
     var data = req.body;
     data.slug = slug(req.body.name);
-    console.log(data);
     collection.update({'_id':id}, data, function(err, result){
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
@@ -179,7 +188,6 @@ router.post('/update/log/:slug/:id', function(req, res) {
     var db = req.db;
     var collection = db.get(collectionName);
     var data = req.body;
-    console.log('!!');
     data.updatedAt = moment().toJSON();
     collection.update({'_id':id}, data, function(err, result){
       res.send(

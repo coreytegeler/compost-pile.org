@@ -115,7 +115,7 @@ function handleLogs(type) {
 			var id = log._id;
 			var since = (thisDayUnix-firstDayUnix)/250000;
 			var x = ease+(since*zoom);
-			var y = height-parseInt(log[type])*5;
+			var y = height-parseInt(log[type])*5-15;
 			var data = {
 				date: humanDate,
 				id: id,
@@ -182,7 +182,6 @@ function handleLogs(type) {
 		scraps: {},
 		compost: {}
 	};
-	console.log(svgs);
 	var svgNames = {
 		scraps: ['apple','banana','beet','egg1','egg2','peanut','tomato','carrot','dirt0','dirt1','dirt2','dirt3','dirt5','dirt5'],
 		compost: [1,2,3,4,5,6]
