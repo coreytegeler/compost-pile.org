@@ -138,7 +138,7 @@ function handleLogs(type) {
 				opacity: 1
 			});
 			var markerHover = marker.clone().set({
-				radius: 25,
+				radius: 15,
 				strokeWidth: 0,
 				opacity: 0
 			});
@@ -153,6 +153,7 @@ function handleLogs(type) {
 			$(popup).children('.date').children('.data').html(humanDate)
 			$(popup).children('.value').children('.title').html(type)
 			$(popup).children('.value').children('.data').html(log[type]+' lbs.');
+			$(popup).attr('data-type', type).addClass(type);
 			$(popup).insertAfter($(popupModel));
 			markerHover.onMouseEnter = function(event) {
 				var id = event.target.data.id;
@@ -311,19 +312,20 @@ function handleLogs(type) {
 		var markers = groups[type].markers.children;
 		var marker = markers[id];
 		if(marker == undefined) {return}
-		for(var i = 0; i < markers.length; i++) {
-			markers[i].fillColor = light;
-		}
-		marker.fillColor = dark;
+		// for(var i = 0; i < markers.length; i++) {
+		// 	markers[i].fillColor = light;
+		// }
+		// marker.fillColor = dark;
+		var pile = groups[type].graphContent;
 		var pileX = pile.bounds.x;
-		var popup = $('.popup[data-id='+id+']');
+		var popup = $('.popup[data-id='+id+'].'+type);
 		var x = marker.x - $(popup)[0].offsetWidth/2 + pileX;
 		var y = marker.y - $(popup)[0].offsetHeight - 30;
 		$('.popup.show').removeClass('show');
 		$(popup).css({
 			display: 'block',
 			left: x,
-			top: y,
+			top: y
 		}).addClass('show');
 		$('.logList li[data-id="'+id+'"]').addClass('hover');
 		papers[type].view.draw();
