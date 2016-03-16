@@ -22,6 +22,7 @@ router.get('/', function(req, res, next) {
           var who = locationsDoc[i].who;
           var how = locationsDoc[i].how;
           var compostable = locationsDoc[i].compostable;
+          var dropoff = locationsDoc[i].dropoff;
           var location = {};
           location.slug = slug;
           location.name = name;
@@ -30,6 +31,7 @@ router.get('/', function(req, res, next) {
           location.who = who;
           location.how = how;
           location.compostable = compostable;
+          location.dropoff = dropoff;
           locations.push(location);
         }
       }

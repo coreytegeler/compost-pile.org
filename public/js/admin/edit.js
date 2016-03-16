@@ -38,7 +38,8 @@ function updateLocation(event) {
             'who': $('form#info textarea#who').val(),
             'how': $('form#info textarea#how').val(),
             'what': $('form#info textarea#what').val(),
-            'compostable': $('form#info textarea#compostable').val()
+            'compostable': $('form#info textarea#compostable').val(),
+            'dropoff': $('form#info textarea#dropoff').val()
         };
         $.ajax({
             type: 'POST',

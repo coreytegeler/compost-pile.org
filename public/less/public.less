@@ -1,7 +1,3 @@
-/*GARDENER GLOVE CURSOR*/
-/*GARDENER GLOVE CURSOR*/
-/*GARDENER GLOVE CURSOR*/
-/*GARDENER GLOVE CURSOR*/
 @import 'style.less';
 ::-webkit-scrollbar { 
     display: none; 
@@ -232,6 +228,7 @@ section {
 					transform: rotate(-45deg);
 				}
 				.row {
+					color: @darker;
 					padding: 5px;
 					&:not(:last-child) {
 						border-bottom: 2px solid @dark;
@@ -240,7 +237,7 @@ section {
 						border-bottom: 1px solid @dark;
 						padding-bottom: 5px;
 						margin-bottom: 5px;
-						text-transform: uppercase;
+						text-transform: capitalize;
 						font-family: 'Work Sans', sans-serif;
 					}
 				}
@@ -322,6 +319,7 @@ section {
 						font-size: 20px;
 						line-height: 30px;
 						font-weight: 500;
+						color: @darker;
 					}
 					.contact {
 						width: 100%;
@@ -371,6 +369,7 @@ section {
 							padding: 5px 0 5px 0;
 							border-bottom: 2px solid @dark; 
 							display: table;
+							color: @darker;
 							&:hover,
 							&.hover {
 								background-color: @medium;
@@ -398,45 +397,6 @@ section {
 						}
 					}
 				}
-			}
-		}
-	}
-	&#compostables {
-		padding-top: 150px;
-		header {
-			width: 100%;
-			h1 {
-				display: table;
-				margin: auto;
-			}
-		}
-		.illustration {
-			width: 100%;
-			height: 700px;
-			display: table;
-			background-image: url(../images/compostables.svg);
-			background-position: center;
-			background-repeat: no-repeat;
-			background-size: auto 100%;
-		}
-		.text {
-			width: 100%;
-			font-size: 20px;
-			display: table-cell;
-			vertical-align: middle;
-			font-size: 25px;
-		    line-height: 35px;
-		    font-weight: 600;
-			.inner {
-				width: 80%;
-				max-width: 700px;
-				height: 400px;
-				overflow: auto;
-				display: block;
-				padding: 20px;
-				margin: auto;
-				border: 10px solid @dark;
-				background-color: @light;
 			}
 		}
 	}
@@ -499,11 +459,62 @@ section {
 								max-height: 500px;
 								display: table;
 								margin: auto;
-								border: 10px solid #73db71;
+								border: 10px solid @dark;
 							}
 						}
 					}
 				}
+			}
+		}
+	}
+	&#compostables {
+		padding-top: 150px;
+		header {
+			width: 100%;
+			h1 {
+				display: table;
+				margin: auto;
+			}
+		}
+		.illustration {
+			width: 100%;
+			height: 700px;
+			display: table;
+			background-image: url(../images/compostables.svg);
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: auto 100%;
+		}
+		.box {
+			width: 100%;
+			display: table-cell;
+			vertical-align: middle;
+			font-size: 25px;
+		    line-height: 35px;
+		    font-weight: 600;
+		    color: @darker;
+			.inner {
+				width: 80%;
+				max-width: 700px;
+				height: 400px;
+				overflow: auto;
+				display: block;
+				padding: 20px;
+				margin: auto;
+				border: 10px solid @dark;
+				background-color: @light;
+			}
+		}
+	}
+	&#times {
+		padding: 0px 0 50px 0;
+		header {
+			width: calc(~'80% + 60px');
+    		max-width: 760px;
+			display: table;
+			margin: auto;
+			h1 {
+
 			}
 		}
 	}
