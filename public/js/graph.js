@@ -24,7 +24,6 @@ function handleLogs(type) {
 		canvases[type] = document.createElement('canvas');
 		width = w();
 		height = graphHeight;
-		console.log(height);
 		canvases[type].height = height;
 		$(canvases[type]).css({
 			height: height
