@@ -48,7 +48,7 @@ function updateLocation(event) {
             dataType: 'JSON'
         }).done(function( response ) {
             if (response.msg === '') {
-                
+                window.location.reload();
             }
             else {
                 alert(response.msg);

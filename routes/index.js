@@ -18,11 +18,11 @@ router.get('/', function(req, res, next) {
           var slug = locationsDoc[i].slug;
           var name = locationsDoc[i].name;
           var email = locationsDoc[i].email;
-          var what = locationsDoc[i].what;
-          var who = locationsDoc[i].who;
-          var how = locationsDoc[i].how;
-          var compostable = locationsDoc[i].compostable;
-          var dropoff = locationsDoc[i].dropoff;
+          var what = locationsDoc[i].what.replace(/(?:\r\n|\r|\n)/g, '<br />');
+          var who = locationsDoc[i].who.replace(/(?:\r\n|\r|\n)/g, '<br />');
+          var how = locationsDoc[i].how.replace(/(?:\r\n|\r|\n)/g, '<br />');
+          var compostable = locationsDoc[i].compostable.replace(/(?:\r\n|\r|\n)/g, '<br />');
+          var dropoff = locationsDoc[i].dropoff.replace(/(?:\r\n|\r|\n)/g, '<br />');
           var location = {};
           location.slug = slug;
           location.name = name;
