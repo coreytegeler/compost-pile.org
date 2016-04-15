@@ -1,7 +1,7 @@
 var graphOffset = 100;
 var light = '#f3fff3';
 var dark = '#73db71';
-var graphHeight = 400;
+var graphHeight = 600;
 var ease = 400;
 var logs, pile;
 var transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
@@ -24,6 +24,7 @@ function handleLogs(type) {
 		canvases[type] = document.createElement('canvas');
 		width = w();
 		height = graphHeight;
+		console.log(height);
 		canvases[type].height = height;
 		$(canvases[type]).css({
 			height: height
@@ -115,7 +116,15 @@ function handleLogs(type) {
 			var id = log._id;
 			var since = (thisDayUnix-firstDayUnix)/250000;
 			var x = ease+(since*zoom);
-			var y = height-parseInt(log[type])*5-15;
+
+			if(type == 'compost') {
+				var yFactor = 2;	
+			} else {
+				var yFactor = 13;
+			}
+			
+
+			var y = height-parseInt(log[type])*yFactor-15;
 			var data = {
 				date: humanDate,
 				id: id,
@@ -387,25 +396,25 @@ function handleLogs(type) {
 
 
 	$('body').on('mousemove', '.graph canvas', function(event) {
-		var type = $('canvas.show').attr('id');
-		var graph = event.currentTarget;
-		var pile = groups[type]['graphContent'];
-		var x = event.offsetX;
-		var width = graph.clientWidth;
-		var arrow;
-		if(x >= width - 200) {
-			arrow = $('.graph .arrow.right')[0];
-		} else if (x <= 200) {
-			arrow = $('.graph .arrow.left')[0];
-		} else {
-			arrow = null;
-		}
+		// var type = $('canvas.show').attr('id');
+		// var graph = event.currentTarget;
+		// var pile = groups[type]['graphContent'];
+		// var x = event.offsetX;
+		// var width = graph.clientWidth;
+		// var arrow;
+		// if(x >= width - 200) {
+		// 	arrow = $('.graph .arrow.right')[0];
+		// } else if (x <= 200) {
+		// 	arrow = $('.graph .arrow.left')[0];
+		// } else {
+		// 	arrow = null;
+		// }
 
-		if(arrow && $('.popup.show').length < 1) {
-			$(arrow).addClass('show');
-		} else {
-			$('.graph .arrow').removeClass('show');
-		}
+		// if(arrow && $('.popup.show').length < 1) {
+		// 	$(arrow).addClass('show');
+		// } else {
+		// 	$('.graph .arrow').removeClass('show');
+		// }
 	});	
 
 	$('body').on('click', '.graph .arrow', function(event) {
@@ -423,6 +432,7 @@ function handleLogs(type) {
 		} else {
 			return;
 		}
+
 		pile.position.x = newPosition;
 		papers[type].view.draw();
 	});	
