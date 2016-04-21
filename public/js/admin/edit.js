@@ -12,11 +12,12 @@ $(document).ready(function() {
 //fills form values with data when completed
 function fillLocationForm() {
     $.getJSON('/admin/data/' + localData.slug, function(data) {
+        $('input#name').val(data['name']);
         $('form#info input.text').each(function(i,input) {
             var fieldName = input.id;
             $('form#info input#'+fieldName).val(data[fieldName]);
         });
-        $('form#info textarea').each(function(i,textarea) {
+        $('form#info textarea').each(function(i, textarea) {
             var fieldName = textarea.id;
             $('form#info textarea#'+fieldName).val(data[fieldName]);
         });
@@ -29,12 +30,10 @@ function updateLocation(event) {
     event.preventDefault();
     var errorCount = 0;
 
-	if($('input#name').val() === '') { errorCount++; }
+	// if($('input#name').val() === '') { errorCount++; }
     if(errorCount === 0) {
         var infoData = {
-            'name': $('form#info input#name').val(),
-            'email': $('form#info input#email').val(),
-            'password': $('form#info input#password').val(),
+            'name': $('input#name').val(),
             'who': $('form#info textarea#who').val(),
             'how': $('form#info textarea#how').val(),
             'what': $('form#info textarea#what').val(),
@@ -53,6 +52,9 @@ function updateLocation(event) {
             else {
                 alert(response.msg);
             }
+        }).error(function( response ) {
+            console.log(response.responseText);
+            alert(response.statusText);
         });
     }
     else {
@@ -241,6 +243,13 @@ function saveLog(event) {
         postUrl = '/admin/create/log/'+localData.slug;
     }
 
+    $('table#log .row:eq(0) input.text').each(function() {
+        var value = $(this).val();
+        if(!value) {
+            errorCount++;
+        }
+    });
+
     if(errorCount === 0) {
         var logData = {};
         var date = {};
@@ -269,6 +278,7 @@ function saveLog(event) {
             logData[type] = value;
         });
         if(isEmpty) {
+            alert('No!');
             return;
         }
 
@@ -283,9 +293,8 @@ function saveLog(event) {
             if (response.msg === '') {
                 $(row).addClass('updated');
                 fillLog(row);
-            }
-            else {
-                
+            } else {
+                alert(response.msg);
             }
         });
     }

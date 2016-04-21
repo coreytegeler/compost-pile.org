@@ -22,13 +22,22 @@ main {
 .list .cell a.delete {
 	// border: none;
 }
-#location header h1 {
-	float: left;	
-	display: table;
+#location header {
+	width: 100%;
+	input#name {
+		width: calc(~'100% - 140px');
+		height: auto;
+		font-size: 50px;
+		line-height: 60px;
+		font-weight: 800;
+		border: none;
+		border-bottom: 5px solid @dark;
+		float: left;
+	}
 }
 #location .buttons {
-	display: table-cell;
-  	vertical-align: middle;
+	display: table;
+	float: left;
 }
 #location .buttons input.submit {
 	margin-left: 10px;

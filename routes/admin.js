@@ -139,8 +139,10 @@ router.post('/update/location/:id', function(req, res) {
     var collection = db.get('locations');
     var id = req.params.id;
     var data = req.body;
-    data.slug = slug(req.body.name);
+    // data.slug = slug(req.body.name);
+    data.slug = 'purchase-college';
     collection.update({'_id':id}, data, function(err, result){
+        console.error(err);
         res.send(
             (err === null) ? { msg: '' } : { msg: err }
         );

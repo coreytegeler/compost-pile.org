@@ -4,7 +4,7 @@ block content
 	main.admin
 		#location.show
 			header
-				h1#title= title
+				input.text#name(type='text')
 				.buttons
 					a.submit.square.save
 					//- a.submit.square.view
@@ -12,11 +12,6 @@ block content
 
 			#location.edit
 				form#info
-					input.text#name(type='text', placeholder='Name')
-					input.text#password(type='password', placeholder='Password')
-					input.text#email(type='text', placeholder='Email Address')
-					input.text#confirmpassword(type='password', placeholder='Password')
-
 					h2 Drop off times
 					textarea#dropoff(type='textarea', rows='4')
 					h2 About Purchase Compost Initiative
@@ -45,9 +40,9 @@ block content
 							td.cell.date.year(label='year')
 								select.date.year(type='text', data-type='year')
 							td.cell.data.scraps(label='scraps')
-								input.text(type='text', placeholder='0', data-type='scraps')
+								input.text(type='text', placeholder='', data-type='scraps')
 							td.cell.data.compost(label='compost')
-								input.text(type='text', placeholder='0', data-type='compost')
+								input.text(type='text', placeholder='', data-type='compost')
 							td.cell.buttons(label='buttons')
 								input.save.submit(type='submit', value='')
 								input.delete.submit(type='submit', value='')
