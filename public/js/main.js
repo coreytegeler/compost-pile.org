@@ -53,9 +53,12 @@ function createLogo() {
 				}
 			}
 		};
-
 		$('header#logo').addClass('show');
 		$('section').addClass('show');
+		setTimeout(function() {
+			handleLogs();
+		}, 900);
+
 		$('header.where').addClass('show');
 		$('canvas#logo').on('mouseenter', function(event) {
 			hovering = true;
@@ -115,7 +118,6 @@ function fillSections() {
 				openSection(location, this.href, true);
 			}
 		});
-		handleLogs();
 	});
 }
 

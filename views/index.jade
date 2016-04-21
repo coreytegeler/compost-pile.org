@@ -9,7 +9,8 @@ block content
 		section#locations
 			.location(id= location.slug, data-slug= location.slug)
 				.content
-					.graph
+					.graph.loading
+						.loader
 						.easel
 							.buttons.view
 								.button.type.scraps.selected(data-type='scraps') Scraps

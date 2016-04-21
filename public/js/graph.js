@@ -303,7 +303,7 @@ function handleLogs(type) {
 	}
 
 	function showGraph(type) {
-		$('.graph').addClass('show');
+		$('.graph').addClass('show').removeClass('loading');
 		var wrapper = $('.location#'+type);
 		if($(wrapper).hasClass('opened')) {
 			var id = wrapper[0].id;
@@ -387,10 +387,15 @@ function handleLogs(type) {
 		var thisMarker = markers[id];
 		var thisMarkerX = thisMarker.position.x;
 		var newPileX = pileX - thisMarkerX + canvasWidth/2;
-		pile.position.x = newPileX;
-		$('.popup.show').removeClass('show');
-		showPopUp(id, type);
-		papers[type].view.draw();
+
+		$('.graph').addClass('loading');
+		setTimeout(function() {
+			pile.position.x = newPileX;
+			papers[type].view.draw();
+			$('.popup.show').removeClass('show');
+			showPopUp(id, type);
+			$('.graph').removeClass('loading');
+		}, 200);
 	}
 
 
@@ -431,9 +436,13 @@ function handleLogs(type) {
 		} else {
 			return;
 		}
-
-		pile.position.x = newPosition;
-		papers[type].view.draw();
+		$(graph).addClass('loading');
+		setTimeout(function() {
+			pile.position.x = newPosition;
+			papers[type].view.draw();
+			$(graph).removeClass('loading');
+		}, 200);
+		
 	});	
 
 	$('body').on('click', '.button.type:not(.selected)', function() {
