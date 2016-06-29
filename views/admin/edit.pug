@@ -1,0 +1,57 @@
+extends ../layout
+block content
+	main.admin
+		-if(error)
+			| error
+		-if(session)
+			| session.error
+		form#location(method='post' action='/admin/location/'+action+(id ? '/'+id : '') class=action)
+			header
+				input#name(name='name' type='text' placeholder='Location Name' required value=(loc ? loc.name : ''))
+				.buttons
+					input(type='submit' value name='submit').submit.square.save
+					a.submit.square.home(href='/')
+					input(type='submit' value name='delete').submit.square.delete
+			.edit
+				h2 Email
+				input(name='email' type='email' required value=(loc ? loc.email : ''))
+				h2 Password
+				input(name='password' type='password' required)
+				h2 Confirm Password
+				input(name='confirmPassword' type='password' required)
+				br
+				h2 Drop off times
+				textarea(name='dropoff' type='textarea', rows='4' value=(loc ? loc.dropoff : ''))
+				h2 About Purchase Compost Initiative
+				textarea(name='what' type='textarea', rows='10' value=(loc ? loc.what : ''))
+				h2 History
+				textarea(name='who' type='textarea', rows='10' value=(loc ? loc.history : ''))
+				h2 About the Rocket
+				textarea(name='how' type='textarea', rows='10' value=(loc ? loc.how : ''))
+				h2 How you can compost!
+				textarea(name='compostable' type='textarea', rows='10' value=(loc ? loc.compostable : ''))
+			-if(action == 'update')
+				.log
+					thead
+						tr.titles
+							th.title.month Month
+							th.title.day Day
+							th.title.year Year
+							th.title.scraps Scraps
+							th.title.compost Compost
+							th.title.buttons 
+						tbody
+							tr.row
+								td.cell.date.month(label='month')
+									select.date.month(type='text', data-type='month')
+								td.cell.date.day(label='day')
+									select.date.day(type='text', data-type='day')
+								td.cell.date.year(label='year')
+									select.date.year(type='text', data-type='year')
+								td.cell.data.scraps(label='scraps')
+									input.text(type='text', placeholder='', data-type='scraps')
+								td.cell.data.compost(label='compost')
+									input.text(type='text', placeholder='', data-type='compost')
+								td.cell.buttons(label='buttons')
+									input.save.submit(type='submit', value='')
+									input.delete.submit(type='submit', value='')

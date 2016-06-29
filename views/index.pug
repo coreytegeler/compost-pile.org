@@ -4,7 +4,7 @@ block content
 	aside
 	header#logo
 		a#logoLink(href= '/')
-		h1.where #{location.name}
+		h1.where  #{location.name}
 	main
 		section#locations
 			.location(id= location.slug, data-slug= location.slug)
@@ -27,7 +27,7 @@ block content
 								.cell.title
 								.cell.data
 							.point
-				include info.jade
-		include compostables.jade
-		include slider.jade
-	include footer.jade
+				include info.pug
+		include compostables.pug
+		include slider.pug
+	include footer.pug
