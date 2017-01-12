@@ -1,325 +1,257 @@
+var slug, logs
 $(document).ready(function() {
-	fillLocationForm();
-	setupNewLog();
-	$('input.delete').on('click', viewLocation);
-	$('#log').on('click', 'input.save', saveLog);
-	$('#log').on('click', '.row:not(.saved) input.delete', clearLog);
-	$('#log').on('click', '.row.saved input.delete', deleteLog);
-});
+	slug = data.slug
+	logs = data.logs.sort(sortDesc)
+	setupNewLog()
 
-//requests single location data query from DB via routes/locations.js
-//fills form values with data when completed
-function fillLocationForm() {
-	$.getJSON('/admin/data/' + localData.slug, function(data) {
-		$('input[name="name"]').val(data['name']);
-		$('form#info input.text').each(function(i,input) {
-			var fieldName = input.id;
-			$('form#info input[name="'+fieldName+'"]').val(data[fieldName]);
-		});
-		$('form#info textarea').each(function(i, textarea) {
-			var fieldName = textarea.id;
-			$('form#info textarea[name="'+fieldName+'"]').val(data[fieldName]);
-		});
-	}).complete(function() {
-
+	tinymce.init({
+	  selector: '.wysiwyg',
+	  height: 400,
+	  theme: 'inlite',
+	  selection_toolbar: 'h1 bold italic quicklink',
+	  menubar: false,
+	  inline: true,
+	  insert_toolbar: 'false'
 	});
-}
 
-function updateLocation(event) {
-	event.preventDefault();
-	var errorCount = 0;
+	$('form.location').on('click', 'input.save', saveLocation)
+	$('#logs').on('click', 'input.save', saveLog)
+	$('#logs').on('click', '.row.saved input.delete', deleteLog)
+	$('#logs').on('click', '.row:not(.saved) input.delete', function(event) {
+		event.preventDefault()
+		var row = $(this).parents('.row')
+		clearLog(row)
+	})
+})
 
-	// if($('input#name').val() === '') { errorCount++; }
-	if(errorCount === 0) {
-		var infoData = {
-				'name': $('input#name').val(),
-				'who': $('form#info textarea#who').val(),
-				'how': $('form#info textarea#how').val(),
-				'what': $('form#info textarea#what').val(),
-				'compostable': $('form#info textarea#compostable').val(),
-				'dropoff': $('form#info textarea#dropoff').val()
-		};
-		$.ajax({
-			type: 'POST',
-			data: infoData,
-			url: '/admin/update/location/'+localData.id,
-			dataType: 'JSON'
-		}).done(function( response ) {
-			if (response.msg === '') {
-				window.location.reload();
-			}
-			else {
-				alert(response.msg);
-			}
-		}).error(function( response ) {
-			console.log(response.responseText);
-			alert(response.statusText);
-		});
-	} else {
-		alert('Please fill in all fields');
-		return false;
-	}
-}
-
-function viewLocation(event) {
-	event.preventDefault();
-	window.location = '/'+localData.slug;
-}
-
-function fillDates(row,month,day,year) {
-	var monthSelect = $(row).children('.cell.month').children('select');
-	var daySelect = $(row).children('.cell.day').children('select');
-	var yearSelect = $(row).children('.cell.year').children('select');
-
-	var days = 31;
-	var dayCounter = 1;
-	while (dayCounter <= days) {
-			$(daySelect).append('<option value="'+dayCounter+'">'+dayCounter+'</option>');        
-			dayCounter++;
-	}
-
-	$(monthSelect).val(month).change();
-	$(daySelect).val(day).change();
-	$(yearSelect).val(year).change();
+function saveLocation(event) {
+	tinymce.triggerSave()
+	event.preventDefault()
 }
 
 function setupNewLog() {
-	var newRow = $('table#log .row:eq(0)');
-
+	var $newRow = $('table#logs .row:eq(0)')
 	var now = {
-			'month': moment().month(),
-			'day': moment().date(),
-			'year': moment().year()
-	};
+		'month': moment().month(),
+		'day': moment().date(),
+		'year': moment().year()
+	}
 
-	var months = moment.months();
-	var monthSelect = $(newRow).children('.cell.month').children('select');
+	var months = moment.months()
+	var $monthSelect = $newRow.children('.cell.month').children('select')
 	$.each(months, function(i,month) {
-			$(monthSelect).append('<option value="'+i+'">'+month+'</option>');        
-	});
+		$monthSelect.append('<option value="'+i+'">'+month+'</option>')      
+	})
 
-	var yearSelect = $(newRow).children('.cell.year').children('select');
-	var year = 2000;
-	var years = [];
+	var $yearSelect = $newRow.children('.cell.year').children('select')
+	var year = 2000
+	var years = []
 	while (year <= now.year) {
-			$(yearSelect).append('<option value="'+year+'">'+year+'</option>');        
-			year++;
+		$yearSelect.append('<option value="'+year+'">'+year+'</option>')
+		year++
 	}
 
-	fillDates(newRow,now['month'],now['day'],now['year']);
-	fillLog();
+	fillDates($newRow, now['month'], now['day'], now['year'])
+	fillLogs()
 }
 
-function fillLog() {
-	var firstRow = $('.row')[0];
-	$.getJSON('/admin/logs/' + localData.slug, function(logs) {
-		if(logs) {
-			$.each(logs, function(i, log) {
-				var id = log._id;
-				var date = log.date;
-				if(!$('.row[data-id="' + id + '"]').length || $('.row[data-id="' + id + '"]').is('.updated')) {
-					if($('.row[data-id="' + id + '"]').is('.updated') && $('.row[data-id="' + id + '"]').is('.saved')) {
-						$('.row.updated').remove();
-					}
-					var newRow = $(firstRow).clone().addClass('saved')
-											.attr('data-id', id)
-											.attr('data-date', date);
-					var date = moment(log['date']);
-					date = {
-						'month' : date.month(), 
-						'day' : date.date(),
-						'year' : date.year()
-					};
-					$(newRow).children('.cell.date').children('select').each(function(ii, select) {
-						var type = select.dataset.type;
-						$(select).val(date[type]);
-					});
-					
-					$(newRow).children('.cell.data').children('input.text').each(function(ii, input) {
-						var type = input.dataset.type;
-						$(input).val(log[type]);
-					});
-
-					$(newRow).children('.buttons').children('input[type="submit"]').each(function(ii, button) {
-						$(button).attr('data-id',log['_id']);
-					});
-
-					var newRowDate = moment($(newRow).attr('data-date'));
-					if(!$('.row.saved').length) {
-						$(newRow).insertAfter($('.row:first-child'));
-					}
-					$('.row.saved').each(function(i, row) {
-						var thisRow = $(this);
-						var thisRowDate = moment($(thisRow).attr('data-date'));
-						var nextRow = $(this).next();
-						var nextRowDate = moment($(nextRow).attr('data-date'));
-						var prevRow = $(this).prev();
-						if(newRowDate.isSame(thisRowDate)) {
-							$(newRow).insertAfter(thisRow);
-							return false;
-						}
-
-						if(newRowDate.isAfter(thisRowDate)) {
-							$(newRow).insertBefore(thisRow);
-							return false;
-						}
-						
-						if(newRowDate.isBefore(thisRowDate)) {
-							if(newRowDate.isAfter(nextRowDate) || !$(nextRow).length) {
-								$(newRow).insertAfter(thisRow);
-								return false;
-							}
-						}
-						if(!$(nextRow).length) {
-							if($(prevRow).is(':not(.saved)')) {
-								$(newRow).insertBefore(thisRow);
-								return false;
-							} else {
-								$(newRow).insertAfter(thisRow);
-								return false;
-							}
-						}
-					});
-				}
-			});
-		}
-	});
-}
-
-function updateLog(row) {
-	fillLog();
-	return;
-	var newRow = (row).clone().addClass('saved');
-	var rowDate = moment($(newRow).attr('data-date'));
-	$(row).find('select').each(function(i, input) {
-		$(newRow).find('select').eq(i).val($(input).val());
-	});
-	$('.row.saved').each(function() {
-		var thisRow = $(this);
-		var thisRowDate = moment($(thisRow).attr('data-date'));
-		var nextRow = $(this).next();
-		var nextRowDate = moment($(nextRow).attr('data-date'));
-		var prevRow = $(this).prev();
-		if(rowDate.isBefore(thisRowDate)) {
-			if(rowDate.isAfter(nextRowDate) || !$(nextRow).length) {
-				$(newRow).insertAfter(thisRow);
-				return false;
-			}
-		} else if($(prevRow).is(':not(.saved):first-child')) {
-			$(newRow).insertAfter(prevRow);
-			return false;
-		} else if(!$(nextRow).length) {
-			$(newRow).insertAfter(thisRow);
-			return false;
-		}
-	});
-}
-
-function clearLog(event) {
-	if(event) {
-		event.preventDefault();    
+function fillDates(row, month, day, year) {
+	var monthSelect = $(row).children('.cell.month').children('select')
+	var daySelect = $(row).children('.cell.day').children('select')
+	var yearSelect = $(row).children('.cell.year').children('select')
+	var days = 31
+	var dayCounter = 1
+	while (dayCounter <= days) {
+		$(daySelect).append('<option value="'+dayCounter+'">'+dayCounter+'</option>')
+		dayCounter++
 	}
-	$('table#log .row:eq(0) input.text').each(function() {
-		$(this).val('');
-	});
+	$(monthSelect).val(month).change()
+	$(daySelect).val(day).change()
+	$(yearSelect).val(year).change()
+}
+
+function fillLogs() {
+	var $firstRow = $('#logs .row').eq(0);
+	$.each(logs, function(i, log) {
+		var id = log._id;
+		var date = log.date;
+		var $newRow = $firstRow.clone()
+			.addClass('saved')
+			.attr('data-id', id)
+			.attr('data-date', date)
+		var date = moment(log['date'])
+		date = {
+			'month' : date.month(), 
+			'day' : date.date(),
+			'year' : date.year()
+		}
+
+		$newRow.find('.date select').each(function(j, select) {
+			var name = select.name
+			$(select).val(date[name])
+		})
+		
+		$newRow.find('.data input.text').each(function(j, input) {
+			var name = input.name
+			$(input).val(log[name])
+		})
+
+		$newRow.find('.buttons input.button').each(function(j, button) {
+			$(button).attr('data-id',log['_id'])
+		})
+		$('#logs').append($newRow)
+	})
 }
 
 function saveLog(event) {
-	event.preventDefault();
-	var self = event.target;
-	var errorCount = 0;
-	var row = $(self).parent('.buttons').parent('.row');
-	var id = self.dataset.id;
-	var saved = $(row).is('.saved');
-	var postUrl;
-
+	event.preventDefault()
+	var self = event.target
+	var row = $(self).parents('.row')
+	var id = self.dataset.id
+	var saved = $(row).is('.saved')
+	var postUrl
+	return
 	if(saved) {
-		postUrl = '/admin/update/log/'+localData.slug+'/'+id;
+		postUrl = '/admin/update/log/'+slug+'/'+id
 	} else {
-		postUrl = '/admin/create/log/'+localData.slug;
+		postUrl = '/admin/create/log/'+slug
 	}
 
-	$('table#log .row:eq(0) input.text').each(function() {
-		var value = $(this).val();
-		if(!value) {
-			errorCount++;
+	var logData = {}
+	var date = {}
+	$(row).find('.field').each(function(i, field) {
+		var type = field.name 
+		var value = field.value
+		if($(field).is('.text')) {
+			logData[type] = value
+		} else {
+			date[type] = value
 		}
 	});
-
-	if(errorCount === 0) {
-		var logData = {};
-		var date = {};
-		$(row).children('.cell.date').each(function(i, cell) {
-			var select = $(cell).children('select');
-			var type = select.data('type');            
-			var value = select.val();
-			date[type] = value;
-		});
-		var year = date['year'];
-		var month = date['month'];
-		var day = date['day'];
-		date = moment([year, month, day]);
-		date = date.toJSON();
-		$(row).attr('data-date', date);
-		logData['date'] = date;
-
-		var isEmpty;
-		$(row).children('.cell.data').each(function(i, cell) {
-			var input = $(cell).children('input');
-			var type = input.data('type');
-			var value = input.val();
-			if(!value.length) {
-				isEmpty = true;
-			}
-			logData[type] = value;
-		});
-
-		if(isEmpty) {
-			alert('No!');
-			return;
+	date = moment([date.year, date.month, date.day])
+	date = date.toJSON()
+	console.log(date)
+	$(row).attr('data-date', date)
+	logData['date'] = date
+	$.ajax({
+		type: 'POST',
+		data: logData,
+		url: postUrl,
+		dataType: 'JSON'
+	}).done(function( response ) {
+		if(response.error)
+			return alert('Error: ' + response.error)
+		console.log(response.success)
+		if(!saved) {
+			clearLog(row)
 		}
+		var rowDates = [], rowElems = []
+		$('#logs .row.saved').each(function() {
+			var id = this.dataset.id
+			var date = this.dataset.date
+			rowDates.push({
+				id: date,
+				date: date,
+				elem: this			
+			})
+		})
+		$('#logs .row.saved').remove()
+		rowDates = rowDates.sort(sortDesc)
+		$(rowDates).each(function() {
+			$('#logs').append(this.elem)
+		})
+	})
+}
 
-		logData['createdAt'] = $(row).data('created');
+function insertLog(newRow) {
+	var $newRow = $(newRow)
+	var newRowDate = moment($newRow.attr('data-date'))
+	if(!$('#logs .row.saved').length) {
+		$newRow.insertAfter($('.row:first-child'))
+	}
+	// $('#logs .row.saved').each(function(i, row) {
+	// 	var $thisRow = $(row)
+	// 	var thisRowDate = moment($thisRow.attr('data-date'))
+	// 	var $nextRow = $(row).next()
+	// 	var nextRowDate = moment($nextRow.attr('data-date'))
+	// 	var $prevRow = $(row).prev()
 
-		$.ajax({
-			type: 'POST',
-			data: logData,
-			url: postUrl,
-			dataType: 'JSON'
-		}).done(function( response ) {
-			if (response.msg === '') {
-				$(row).addClass('updated');
-				fillLog(row);
-			} else {
-				alert(response.msg);
-			}
-		});
-	}
-	else {
-		alert('Please fill in all fields');
-		return false;
-	}
+	// 	if($newRow.attr('data-id') == $thisRow.attr('data-id')) {
+	// 		return
+	// 	}
+	// 	console.log($thisRow)
+	// 	if(newRowDate.isSame(thisRowDate)) {
+	// 		console.log(1)
+	// 		return $newRow.insertAfter($thisRow)
+	// 	}
+
+	// 	if(newRowDate.isAfter(thisRowDate)) {
+	// 		console.log(2)
+	// 		return $newRow.insertAfter($thisRow)
+	// 	}
+		
+	// 	if(newRowDate.isBefore(thisRowDate)) {
+	// 		if(newRowDate.isAfter(nextRowDate) || !$nextRow.length) {
+	// 			console.log(3)
+	// 			return $newRow.insertAfter($thisRow)
+	// 		}
+	// 	}
+
+	// 	if(!$nextRow.length) {
+	// 		if($prevRow.is(':not(.saved)')) {
+	// 			console.log(4)
+	// 			return $newRow.insertBefore($thisRow)
+	// 		} else {
+	// 			console.log(5)
+	// 			return $newRow.insertAfter($thisRow)
+	// 		}
+	// 	}
+	// })
+}
+
+function clearLog(row) {
+	var $row = $(row)
+	$row.find('input.text').val('')
+	$row.find('.month select').val(moment().month()).change()
+	$row.find('.day select').val(moment().date()).change()
+	$row.find('.year select').val(moment().year()).change()
 }
 
 function deleteLog(event) {
-	event.preventDefault();
-	var id = event.target.dataset.id;
-	var row = $('.row[data-id="'+id+'"]');
-	var confirmation = confirm('Are you sure?');
+	event.preventDefault()
+	var id = event.target.dataset.id
+	var $row = $('.row[data-id="'+id+'"]')
+	var confirmation = confirm('Are you sure?')
 	if(confirmation) {
-		event.preventDefault();
 		$.ajax({
 			type: 'DELETE',
-			url: '/admin/delete/log/' + localData.slug + '/' + id
+			url: '/admin/delete/log/' + slug + '/' + id
 		}).done(function( response ) {
-			if (response.msg === '') {
-				row.remove();
-			}
-			else {
-				alert('Error: ' + response.msg);
-			}
-		});
+			if(response.error)
+				return alert('Error: ' + response.error)
+			console.log(response.success)
+			$row.remove()
+		})
 	} else {
-		return false;
+		return false
 	}
 }
+
+function requireInput(target) {
+	var $target = $(target)
+	$target.addClass('require')
+	$target.on('keyup', function() {
+		if(this.value.length) {
+			$target.removeClass('require')
+		} else {
+			$target.addClass('require')
+		}
+	})
+}
+
+document.addEventListener('invalid', (function() {
+  return function(e) {
+    e.preventDefault()
+    requireInput(e.target)
+  }
+})(), true)

@@ -1,6 +1,6 @@
 @import 'style.less';
 ::-webkit-scrollbar { 
-    display: none; 
+  display: none; 
 }
 header#logo {
 	width: 100%;
@@ -37,13 +37,13 @@ header#logo {
 		bottom: -10px;
 		padding: 0;
 		display: table;
-	    margin: auto;
-	    color: @dark;
-	    text-align: center;
-	    white-space: nowrap;
-	    line-height: 50px;
-	    cursor: default;
-	    transition: all 200ms ease-in-out;
+    margin: auto;
+    color: @dark;
+    text-align: center;
+    white-space: nowrap;
+    line-height: 50px;
+    cursor: default;
+    transition: all 200ms ease-in-out;
 		-moz-transition: all 200ms ease-in-out;
 		-webkit-transition: all 200ms ease-in-out;
 		&:before {
@@ -74,14 +74,14 @@ section {
 	width: 100%;
 	display: block;
 	opacity: 0;
-	-webkit-transform: translate3d(0, -2000px, 0);
-    transform: translate3d(0, -2000px, 0);
-	-webkit-transition: opacity 200ms ease-in-out 950ms;
-	-moz-transition: opacity 200ms ease-in-out 950ms;
-	transition: opacity 200ms ease-in-out 950ms;
+	// -webkit-transform: translate3d(0, -2000px, 0);
+ //  transform: translate3d(0, -2000px, 0);
+	-webkit-transition: opacity 300ms ease-in-out 800ms;
+	-moz-transition: opacity 300ms ease-in-out 800ms;
+	transition: opacity 300ms ease-in-out 800ms;
 	&.show {
-		-webkit-animation: bounceInUp 900ms forwards 600ms;
-		animation: bounceInUp 900ms forwards 600ms;
+		// -webkit-animation: bounceInUp 900ms forwards 600ms;
+		// animation: bounceInUp 900ms forwards 600ms;
 		opacity: 1;
 	}
 	&#locations {

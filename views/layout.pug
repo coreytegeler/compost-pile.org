@@ -31,10 +31,9 @@ html
 		script(src='/js/jquery-2.1.4.min.js')
 		script(src='/js/helpers.js')
 		script(src='/js/transit.js')
-
 		if data
 			script(type='text/javascript').
-				var localData =!{JSON.stringify(data)}
+				var data =!{JSON.stringify(data)}
 		if scripts
 			each script in scripts
 				script(type='text/javascript' src='/js/' + script + '.js')

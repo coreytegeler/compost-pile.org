@@ -33,10 +33,16 @@
     src: url('../fonts/gt-walsheim-bold-oblique-web.eot?#iefix') format('embedded-opentype'),
          url('../fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
 }
+html {
+	overflow: hidden;
+  height: 100%;
+	body {
+		height: 100%;
+    overflow: auto;
+	}
+}
 html, body {
 	width: 100%;
-	height: 100%;
-	display: block;
 	background-color: @lightest;
 	color: @dark;
 	font-family: 'Work Sans', sans-serif;
@@ -44,12 +50,13 @@ html, body {
 	font-size: 16px;
 	margin: 0;
 	text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: subpixel-antialiased;
+  -webkit-font-smoothing: subpixel-antialiased;
 }
 main {
 	display: table;
 	margin: auto;
 	min-width: 800px;
+	overflow-y: hidden;
 }
 #about {
 	width: 100%;
@@ -57,13 +64,11 @@ main {
 	background: @dark;
 }
 header {
-	font-size: 100px;
-	font-weight: 800;
 	display:table;
-}
-header svg {
-	display: table;
-	margin: auto;
+	svg {
+		display: table;
+		margin: auto;
+	}
 }
 h1 {
 	font-size: 50px;

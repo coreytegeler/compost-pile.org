@@ -3,6 +3,176 @@ main {
 	padding: 50px;
 	width: 900px;
 }
+header {
+	width: 100%;
+	padding-bottom: 20px;
+	display: flex;
+	.title {
+		width: 100%;
+		.name {
+			width: 100%;
+			height: auto;
+			font-size: 4em;
+			line-height: 1.4em;
+			font-weight: 800;
+			border: none;
+		}
+		.slug {
+			font-size: 1.5em;
+			margin-top: 10px;
+			border-bottom-width: 2px;
+		}
+	}
+	input {
+		border-bottom: 5px solid @dark;
+	}
+	.buttons {
+		display: inline-flex;
+		align-items: center;
+	}
+}
+.buttons input.submit {
+	margin-left: 10px;
+	float: left;
+}
+/*FORMS*/
+form {
+	padding: 50px 0 0 0;
+	width: 100%;
+	max-width: 900px;
+	display: table;
+	h2 {
+		font-family: "GT Walsheim Bold";
+		width: 100%;
+		padding: 10px 0;
+		color: @dark;
+		font-size: 25px;
+		float: none;
+		clear: both;
+	}
+	.group {
+		padding-bottom: 50px;
+	}
+}
+input, select, textarea, .wysiwyg {
+	width: 100%;
+	max-width: calc(~'100% - 16px');
+	font-family: "GT Walsheim Bold";
+	display: block;
+	background: @light;
+	color: @dark;
+	font-size: 25px;
+	outline: none;
+	border: 5px solid @dark;
+	resize: none;
+	&.require {
+		background: rgba(255,0,0,0.1);
+		border-color: red;
+	}
+	&:-webkit-autofill {
+		background-color: rgb(250, 255, 189);
+    background-image: none;
+    color: rgb(0, 0, 0);
+	}
+}
+input[type="text"], input[type="email"], input[type="password"] {
+	width: 100%;
+	padding: 5px 0 5px 6px;
+	border-width: 0 0 5px 0;
+}
+select {
+	width: 100%;
+	padding: 5px 10px 5px 6px;
+	-webkit-appearance: none;
+	-webkit-border-radius: 0px;
+	background-image:url(../images/drop.svg);
+	background-size: 20px;
+	background-repeat: no-repeat;
+	background-position: calc(~'100% - 10px') center; 
+	&:hover {
+		cursor: pointer;
+	}
+}
+.wysiwyg {
+	font-family: 'GT Walsheim';
+	height: 400px;
+	padding: 7px 0 5px 6px;
+	outline: none !important;
+	font-size: 20px !important;
+	line-height: 1.2em;
+	color: #3d6d46;
+	p {
+		font-size: 20px !important;
+		line-height: 1.2em;
+	}
+	h1 {
+		font-family: 'GT Walsheim Bold';
+		font-size: 25px;
+    line-height: 1.3em;
+    font-weight: 700;
+    color: #73db71;
+	}
+	strong {
+		font-family: 'GT Walsheim Bold';
+	}
+	em {
+		font-family: 'GT Walsheim Oblique';
+	}
+	strong em, em strong {
+		font-family: 'GT Walsheim Bold Oblique';	
+	}
+	a {
+		opacity: 0.8;
+		text-decoration: underline;
+	}
+}
+.mce-arrow-left {
+	// display: none !important;
+}
+.button {
+	display: block;
+	margin: 0;
+	float: left;
+	border: 0;
+	background: none;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 30px;
+	&.square {
+		width: 47px;
+		height: 47px;
+	}
+	&.text {
+		width: auto;
+		display: block;
+		margin: 40px auto 0 auto;
+		float: none;
+		padding-right: 40px;
+		background-position: center right;
+		text-transform: capitalize;
+	}
+	&:hover {
+		cursor: pointer;	
+	}
+	&.add {
+		background-image: url(../images/plus.svg);
+	}
+	&.save {
+		background-image: url(../images/check.svg);
+	}
+	&.go {
+		background-image: url(../images/go.svg);
+	}
+	&.delete {
+		background-image: url(../images/x.svg);
+	}
+	&.view {
+		background-image: url(../images/view.svg);
+	}
+	&.home {
+		background-image: url(../images/home.svg);
+	}
+}
 .list {
 	display: table;
 	margin: 20px 0;
@@ -22,184 +192,57 @@ main {
 .list .cell a.delete {
 	// border: none;
 }
-header {
-	width: 100%;
-	#name {
-		width: calc(~'100% - 140px');
-		height: auto;
-		font-size: 50px;
-		line-height: 60px;
-		font-weight: 800;
-		border: none;
-		float: left;
-	}
-	input {
-		border-bottom: 5px solid @dark;
-	}
-
-}
-.buttons {
-	display: table;
-	float: left;
-}
-.buttons input.submit {
-	margin-left: 10px;
-	float: left;
-}
-/*FORMS*/
-form h2 {
-	font-family: "GT Walsheim Bold";
-	width: 100%;
-	padding: 10px 0;
-	color: @dark;
-	font-size: 25px;
-	float: none;
-	clear: both;
-}
-form {
-	padding: 50px 0 0 0;
-	width: 100%;
-	max-width: 900px;
-	display: table;
-}
-input, select, textarea {
-	max-width: calc(~'100% - 16px');
-	font-family: "GT Walsheim Bold";
-	display: block;
-	background: @light;
-	color: @dark;
-	font-size: 25px;
-	outline: none;
-	border: 5px solid @dark;
-}
-textarea {
-	padding: 2px 0 2px 6px;
-}
-input[type="text"], input[type="email"], input[type="password"] {
-	width: 100%;
-	padding: 5px 0 5px 6px;
-	border-width: 0 0 5px 0;
-}
-input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-    background-color: rgb(250, 255, 189);
-    background-image: none;
-    color: rgb(0, 0, 0);
-}
-
-input.text {
-	height: 33px;
-}
-input[type="submit"], a.submit {
-	margin: 0;
-	display: block;
-	float: left;
-	cursor: pointer;
-	border: 0;
-	background: none;
-}
-input[type="submit"].submit, a.submit.submit {
-	width: 47px;
-	height: 47px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 30px;
-	margin-left: 20px;
-}
-.submit:hover {
-	cursor: pointer;	
-}
-.submit.add {
-	background-image: url(../images/plus.svg);
-}
-.submit.save {
-	background-image: url(../images/check.svg);
-}
-.submit.delete {
-	background-image: url(../images/x.svg);
-}
-.submit.view {
-	background-image: url(../images/view.svg);
-}
-.submit.home {
-	background-image: url(../images/home.svg);
-}
-textarea {
-	resize: none;
-	width: 100%;
-}
-select {
-	height: 47px;
-	-webkit-appearance: none;
-  	-webkit-border-radius: 0px;
-  	background-image:url(../images/drop.svg);
-  	background-size: 20px;
-  	background-repeat: no-repeat;
-  	background-position: calc(~'100% - 10px') center; 
-  	cursor: pointer;
-}
-form#info input {
-	float: left;
-}
-form#info input.text {
-	width: calc(~'50% - 26px');
-	margin: 0 20px 20px 0;
-}
-form#info input.text:nth-child(even),
-form#info textarea:nth-child(even) {
-	margin-right: 0px;
-}
-form#info textarea {
-	float: left;
-}
-table#log {
+table#logs {
 	clear: both;
 	border-collapse: collapse;
-    border-spacing: 0;
-    margin-top: 50px;
-}
-table#log .titles {
-	border-bottom: 5px solid @dark;
-}
-table#log .titles .title {
-	font-family: 'GT Walsheim Bold';
-	font-size: 25px;
-	text-align: left;
-	padding-bottom: 10px;
-	margin-bottom: 10px;
-}
-table#log td.cell {
-	padding: 10px 20px 0 0;
-	vertical-align: bottom;
-}
-table#log td.cell:last-child {
-	padding-right: 0;
-	// float: right;
-}
-table#log td.cell.month {
-	width: 23%;
-}
-table#log td.cell.day {
-	width: 13%;
-}
-table#log td.cell.year {
-	width: 15%;
-}
-table#log td.cell.data {
-	width: 17%;
-	input {
-		width: calc(~'100% - 16px');
+  border-spacing: 0;
+  margin-top: 50px;
+	.titles {
+		border-bottom: 5px solid @dark;
+		.title {
+			font-family: 'GT Walsheim Bold';
+			font-size: 25px;
+			text-align: left;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+		}
 	}
-}
-table#log .row input.text, table#log .row select {
-	width: 100%;
-}
-table#log .row input[type="submit"] {
-	width: 47px;
-	height: 47px;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-size: 30px;
-	background-color: @lightest;
-	margin-left: 20px;
-	border: none;
+	td.cell {
+		padding: 10px 0 0 0;
+		vertical-align: bottom;
+		&:last-child {
+			padding-right: 0;
+			// float: right;
+		}
+		&.month {
+			width: 23%;
+		}
+		&.day {
+			width: 13%;
+		}
+		&.year {
+			width: 15%;
+		}
+		&.data {
+			width: 17%;
+			input {
+				width: calc(~'100% - 16px');
+			}
+		}
+	}
+	.row {
+		input.text, select {
+			width: 100%;
+		}
+		input[type="submit"] {
+			width: 47px;
+			height: 47px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 30px;
+			background-color: @lightest;
+			margin-left: 20px;
+			border: none;
+		}
+	}
 }
