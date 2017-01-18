@@ -1,0 +1,48 @@
+extends ../layout
+block content
+	main.admin
+		-if(errors)
+			| error
+		-if(session)
+			| session.error
+		form#location(method='post' action='/admin/'+action+(loc ? '/'+loc.id : '') class=action)
+			header
+				input#name(name='name' type='text' placeholder='Location Name' required value=(loc ? loc.name : ''))
+				.buttons
+					input(type='submit' value name='submit').submit.square.save
+					a.submit.square.home(href='/')
+					if(loc)
+						a.submit.delete.square(href='/admin/delete/'+loc.id)
+			.edit
+				h2 Email
+				input(name='email' type='email' required value=(loc ? loc.email : ''))
+				h2 Password
+				input(name='password' type='password')
+				h2 Confirm Password
+				input(name='confirmPassword' type='password')
+				br
+				h2 Drop off times
+				textarea(name='dropoff' type='textarea', rows='4')= (loc ? loc.dropoff : '' )
+				h2 About Purchase Compost Initiative
+				textarea(name='what' type='textarea', rows='10')= (loc ? loc.what : '' )
+				h2 History
+				textarea(name='who' type='textarea', rows='10')= (loc ? loc.history : '' )
+				h2 About the Rocket
+				textarea(name='how' type='textarea', rows='10')= (loc ? loc.how : '' )
+				h2 How you can compost!
+				textarea(name='compostable' type='textarea', rows='10')= (loc ? loc.compostable : '' )
+		-if(action == 'update' && loc)
+			#logs
+				.head
+					.titles
+						.title.month='Month'
+						.title.day='Day'
+						.title.year='Year'
+						.title.scraps='Scraps'
+						.title.compost='Compost'
+						.title.buttons
+					+log()
+					if(logs)
+						each log in logs
+							+log(log)
+							

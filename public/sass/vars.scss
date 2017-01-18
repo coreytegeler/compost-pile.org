@@ -1,0 +1,31 @@
+$dark: #73db71;
+$darker: #3d6d46;
+$medium: #d8f7d7;
+$lightest: #fbfffb;
+$light: #f1fef1;
+$brown: #7f5233;
+@import url(https://fonts.googleapis.com/css?family=Work+Sans:400,500,600,700,800,900);
+@font-face {
+  font-family: 'GT Walsheim';
+  src: url('../fonts/gt-walsheim-web.eot');
+  src: url('../fonts/gt-walsheim-web.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/gt-walsheim-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Oblique';
+  src: url('../fonts/gt-walsheim-regular-oblique-web.eot');
+  src: url('../fonts/gt-walsheim-regular-oblique-web.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/gt-walsheim-regular-oblique-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Bold';
+  src: url('../fonts/gt-walsheim-bold-web.eot');
+  src: url('../fonts/gt-walsheim-bold-web.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/gt-walsheim-bold-web.ttf') format('truetype');
+}
+@font-face {
+  font-family: 'GT Walsheim Bold Oblique';
+  src: url('../fonts/gt-walsheim-bold-oblique-web.eot');
+  src: url('../fonts/gt-walsheim-bold-oblique-web.eot?#iefix') format('embedded-opentype'),
+       url('../fonts/gt-walsheim-bold-oblique-web.ttf') format('truetype');
+}

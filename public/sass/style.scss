@@ -1,0 +1,48 @@
+@import 'vars';
+@import 'animate';
+html, body {
+	width: 100%;
+	height: 100%;
+	display: block;
+	background-color: $lightest;
+	color: $dark;
+	font-family: 'Work Sans', sans-serif;
+	font-weight: 500;
+	font-size: 16px;
+	margin: 0;
+	text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+main {
+	width: calc(100% - 4em);
+	display: block;
+	margin: auto;
+	padding: 4em 2em;
+}
+#about {
+	width: 100%;
+	height: 300px;
+	background: $dark;
+}
+header {
+	font-size: 100px;
+	font-weight: 800;
+	display:table;
+	svg {
+		display: table;
+		margin: auto;
+	}
+}
+h1 {
+	font-size: 50px;
+	line-height: 57px;
+	font-weight: 800;
+}
+
+a, a:visited {
+	color: $dark;
+	text-decoration: none;
+}

@@ -1,0 +1,32 @@
+mixin log(log)
+	-if(log)
+		-var action = 'update'
+		-var id = log.id
+	-else
+		-var action = 'create'
+		-var id = loc.id
+	form.log(method='post', action='/admin/'+action+'/log/'+id, data-display=(log ? log.dateDisplay : ''))
+		.cell.date.month(label='month')
+			-var months = ['January','February','March','April','May','June','July','August','September','October','November','December']								
+			select.date.month(name='month' type='text', value=(log ? log.month : ''))
+				each month, index in months
+					-var monthIndex = index + 1
+					option(value=monthIndex, selected=(log && monthIndex == log.month))= month
+		.cell.date.day(label='day')
+			select.date.day(name='day' type='text', value=(log ? log.day : ''))
+				- for(var day = 1; day <= 31; day++)
+					option(value=day, selected=(log && day == log.day))= day
+		.cell.date.year(label='year')
+			select.date.year(name='year' type='text', value=(log ? log.year : ''))
+				- for(var year = 2010; year <= 2017; year++)
+					option(value=year, selected=(log && year == log.year))= year
+		.cell.data.scraps(label='scraps')
+			input.text(name='scraps' type='text', value=(log ? log.scraps : ''))
+		.cell.data.compost(label='compost')
+			input.text(name='compost' type='text', value=(log ? log.compost : ''))
+		.cell.buttons(label='buttons')
+			input.save.submit(type='submit', value='')
+			if(log)
+				a.delete.submit(href='/admin/delete/log/'+log.id)
+			else
+				a.delete.submit

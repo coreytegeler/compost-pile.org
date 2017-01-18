@@ -1,0 +1,30 @@
+.info
+	.inner
+		.box.left
+			.inner
+				.text
+					h2.dropoff !{location.dropoff}
+				h2 About Purchase Compost Initiative
+				.text
+					p !{location.what}
+				h2 History
+				.text
+					p !{location.who}
+				h2 About the Rocket
+				.text
+					p !{location.how}
+		.box.right
+			.inner
+				.labels.sort 
+					.label.value.date 
+						h2 Date
+					.label.value.scraps 
+						h2 Scraps
+					.label.value.compost 
+						h2 Compost
+				ul.logList
+					for log in logs
+						li(data-id=log._id)
+							.cell.date= log.dateDisplay
+							.cell.scraps= log.scraps+' lbs.'
+							.cell.compost= log.compost+' lbs.'

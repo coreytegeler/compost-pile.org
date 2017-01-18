@@ -1,0 +1,214 @@
+@import 'style';
+main {
+	max-width: 900px;
+}
+.list {
+	display: table;
+	margin: 20px 0;
+	font-size: 25px;
+}
+.list .cell {
+	display: table;
+	float: left;
+	margin: 0 10px 10px 0;
+}
+.list .cell:last-child {
+	margin-right: 0;
+}
+.list .cell a.delete {
+	// border: none;
+}
+header {
+	width: 100%;
+	display: flex;
+  align-items: center;
+	#name {
+		width: auto;
+		height: auto;
+		font-size: 50px;
+		line-height: 60px;
+		font-weight: 800;
+		border: none;
+		float: left;
+		flex-grow: 1;
+	}
+	input {
+		border-bottom: 5px solid $dark;
+	}
+}
+.buttons {
+	margin-left: 5px;
+	display: table;
+	float: left;
+	.submit {
+		margin-right: 5px;
+		float: left;
+		&:last-child {
+			margin: 0;
+		}
+	}
+}
+/*FORMS*/
+form#location {
+	width: 100%;
+	display: table;
+	h2 {
+		font-family: "GT Walsheim Bold";
+		width: 100%;
+		padding: 10px 0;
+		color: $dark;
+		font-size: 25px;
+		float: none;
+		clear: both;
+	}
+}
+input, select, textarea {
+	max-width: 100%;
+	font-family: "GT Walsheim Bold";
+	display: block;
+	background: $light;
+	color: $dark;
+	font-size: 25px;
+	outline: none;
+	border: solid $dark;
+}
+textarea {
+	width: calc(100% - 16px);
+	padding: 2px 0 2px 6px;
+	border-width: 5px;
+	resize: none;
+}
+input[type="text"], input[type="email"], input[type="password"] {
+	width: calc(100% - 6px);
+	padding: 5px 0 5px 6px;
+	border-width: 0 0 5px 0;
+}
+select {
+	border-width: 0;
+	padding: 2px 0 2px 6px;
+}
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color: rgb(250, 255, 189);
+  background-image: none;
+  color: rgb(0, 0, 0);
+}
+input.text {
+	height: 33px;
+}
+input[type="submit"], a.submit {
+	margin: 0;
+	display: block;
+	float: left;
+	cursor: pointer;
+	border: 0;
+	background: none;
+}
+input[type="submit"].submit, a.submit.submit {
+	width: 47px;
+	height: 47px;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: 30px;
+}
+select {
+	height: 47px;
+	-webkit-appearance: none;
+  	-webkit-border-radius: 0px;
+  	background-image:url(../images/drop.svg);
+  	background-size: 20px;
+  	background-repeat: no-repeat;
+  	background-position: calc(100% - 10px) center; 
+  	cursor: pointer;
+}
+.submit:hover {
+	cursor: pointer;	
+}
+.submit.add {
+	background-image: url(../images/plus.svg);
+}
+.submit.save {
+	background-image: url(../images/check.svg);
+}
+.submit.delete {
+	background-image: url(../images/x.svg);
+}
+.submit.view {
+	background-image: url(../images/view.svg);
+}
+.submit.home {
+	background-image: url(../images/home.svg);
+}
+form#info {
+	input {
+		float: left;
+		&.text {
+			width: calc(50% - 26px);
+			margin: 0 20px 20px 0;
+			&.text:nth-child(even), {
+				margin-right: 0px;			
+			}
+		}
+	}
+	textarea {
+		float: left;
+	}
+}
+#logs {
+	clear: both;
+	border-collapse: collapse;
+  border-spacing: 0;
+  margin-top: 50px;
+	.titles {
+		border-bottom: 5px solid $dark;
+		display: flex;
+		flex-direction: rows;
+		.title {
+			font-family: 'GT Walsheim Bold';
+			font-size: 25px;
+			text-align: left;
+			padding-bottom: 10px;
+			margin-bottom: 10px;
+		}
+	}
+	form.log {
+		display: flex;
+		flex-direction: rows;
+		align-items: center;
+		.cell {
+			padding: 10px 20px 0 0;
+		}
+		input.text, select {
+			width: 100%;
+		}
+		input[type="submit"] {
+			width: 47px;
+			height: 47px;
+			background-position: center;
+			background-repeat: no-repeat;
+			background-size: 30px;
+			background-color: $lightest;
+			border: none;
+		}
+	}
+	.cell, .title {
+		vertical-align: bottom;
+		&:last-child {
+			padding-right: 0;
+		}
+		&.month {
+			width: 23%;
+		}
+		&.day {
+			width: 13%;
+		}
+		&.year {
+			width: 15%;
+		}
+		&.data, &.compost, &.scraps {
+			width: 17%;
+		}
+	}
+	input {
+		width: calc(100% - 16px);
+	}
+}

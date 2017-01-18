@@ -1,0 +1,12 @@
+extends ../layout
+
+block content
+	main.admin
+		h1= title	
+		#locations.list
+			for location in locations
+				.cell.location
+					a(href='/admin/edit/'+location.slug)= location.name
+					a(href='/admin/delete/'+location._id class="delete")= '(X)'
+			.cell.location
+				a(href='/admin/signup')= 'New Location'
