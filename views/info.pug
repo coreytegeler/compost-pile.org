@@ -2,17 +2,25 @@
 	.inner
 		.box.left
 			.inner
-				.text
-					h2.dropoff !{location.dropoff}
-				h2 About Purchase Compost Initiative
-				.text
-					p !{location.what}
-				h2 History
-				.text
-					p !{location.who}
-				h2 About the Rocket
-				.text
-					p !{location.how}
+				if location.dropoff
+					.text
+						h2.dropoff !{location.dropoff}
+				if location.what
+					h2 About Purchase Compost Initiative
+					.text
+						p !{location.what}
+				if location.compostable
+					h2 How to compost
+					.text
+						p !{location.compostable}
+				if location.who
+					h2 History
+					.text
+						p !{location.who}
+				if location.how
+					h2 About the Rocket
+					.text
+						p !{location.how}
 		.box.right
 			.inner
 				.labels.sort 

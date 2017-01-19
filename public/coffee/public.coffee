@@ -52,8 +52,8 @@ $ ->
     height = graphHeight
     canvases[type].height = height
     $(canvases[type]).css height: height
-    $(canvases[type]).attr('resize', false).attr 'id', type
-    $(canvases[type]).appendTo $('#purchase-college .easel')
+    $(canvases[type]).attr('resize', false).attr('id', type)
+    $(canvases[type]).appendTo($('.easel'))
     papers[type].setup canvases[type]
     graphPoints(logs, type)
 
@@ -69,7 +69,7 @@ $ ->
       scrapsHtml = '<div class="cell scraps">' + scraps + ' lbs.</div>'
       compostHtml = '<div class="cell compost">' + compost + ' lbs.</div>'
       html = '<li data-id="' + id + '">' + dateHtml + scrapsHtml + compostHtml + '</li>'
-      $logList.prepend html
+      $logList.prepend(html)
 
   graphPoints = (logs, type) ->
     if logs.length == 0
@@ -84,7 +84,7 @@ $ ->
       thisGroup[groupName] = newGroup
       groups[type].addChildren thisGroup[groupName]
       i++
-    xFactor = 300
+    xFactor = 250
     line = new (papers[type].Path)(
       name: 'line'
       strokeWidth: 4
@@ -98,7 +98,7 @@ $ ->
     firstDayUnix = moment(logs[0].date).unix()
     line.add(ease, graphHeight + 5)
     $(logs).each (i, log) ->
-      if(log[type] > 0)
+      if(log[type] >= 0)
         date = moment(log.date)
         humanDate = date.format('MMMM Do, YYYY')
         thisDayUnix = moment(date).unix()
@@ -106,10 +106,7 @@ $ ->
         since = (thisDayUnix - firstDayUnix) / 250000
         x = since * xFactor
         lastX = x
-        if type == 'compost'
-          yFactor = 2
-        else
-          yFactor = 13
+        yFactor = 5
         y = graphHeight - (parseInt(log[type]) * yFactor) - 15
         data = 
           date: humanDate
@@ -162,7 +159,7 @@ $ ->
           scrollToListItem id
 
       if(i == logs.length - 1)
-        line.add(lastX - ease, graphHeight + 5)
+        line.add(lastX + ease, graphHeight + 5)
         line.sendToBack()
         line.simplify()
         loadFillSymbols line, type
@@ -251,9 +248,15 @@ $ ->
     lastMarkerX = lastMarker.position.x
     newPileX = pileX - lastMarkerX + canvasWidth - (ease / 4)
     pile.position.x = newPileX
+
+    console.log(newPileX)
+
+
     papers[type].view.draw()
     showGraph(type)
     return
+
+
 
   showGraph = (type) ->
     $('.graph').addClass('show').removeClass 'loading'
@@ -263,7 +266,6 @@ $ ->
       showGraphUtils id
     if type == 'scraps'
       $(canvases[type]).addClass 'show'
-    return
 
   showPopUp = (id) ->
     type = $('canvas.show').attr('id')
@@ -311,7 +313,6 @@ $ ->
     $(lastListItem).css marginBottom: scrollTo
     $(logList).animate { scrollTop: scrollTo }, 200, ->
       $(logList).on 'scroll', (event) ->
-        `var lastListItem`
         lastListItem = $(this).children('li:last-child')
         distance = $(lastListItem).index() * $(lastListItem).outerHeight() + $(lastListItem).outerHeight() + 30 - $(this).outerHeight()
         scrollTop = $(this).scrollTop()
@@ -461,8 +462,8 @@ $ ->
         return
 
       $('header#logo').addClass('show')
-      $('section').addClass('show')
-      $('header.where').addClass('show')
+      $('section#locations').addClass('show')
+      # $('header.where').addClass('show')
       # $('canvas#logo').on 'mouseenter', (event) ->
       #   hovering = true
       #   wiggleSpeed = undefined
@@ -479,28 +480,9 @@ $ ->
       #     logoObjs[i].rotation = 0
       #     i++
       #   return
-      keepScrollin()
       fillSections()
       createDirt()
       return
-    return
-
-  keepScrollin = ->
-    # var lastScrolled = 0;
-    # var distance = $('header#logo').outerHeight();
-    # $(window).scroll(function(event) {
-    # 	var distance = $('header#logo').outerHeight();
-    # 	var scrolled = $(window).scrollTop();
-    # 	lastScrolled = scrolled;
-    # 	var height = distance - scrolled;
-    # 	if(height >= 100) {
-    # 		console.log("!");
-    # 		$('header#logo').css({height:height});
-    # 		$('#locations').css({marginTop: height});
-    # 	} else if (scrolled = 0) {
-    # 		$('header#logo').css({height:height+1});
-    # 	}
-    # });
     return
 
   fillSections = ->
@@ -551,10 +533,6 @@ $ ->
     hidden = $('.location.hidden')
     $(hidden).removeClass 'hidden'
     $(hidden).transition { 'width': '50%' }, speed, 'cubic-bezier(.42,.15,.03,1)'
-    # var top = $(wrapper).offset().top;
-    # $('html, body').animate({
-    # 	scrollTop: top
-    # }, speed);
     openedId = $('.location.opened').attr('id')
     $(wrapper).addClass 'opened'
     $(wrapper).transition { 'width': 'calc(100% - 20px)' }, speed, 'cubic-bezier(.42,.15,.03,1)', ->
@@ -565,19 +543,13 @@ $ ->
           hideGraphUtils openedId
           return
       top = $('#locations').offset().top
-      # $('html, body').animate({
-      # 	scrollTop: top
-      # }, 0, function() {
-      # });
       $('#locations').prepend $(wrapper)
       if anim
         showGraphUtils id
       return
-    $('body').removeClass('multiple').addClass 'single'
-    return
+    $('body').removeClass('multiple').addClass('single')
 
   closeSection = ->
-    `var sibling`
     speed = 500
     history.pushState null, null, '/'
     wrapper = $('.location.opened')
@@ -607,9 +579,8 @@ $ ->
     showingImage = $(slides)[0]
     $(showingImage).addClass 'show'
     setSliderWidth()
+    $('section#slider').addClass('show')
     $(arrow).click ->
-      `var sliderWidth`
-      `var nextIndex`
       sliderWidth = $(slider).innerWidth()
       showingSlide = $('.slide.show')
       showingCaption = $('.caption.show')

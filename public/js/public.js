@@ -41,7 +41,7 @@
   transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
 
   $(function() {
-    var $logList, $main, closeSection, createDirt, createLogList, createLogo, dirtSvgs, fillGraphWithSymbols, fillSections, getData, graphPoints, hideGraphUtils, hidePopUp, isEnd, isStart, keepScrollin, loadFillSymbols, openSection, scatterDirt, scrollToListItem, setSliderWidth, setUpSlider, showGraph, showGraphUtils, showPopUp, slideToMarker, stretchCanvas, winW;
+    var $logList, $main, closeSection, createDirt, createLogList, createLogo, dirtSvgs, fillGraphWithSymbols, fillSections, getData, graphPoints, hideGraphUtils, hidePopUp, isEnd, isStart, loadFillSymbols, openSection, scatterDirt, scrollToListItem, setSliderWidth, setUpSlider, showGraph, showGraphUtils, showPopUp, slideToMarker, stretchCanvas, winW;
     $main = $('main');
     $logList = $('.info .logList');
     $logList.on('mouseenter', 'li', function(event) {
@@ -80,7 +80,7 @@
         height: height
       });
       $(canvases[type]).attr('resize', false).attr('id', type);
-      $(canvases[type]).appendTo($('#purchase-college .easel'));
+      $(canvases[type]).appendTo($('.easel'));
       papers[type].setup(canvases[type]);
       return graphPoints(logs, type);
     };
@@ -120,7 +120,7 @@
         groups[type].addChildren(thisGroup[groupName]);
         i++;
       }
-      xFactor = 300;
+      xFactor = 250;
       line = new papers[type].Path({
         name: 'line',
         strokeWidth: 4,
@@ -135,7 +135,7 @@
       line.add(ease, graphHeight + 5);
       return $(logs).each(function(i, log) {
         var data, date, humanDate, id, marker, markerHover, popup, popupModel, since, thisDayUnix, x, y, yFactor;
-        if (log[type] > 0) {
+        if (log[type] >= 0) {
           date = moment(log.date);
           humanDate = date.format('MMMM Do, YYYY');
           thisDayUnix = moment(date).unix();
@@ -143,11 +143,7 @@
           since = (thisDayUnix - firstDayUnix) / 250000;
           x = since * xFactor;
           lastX = x;
-          if (type === 'compost') {
-            yFactor = 2;
-          } else {
-            yFactor = 13;
-          }
+          yFactor = 5;
           y = graphHeight - (parseInt(log[type]) * yFactor) - 15;
           data = {
             date: humanDate,
@@ -209,7 +205,7 @@
           };
         }
         if (i === logs.length - 1) {
-          line.add(lastX - ease, graphHeight + 5);
+          line.add(lastX + ease, graphHeight + 5);
           line.sendToBack();
           line.simplify();
           return loadFillSymbols(line, type);
@@ -313,6 +309,7 @@
       lastMarkerX = lastMarker.position.x;
       newPileX = pileX - lastMarkerX + canvasWidth - (ease / 4);
       pile.position.x = newPileX;
+      console.log(newPileX);
       papers[type].view.draw();
       showGraph(type);
     };
@@ -325,7 +322,7 @@
         showGraphUtils(id);
       }
       if (type === 'scraps') {
-        $(canvases[type]).addClass('show');
+        return $(canvases[type]).addClass('show');
       }
     };
     showPopUp = function(id) {
@@ -385,7 +382,6 @@
         scrollTop: scrollTo
       }, 200, function() {
         $(logList).on('scroll', function(event) {
-          var lastListItem;
           var distance, scrollTop;
           lastListItem = $(this).children('li:last-child');
           distance = $(lastListItem).index() * $(lastListItem).outerHeight() + $(lastListItem).outerHeight() + 30 - $(this).outerHeight();
@@ -552,14 +548,11 @@
           }
         };
         $('header#logo').addClass('show');
-        $('section').addClass('show');
-        $('header.where').addClass('show');
-        keepScrollin();
+        $('section#locations').addClass('show');
         fillSections();
         createDirt();
       });
     };
-    keepScrollin = function() {};
     fillSections = function() {
       $('#locations .location').each(function(i, wrapper) {
         var location;
@@ -644,10 +637,9 @@
           showGraphUtils(id);
         }
       });
-      $('body').removeClass('multiple').addClass('single');
+      return $('body').removeClass('multiple').addClass('single');
     };
     closeSection = function() {
-      var sibling;
       var hidden, id, sibling, speed, wrapper;
       speed = 500;
       history.pushState(null, null, '/');
@@ -687,9 +679,8 @@
       showingImage = $(slides)[0];
       $(showingImage).addClass('show');
       setSliderWidth();
+      $('section#slider').addClass('show');
       $(arrow).click(function() {
-        var sliderWidth;
-        var nextIndex;
         var margin, newLeft, nextIndex, nextSlide, shift, showIndex, showingCaption, showingSlide;
         sliderWidth = $(slider).innerWidth();
         showingSlide = $('.slide.show');

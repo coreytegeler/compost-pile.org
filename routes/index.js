@@ -16,7 +16,7 @@ module.exports = function (app) {
           }
         })
       }, function(location, callback) {
-        Log.find({location: location._id}).sort({date:1}).exec(function (err, logs) {
+        Log.find({location: location._id}).sort({date:-1}).exec(function (err, logs) {
           if (err) {
             res.render('error', {
               error: err,
@@ -44,7 +44,7 @@ module.exports = function (app) {
 
   app.get('/logs/:id', function(req, res) {
     var id = req.params.id
-    Log.find({location: id}).sort({date:-1}).exec(function(e, logs) {
+    Log.find({location: id}).sort({date:1}).exec(function(e, logs) {
       if(logs)
         res.json(logs)
     })
