@@ -328,6 +328,9 @@
     showPopUp = function(id) {
       var marker, markers, pileX, popup, type, x, y;
       type = $('canvas.show').attr('id');
+      if (!groups[type] || !groups[type].markers) {
+        return;
+      }
       markers = groups[type].markers.children;
       marker = markers[id];
       if (marker === void 0) {
@@ -336,37 +339,36 @@
       pile = groups[type].graphContent;
       pileX = pile.bounds.x;
       popup = $('.popup[data-id=' + id + '].' + type);
-      x = marker.x - ($(popup)[0].offsetWidth / 2) + pileX;
-      y = marker.y - ($(popup)[0].offsetHeight) - 30;
+      x = marker.x - ($(popup).outerWidth() / 2) + pileX + 10;
+      y = marker.y - ($(popup).outerHeight()) - 30;
       $('.popup.show').removeClass('show');
       $(popup).css({
         display: 'block',
         left: x,
         top: y
       }).addClass('show');
-      $('.logList li[data-id="' + id + '"]').addClass('hover');
-      papers[type].view.draw();
+      return $('.logList li[data-id="' + id + '"]').addClass('hover');
     };
     hidePopUp = function(id) {
       var marker, markers, popup, type;
       type = $('canvas.show').attr('id');
+      if (!groups[type] || !groups[type].markers) {
+        return;
+      }
       markers = groups[type].markers.children;
       marker = markers[id];
       if (marker === void 0) {
         return;
       }
-      marker.fillColor = light;
+      console.log(marker);
       popup = $('.popup[data-id=' + id + ']');
-      $(popup).removeClass('show');
       $(popup).one(transitionEnd, function(e) {
-        if (!$(popup).hasClass('show')) {
-          $(popup).css({
-            top: '1000px'
-          });
-        }
+        return $(popup).css({
+          top: '1000px'
+        });
       });
-      $('.logList li[data-id="' + id + '"]').removeClass('hover');
-      papers[type].view.draw();
+      $(popup).removeClass('show');
+      return $('.logList li[data-id="' + id + '"]').removeClass('hover');
     };
     scrollToListItem = function(id) {
       var lastListItem, logList, logListHeight, logListItem, scrollTo;

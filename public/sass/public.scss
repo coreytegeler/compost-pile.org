@@ -139,7 +139,6 @@ section {
 				width: auto;
 				height: 50px;
 				position: absolute;
-				z-index: 100;
 				top: 50%;
 				transition: transform 300ms cubic-bezier(0.895, 0.185, 0.460, 0.985);
 				&.left {
@@ -194,11 +193,11 @@ section {
 				border: 3px solid $dark;
 				white-space: nowrap;
 				z-index: 2;
-				transform: translateY(50px) scale(0);
+				transform: translateY(-50px);
 				transition: opacity 200ms ease-out, transform 200ms ease-out;
 				&.show {
 					opacity: 1;
-					transform: translateY(0px) scale(1);
+					transform: translateY(0px);
 					transition: opacity 200ms ease-in-out 50ms, transform 250ms ease-in-out;
 				}
 				.point {
@@ -207,7 +206,7 @@ section {
 					display: table;
 					position: absolute;
 					bottom: -13px;
-					left: calc(~'50% - 10px');
+					left: calc(50% - 10px);
 					background-color: $light;
 			    border-bottom: 3px solid $dark;
 			    border-left: 3px solid $dark;
