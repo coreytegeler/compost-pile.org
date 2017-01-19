@@ -12,7 +12,7 @@ var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var session = require('express-session');
 var monk = require('monk');
-var db = 'localhost:27017/compost';
+// var db = 'localhost:27017/compost';
 var db = 'mongodb://heroku_z28551tz:i6b2adudtmtreh9uv2c99faept@ds051913.mlab.com:51913/heroku_z28551tz';
 mongoose.connect(db);
 require('./config/passport')(passport);

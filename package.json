@@ -13,8 +13,8 @@
     "prefix-public" : "postcss -w -u autoprefixer public/css/pre-public.css -o public/css/public.css",
     "css" : "npm run sass-admin & npm run prefix-admin & npm run sass-public & npm run prefix-public",
     "js": "coffee -o public/js/ -cw public/coffee/",
-    "server": "nodemon ./bin/www localhost 3000",
-    "go": "npm run css & npm run js & npm run server"
+    "start": "nodemon ./bin/www localhost 3000",
+    "go": "npm run css & npm run js & npm run start"
   },
   "dependencies": {
     "async": "2.0.0-rc.6",
