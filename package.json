@@ -40,7 +40,7 @@
 
     "coffee-script": "1.10.0",
     "pug" : "2.0.0-beta3",
-    "node-sass": "3.8.0",
+    "node-sass": "4.3.0",
     "autoprefixer": "^6.5.1",
     "cssnano": "^3.8.0",
     "less-middleware": "^2.2.0",
