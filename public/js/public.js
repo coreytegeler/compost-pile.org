@@ -41,7 +41,7 @@
   transitionEnd = 'transitionend webkitTransitionEnd oTransitionEnd MSTransitionEnd';
 
   $(function() {
-    var $logList, $main, closeSection, createDirt, createLogList, createLogo, dirtSvgs, fillGraphWithSymbols, fillSections, getData, graphPoints, hideGraphUtils, hidePopUp, isEnd, isStart, loadFillSymbols, openSection, scatterDirt, scrollToListItem, setSliderWidth, setUpSlider, showGraph, showGraphUtils, showPopUp, slideToMarker, stretchCanvas, winW;
+    var $logList, $main, browsePile, closeSection, createDirt, createLogList, createLogo, dirtSvgs, fillGraphWithSymbols, fillSections, getData, graphPoints, hideGraphUtils, hidePopUp, isEnd, isStart, loadFillSymbols, openSection, scatterDirt, scrollToListItem, setSliderWidth, setUpSlider, showGraph, showGraphUtils, showPopUp, slideToMarker, stretchCanvas, swapPileDate, swapPileType, winW;
     $main = $('main');
     $logList = $('.info .logList');
     $logList.on('mouseenter', 'li', function(event) {
@@ -53,11 +53,15 @@
     $logList.on('click', 'li', function(event) {
       return slideToMarker($(this).attr('data-id'));
     });
-    getData = function() {
+    getData = function(date) {
       var id;
       id = $('.location').attr('data-id');
+      if (!date) {
+        date = '4/2016';
+      }
+      console.log(date);
       $.ajax({
-        url: '/logs/' + id,
+        url: '/logs/' + id + '/' + date,
         dataType: 'json',
         error: function(jqXHR, status, error) {
           return console.log(jqXHR, status, error);
@@ -132,7 +136,7 @@
       width = $('canvas#' + type).innerWidth();
       lastX = void 0;
       firstDayUnix = moment(logs[0].date).unix();
-      line.add(ease, graphHeight + 5);
+      line.add(-ease, graphHeight + 5);
       return $(logs).each(function(i, log) {
         var data, date, humanDate, id, marker, markerHover, popup, popupModel, since, thisDayUnix, x, y, yFactor;
         if (log[type] >= 0) {
@@ -309,7 +313,6 @@
       lastMarkerX = lastMarker.position.x;
       newPileX = pileX - lastMarkerX + canvasWidth - (ease / 4);
       pile.position.x = newPileX;
-      console.log(newPileX);
       papers[type].view.draw();
       showGraph(type);
     };
@@ -360,7 +363,6 @@
       if (marker === void 0) {
         return;
       }
-      console.log(marker);
       popup = $('.popup[data-id=' + id + ']');
       $(popup).one(transitionEnd, function(e) {
         return $(popup).css({
@@ -418,7 +420,7 @@
         return $('.graph').removeClass('loading');
       }), 200);
     };
-    $('body').on('click', '.graph .arrow', function(event) {
+    browsePile = function(e) {
       var graph, newPosition, type, width;
       type = $('canvas.show').attr('id');
       if ($('.popup.show').length >= 1) {
@@ -440,8 +442,8 @@
         papers[type].view.draw();
         return $(graph).removeClass('loading');
       }), 200);
-    });
-    $('body').on('click', '.button.type:not(.selected)', function() {
+    };
+    swapPileType = function(e) {
       var type;
       type = $(this).attr('data-type');
       $('.button.selected').removeClass('selected');
@@ -452,7 +454,18 @@
       });
       $('canvas.show').removeClass('show');
       return $('.popup').removeClass('show');
-    });
+    };
+    swapPileDate = function(e) {
+      var date;
+      date = this.value;
+      $('.graph').addClass('loading');
+      $('canvas.show').one(transitionEnd, function() {
+        papers['scraps'].remove();
+        papers['compost'].remove();
+        return getData(date);
+      });
+      return $('canvas.show').removeClass('show');
+    };
     isStart = function(pile) {
       if (pile.bounds.x + 200 > 0) {
         return true;
@@ -804,6 +817,9 @@
     setSliderWidth();
     setUpSlider();
     getData();
+    $('body').on('click', '.graph .arrow', browsePile);
+    $('body').on('click', '.button.type:not(.selected)', swapPileType);
+    $('body').on('change', 'select.date', swapPileDate);
     return dirtSvgs = [];
   });
 

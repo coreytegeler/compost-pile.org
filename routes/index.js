@@ -49,4 +49,15 @@ module.exports = function (app) {
         res.json(logs)
     })
   })
+
+  app.get('/logs/:id/:month/:year', function(req, res) {
+    var id = req.params.id
+    var month = req.params.month
+    var year = req.params.year
+    console.log(month, year)
+    Log.find({location: id, month: month, year: year}).sort({date:1}).exec(function(e, logs) {
+      if(logs)
+        res.json(logs)
+    })
+  })
 }

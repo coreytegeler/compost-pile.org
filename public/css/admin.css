@@ -148,6 +148,66 @@ a, a:visited {
   color: #73db71;
   text-decoration: none; }
 
+input, select, textarea {
+  max-width: 100%;
+  font-family: "GT Walsheim Bold";
+  display: block;
+  background: #f1fef1;
+  color: #73db71;
+  font-size: 25px;
+  outline: none;
+  border: solid #73db71; }
+
+textarea {
+  width: calc(100% - 16px);
+  padding: 2px 0 2px 6px;
+  border-width: 5px;
+  resize: none; }
+
+input[type="text"], input[type="email"], input[type="password"] {
+  width: calc(100% - 6px);
+  padding: 5px 0 5px 6px;
+  border-width: 0 0 5px 0; }
+
+select {
+  border-width: 0;
+  padding: 2px 0 2px 6px; }
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color: #faffbd;
+  background-image: none;
+  color: black; }
+
+input.text {
+  height: 33px; }
+
+input[type="submit"], a.submit {
+  margin: 0;
+  display: block;
+  float: left;
+  cursor: pointer;
+  border: 0;
+  background: none; }
+
+input[type="submit"].submit, a.submit.submit {
+  width: 47px;
+  height: 47px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 30px; }
+
+select {
+  height: 47px;
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+  border-radius: 0px;
+  background-image: url(../images/drop.svg);
+  background-size: 20px;
+  background-repeat: no-repeat;
+  background-position: calc(100% - 10px) center;
+  cursor: pointer; }
+
 main {
   max-width: 900px; }
 
@@ -208,64 +268,6 @@ form#location {
     font-size: 25px;
     float: none;
     clear: both; }
-
-input, select, textarea {
-  max-width: 100%;
-  font-family: "GT Walsheim Bold";
-  display: block;
-  background: #f1fef1;
-  color: #73db71;
-  font-size: 25px;
-  outline: none;
-  border: solid #73db71; }
-
-textarea {
-  width: calc(100% - 16px);
-  padding: 2px 0 2px 6px;
-  border-width: 5px;
-  resize: none; }
-
-input[type="text"], input[type="email"], input[type="password"] {
-  width: calc(100% - 6px);
-  padding: 5px 0 5px 6px;
-  border-width: 0 0 5px 0; }
-
-select {
-  border-width: 0;
-  padding: 2px 0 2px 6px; }
-
-input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
-  background-color: #faffbd;
-  background-image: none;
-  color: black; }
-
-input.text {
-  height: 33px; }
-
-input[type="submit"], a.submit {
-  margin: 0;
-  display: block;
-  float: left;
-  cursor: pointer;
-  border: 0;
-  background: none; }
-
-input[type="submit"].submit, a.submit.submit {
-  width: 47px;
-  height: 47px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: 30px; }
-
-select {
-  height: 47px;
-  -webkit-appearance: none;
-  -webkit-border-radius: 0px;
-  background-image: url(../images/drop.svg);
-  background-size: 20px;
-  background-repeat: no-repeat;
-  background-position: calc(100% - 10px) center;
-  cursor: pointer; }
 
 .submit:hover {
   cursor: pointer; }

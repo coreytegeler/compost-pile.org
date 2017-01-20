@@ -23,7 +23,6 @@ $ ->
 
   $main = $('main')
   $logList = $('.info .logList')
-
   $logList.on 'mouseenter', 'li', (event) ->
     showPopUp $(this).attr('data-id')
   $logList.on 'mouseleave', 'li', (event) ->
@@ -31,10 +30,13 @@ $ ->
   $logList.on 'click', 'li', (event) ->
     slideToMarker $(this).attr('data-id')
 
-  getData = () ->
+  getData = (date) ->
     id = $('.location').attr('data-id')
+    if(!date)
+      date = '4/2016'
+    console.log(date)
     $.ajax
-      url: '/logs/'+id
+      url: '/logs/'+id+'/'+date
       dataType: 'json'
       error:  (jqXHR, status, error) ->
         console.log jqXHR, status, error
@@ -96,7 +98,7 @@ $ ->
     width = $('canvas#'+type).innerWidth()
     lastX = undefined
     firstDayUnix = moment(logs[0].date).unix()
-    line.add(ease, graphHeight + 5)
+    line.add(-ease, graphHeight + 5)
     $(logs).each (i, log) ->
       if(log[type] >= 0)
         date = moment(log.date)
@@ -249,10 +251,6 @@ $ ->
     lastMarkerX = lastMarker.position.x
     newPileX = pileX - lastMarkerX + canvasWidth - (ease / 4)
     pile.position.x = newPileX
-
-    console.log(newPileX)
-
-
     papers[type].view.draw()
     showGraph(type)
     return
@@ -296,7 +294,6 @@ $ ->
     marker = markers[id]
     if marker == undefined
       return
-    console.log(marker)
     popup = $('.popup[data-id=' + id + ']')
     $(popup).one transitionEnd, (e) ->  
       $(popup).css top: '1000px'
@@ -342,7 +339,7 @@ $ ->
       $('.graph').removeClass 'loading'
     ), 200
 
-  $('body').on 'click', '.graph .arrow', (event) ->
+  browsePile = (e)->
     type = $('canvas.show').attr('id')
     if $('.popup.show').length >= 1
       return
@@ -363,7 +360,7 @@ $ ->
     ), 200
     return
 
-  $('body').on 'click', '.button.type:not(.selected)', ->
+  swapPileType = (e) ->
     type = $(this).attr('data-type')
     $('.button.selected').removeClass 'selected'
     $(this).addClass 'selected'
@@ -374,6 +371,15 @@ $ ->
     $('canvas.show').removeClass 'show'
     $('.popup').removeClass 'show'
 
+  swapPileDate = (e) ->
+    date = this.value
+    $('.graph').addClass 'loading'
+    $('canvas.show').one transitionEnd, ->
+      papers['scraps'].remove()
+      papers['compost'].remove()
+      getData(date)
+    $('canvas.show').removeClass 'show'
+    
   isStart = (pile) ->
     if pile.bounds.x + 200 > 0
       true
@@ -685,4 +691,7 @@ $ ->
   setSliderWidth()
   setUpSlider()
   getData()
+  $('body').on 'click', '.graph .arrow', browsePile
+  $('body').on 'click', '.button.type:not(.selected)', swapPileType
+  $('body').on 'change', 'select.date', swapPileDate
   dirtSvgs = []

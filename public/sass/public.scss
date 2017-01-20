@@ -153,15 +153,21 @@ section {
 					transform: translateX(0px);
 				}
 			}
-			.buttons {
+			.tools {
 				position: absolute;
 				top: 0;
-				right: 0;
 				height: 50px;
 				display: block;
 				background-color: $light;
 				border-bottom: 10px solid $dark;
 				z-index: 10;
+				&.left {
+					left: 0;
+					border-right: 10px solid $dark;
+				}
+				&.right {
+					right: 0;
+				}
 				.button {
 					height: 50px;
 					border-left: 10px solid $dark;
@@ -180,6 +186,10 @@ section {
 					&.selected {
 						background-color: $medium;
 					}
+				}
+				select {
+					padding-right: 60px;
+					padding-left: 20px;
 				}
 			}
 			.popup {
