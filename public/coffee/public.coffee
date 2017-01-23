@@ -352,8 +352,7 @@ $ ->
       ), 200
     else
       date = $('.logList li[data-id="'+id+'"]').data('date')
-      console.log(date)
-      getData(date)
+      swapPileDate(date)
 
   browsePile = (e)->
     type = $('canvas.show').attr('id')
@@ -387,8 +386,9 @@ $ ->
     $('canvas.show').removeClass 'show'
     $('.popup').removeClass 'show'
 
-  swapPileDate = (e) ->
-    date = this.value
+  swapPileDate = (date) ->
+    if(!date)
+      date = this.value
     $('.graph').addClass 'loading'
     $('canvas.show').one transitionEnd, ->
       papers['scraps'].remove()

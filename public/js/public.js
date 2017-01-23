@@ -434,8 +434,7 @@
         }), 200);
       } else {
         date = $('.logList li[data-id="' + id + '"]').data('date');
-        console.log(date);
-        return getData(date);
+        return swapPileDate(date);
       }
     };
     browsePile = function(e) {
@@ -473,9 +472,10 @@
       $('canvas.show').removeClass('show');
       return $('.popup').removeClass('show');
     };
-    swapPileDate = function(e) {
-      var date;
-      date = this.value;
+    swapPileDate = function(date) {
+      if (!date) {
+        date = this.value;
+      }
       $('.graph').addClass('loading');
       $('canvas.show').one(transitionEnd, function() {
         papers['scraps'].remove();
