@@ -45,8 +45,29 @@ module.exports = function (app) {
   app.get('/logs/:id', function(req, res) {
     var id = req.params.id
     Log.find({location: id}).sort({date:1}).exec(function(e, logs) {
-      if(logs)
-        res.json(logs)
+      var recentLogs = []
+      var latestYear = 0
+      var latestMonth = 0
+      for(var i = 0; i < logs.length; i++) {
+        var log = logs[i]
+        if (log.month >= latestMonth) {
+          latestMonth = log.month
+          if (log.year >= latestYear) {
+            latestYear = log.year
+          }
+        }
+      }
+      for(var i = 0; i < logs.length; i++) {
+        var log = logs[i]
+        if(log.month == latestMonth && log.year == latestYear) {
+          recentLogs.push(log)
+        }
+      }
+      var data = {
+        'date': latestMonth+'/'+latestYear,
+        'logs': recentLogs
+      }
+      res.json(data)
     })
   })
 

@@ -32,7 +32,7 @@
 						h2 Compost
 				ul.logList
 					for log in logs
-						li(data-id=log._id)
+						li(data-id=log._id, data-date=log.month+'/'+log.year)
 							.cell.date= log.dateDisplay
 							.cell.scraps= log.scraps+' lbs.'
 							.cell.compost= log.compost+' lbs.'

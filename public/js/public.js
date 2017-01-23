@@ -54,20 +54,29 @@
       return slideToMarker($(this).attr('data-id'));
     });
     getData = function(date) {
-      var id;
+      var id, url;
       id = $('.location').attr('data-id');
-      if (!date) {
-        date = '4/2016';
+      if (date) {
+        url = '/logs/' + id + '/' + date;
+      } else {
+        url = '/logs/' + id + '/';
       }
-      console.log(date);
       $.ajax({
-        url: '/logs/' + id + '/' + date,
+        url: url,
         dataType: 'json',
         error: function(jqXHR, status, error) {
           return console.log(jqXHR, status, error);
         },
         success: function(response) {
-          logs = response;
+          if (!response) {
+            return;
+          } else if (response.date) {
+            logs = response.logs;
+            date = response.date;
+            $('select.date').val(date);
+          } else {
+            logs = response;
+          }
           stretchCanvas('scraps');
           stretchCanvas('compost');
         }
@@ -329,7 +338,7 @@
       }
     };
     showPopUp = function(id) {
-      var marker, markers, pileX, popup, type, x, y;
+      var easelWidth, marker, markers, pileOffset, pileWidth, pileX, popup, type, x, y;
       type = $('canvas.show').attr('id');
       if (!groups[type] || !groups[type].markers) {
         return;
@@ -340,10 +349,13 @@
         return;
       }
       pile = groups[type].graphContent;
-      pileX = pile.bounds.x;
+      pileOffset = pile.bounds.x;
+      pileWidth = pile.bounds.width;
+      pileX = pile.position.x;
+      easelWidth = $('.easel').innerWidth();
       popup = $('.popup[data-id=' + id + '].' + type);
-      x = marker.x - ($(popup).outerWidth() / 2) + pileX + 10;
-      y = marker.y - ($(popup).outerHeight()) - 30;
+      x = marker.position.x - popup.outerWidth() / 2;
+      y = marker.position.y - $(popup).outerHeight() - 30;
       $('.popup.show').removeClass('show');
       $(popup).css({
         display: 'block',
@@ -399,26 +411,32 @@
       });
     };
     slideToMarker = function(id) {
-      var canvasWidth, markers, newPileX, pileWidth, pileX, thisGroup, thisMarker, thisMarkerIndex, thisMarkerX, type;
+      var canvasWidth, date, group, marker, markerIndex, markerX, markers, newPileX, pileWidth, pileX, type;
       type = $('canvas.show').attr('id');
       pile = groups[type].graphContent;
       pileWidth = pile.bounds.width;
       pileX = pile.position.x;
       canvasWidth = $('.graph canvas').innerWidth();
-      thisGroup = groups[type];
-      markers = thisGroup.markers.children;
-      thisMarkerIndex = markers[id];
-      thisMarker = markers[id];
-      thisMarkerX = thisMarker.position.x;
-      newPileX = pileX - thisMarkerX + canvasWidth / 2;
-      $('.graph').addClass('loading');
-      return setTimeout((function() {
-        pile.position.x = newPileX;
-        papers[type].view.draw();
-        $('.popup.show').removeClass('show');
-        showPopUp(id, type);
-        return $('.graph').removeClass('loading');
-      }), 200);
+      group = groups[type];
+      markers = group.markers.children;
+      markerIndex = markers[id];
+      if (markerIndex) {
+        marker = markers[id];
+        markerX = marker.position.x;
+        newPileX = pileX - markerX + canvasWidth / 2;
+        $('.graph').addClass('loading');
+        return setTimeout((function() {
+          pile.position.x = newPileX;
+          papers[type].view.draw();
+          $('.popup.show').removeClass('show');
+          showPopUp(id, type);
+          return $('.graph').removeClass('loading');
+        }), 200);
+      } else {
+        date = $('.logList li[data-id="' + id + '"]').data('date');
+        console.log(date);
+        return getData(date);
+      }
     };
     browsePile = function(e) {
       var graph, newPosition, type, width;
