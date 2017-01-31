@@ -266,7 +266,8 @@ $ ->
 
 
   showGraph = (type) ->
-    $('.graph').addClass('show').removeClass 'loading'
+    $('.graph').addClass('show').removeClass('loading')
+    $('.location').addClass('loaded')
     wrapper = $('.location#' + type)
     if $(wrapper).hasClass('opened')
       id = wrapper[0].id
@@ -352,7 +353,8 @@ $ ->
       ), 200
     else
       date = $('.logList li[data-id="'+id+'"]').data('date')
-      swapPileDate(date)
+      $('select.date').val(date).change()
+      # swapPileDate(date)
 
   browsePile = (e)->
     type = $('canvas.show').attr('id')
@@ -387,7 +389,7 @@ $ ->
     $('.popup').removeClass 'show'
 
   swapPileDate = (date) ->
-    if(!date)
+    if(!date || typeof date != 'string')
       date = this.value
     $('.graph').addClass 'loading'
     $('canvas.show').one transitionEnd, ->
@@ -707,7 +709,7 @@ $ ->
   setSliderWidth()
   setUpSlider()
   getData()
-  $('body').on 'click', '.graph .arrow', browsePile
-  $('body').on 'click', '.button.type:not(.selected)', swapPileType
-  $('body').on 'change', 'select.date', swapPileDate
+  $('body').on 'click', '.loaded .graph .arrow', browsePile
+  $('body').on 'click', '.loaded .button.type:not(.selected)', swapPileType
+  $('body').on 'change', '.loaded select.date', swapPileDate
   dirtSvgs = []

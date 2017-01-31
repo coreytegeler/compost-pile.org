@@ -328,6 +328,7 @@
     showGraph = function(type) {
       var id, wrapper;
       $('.graph').addClass('show').removeClass('loading');
+      $('.location').addClass('loaded');
       wrapper = $('.location#' + type);
       if ($(wrapper).hasClass('opened')) {
         id = wrapper[0].id;
@@ -434,7 +435,7 @@
         }), 200);
       } else {
         date = $('.logList li[data-id="' + id + '"]').data('date');
-        return swapPileDate(date);
+        return $('select.date').val(date).change();
       }
     };
     browsePile = function(e) {
@@ -473,7 +474,7 @@
       return $('.popup').removeClass('show');
     };
     swapPileDate = function(date) {
-      if (!date) {
+      if (!date || typeof date !== 'string') {
         date = this.value;
       }
       $('.graph').addClass('loading');
@@ -835,9 +836,9 @@
     setSliderWidth();
     setUpSlider();
     getData();
-    $('body').on('click', '.graph .arrow', browsePile);
-    $('body').on('click', '.button.type:not(.selected)', swapPileType);
-    $('body').on('change', 'select.date', swapPileDate);
+    $('body').on('click', '.loaded .graph .arrow', browsePile);
+    $('body').on('click', '.loaded .button.type:not(.selected)', swapPileType);
+    $('body').on('change', '.loaded select.date', swapPileDate);
     return dirtSvgs = [];
   });
 
