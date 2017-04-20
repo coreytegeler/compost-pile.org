@@ -99,7 +99,7 @@ $ ->
         # SHOW THAT NO LOGS ARE ENTERED
         return
       loc.groups[type] = new loc.papers[type].Group
-      groupNames = ['graph','graphContent','clippedGraphContent','markers','markerHovers','fillSymbols','ticks','horzTicks','vertTicks','horzAxis','vertAxis','fillContent','axes','graphUtils']
+      groupNames = ['graph','graphContent','clippedGraphContent','markers','markerHovers','fillSymbols','fillContent','axes','graphUtils']
       i = 0
       while i < groupNames.length
         groupName = groupNames[i]
@@ -262,13 +262,13 @@ $ ->
             newSymbol.scale 0.25
             newSymbol.rotate random(0, 360)
             newSymbol.sendToBack()
-            loc.groups[type].fillSymbols.addChild newSymbol
+            loc.groups[type].fillSymbols.addChild(newSymbol)
           ii += 20
         i++
-      loc.groups[type].fillContent.addChildren [fill, fillMask, loc.groups[type].fillSymbols]
-      loc.groups[type].clippedGraphContent.addChildren [loc.groups[type].fillContent, line, loc.groups[type].markers, loc.groups[type].markerHovers]
-      loc.groups[type].graphContent.addChildren [mask, loc.groups[type].clippedGraphContent, loc.groups[type].ticks]
-      loc.groups[type].graph.addChild loc.groups[type].graphContent
+      loc.groups[type].fillContent.addChildren([fill, fillMask, loc.groups[type].fillSymbols])
+      loc.groups[type].clippedGraphContent.addChildren([loc.groups[type].fillContent, line, loc.groups[type].markers, loc.groups[type].markerHovers])
+      loc.groups[type].graphContent.addChildren([mask, loc.groups[type].clippedGraphContent])
+      loc.groups[type].graph.addChild(loc.groups[type].graphContent)
       pile = loc.groups[type].graphContent
       pileWidth = pile.bounds.width
       pileX = pile.position.x
@@ -382,9 +382,6 @@ $ ->
       loc = this
       thisGroup = loc.groups[type]
       markers = thisGroup.markers
-      line = thisGroup
-      ticks = thisGroup.ticks
-      i = 0
       while i < markers.children.length
         markers.children[i].opacity = 0
         i++
@@ -395,8 +392,6 @@ $ ->
       loc = this
       thisGroup = loc.groups[type]
       markers = thisGroup.markers
-      line = loc.papers[type]
-      ticks = thisGroup.ticks
       markerCount = markers.children.length
       i = 0
       while i < markers.children.length
