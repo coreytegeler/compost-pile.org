@@ -14,8 +14,7 @@
     "css" : "npm run sass-admin & npm run prefix-admin & npm run sass-public & npm run prefix-public",
     "js": "coffee -o public/js/ -cw public/coffee/",
     "local": "nodemon ./bin/www localhost 3000",
-    "go": "npm run css & npm run js & npm run local",
-    "start": "node ./bin/www"
+    "go": "npm run css & npm run js & npm run local"
   },
   "dependencies": {
     "async": "2.0.0-rc.6",

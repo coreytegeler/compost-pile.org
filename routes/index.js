@@ -3,9 +3,19 @@ var Async = require('async')
 var Location = require('../models/location')
 var Log = require('../models/log')
 
-module.exports = function (app) { 
+module.exports = function (app) {
+
   app.get('/', function(req, res, next) {
-    slug = 'purchase-college'
+    slug = req.query.slug
+    res.render('index', {
+      template: 'home',
+      scripts: ['paper','moment','public'],
+      styles: ['public']
+    })
+  })
+
+  app.get('/:slug', function(req, res, next) {
+    var slug = req.params.slug
     Async.waterfall([
       function(callback) {
         Location.findOne({slug: slug}, {}, function (err, location) {
@@ -28,8 +38,8 @@ module.exports = function (app) {
             location.how = location.how.replace(/(?:\r\n|\r|\n)/g, '<br />')
             location.compostable = location.compostable.replace(/(?:\r\n|\r|\n)/g, '<br />')
             location.dropoff = location.dropoff.replace(/(?:\r\n|\r|\n)/g, '<br />')
-            res.render('index', {
-              pageType: 'single',
+            res.render('location', {
+              template: 'single',
               location: location,
               logs: logs,
               scripts: ['paper','moment','public'],
@@ -42,7 +52,23 @@ module.exports = function (app) {
     ])
   })
 
-  app.get('/logs/:id', function(req, res) {
+  app.get('/api/location', function(req, res, next) {
+    var slug = req.query.slug
+    if(slug) {
+      var query = {slug: slug}
+    } else {
+      var query = {}
+    }
+    Location.find(query).sort({name:-1}).exec(function (err, locations) {
+      if (err) {
+        res.json(err)
+      } else {
+        res.json(locations)
+      } 
+    }) 
+  })
+
+  app.get('/api/logs/:id', function(req, res) {
     var id = req.params.id
     Log.find({location: id}).sort({date:1}).exec(function(e, logs) {
       var recentLogs = []
@@ -71,7 +97,7 @@ module.exports = function (app) {
     })
   })
 
-  app.get('/logs/:id/:month/:year', function(req, res) {
+  app.get('/api/logs/:id/:month/:year', function(req, res) {
     var id = req.params.id
     var month = req.params.month
     var year = req.params.year

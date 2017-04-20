@@ -122,10 +122,10 @@ html, body {
   overflow-y: auto; }
 
 main {
-  width: calc(100% - 4em);
+  width: calc(90%);
   display: block;
   margin: auto;
-  padding: 4em 2em; }
+  padding: 4em 5%; }
 
 #about {
   width: 100%;

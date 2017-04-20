@@ -3,40 +3,12 @@ block content
 	aside
 	header#logo
 		a#logoLink(href= '/')
-		h1.where  #{location.name}
 	main
-		section#locations
-			.location(id=location.slug, data-slug=location.slug, data-id=location.id)
+		section.locations
+			.location.sample
 				.content
 					.graph.loading
 						.loader
 						.easel
-							.tools.left
-								select.date
-									option(value=null)
-									-var lastMonth = null
-									-var lastYear = null
-									-var months = ['January','February','March','April','May','June','July','August','September','October','November','December']								
-									for log in logs
-										if(log.month != lastMonth || log.year != lastYear)
-											option(value=log.month+'/'+log.year)= months[log.month-1]+' '+log.year
-											-lastMonth = log.month
-											-lastYear = log.year
-							.tools.right
-								.tool.button.type.scraps.selected(data-type='scraps') Scraps
-								.tool.button.type.compost(data-type='compost') Compost
-						.arrow.left.show
-							img(src ='images/left.svg')
-						.arrow.right.show
-							img(src ='images/right.svg')
-						.popup.model
-							.row.date
-								.cell.title='Date'
-								.cell.data
-							.row.value
-								.cell.title
-								.cell.data
-							.point
-				include info.pug
 	include slider.pug
 	include footer.pug

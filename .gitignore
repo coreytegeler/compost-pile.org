@@ -3,3 +3,4 @@ node_modules
 node_modules/*
 .sass_cache
 *.csv
+HELP.md
