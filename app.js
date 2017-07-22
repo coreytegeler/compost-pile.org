@@ -38,7 +38,8 @@ app.use(passport.session());
 app.use(flash());
 
 require('./routes/admin')(app, passport);
-require('./routes/index')(app);
+require('./routes/api')(app);
+require('./routes/public')(app);
 
 app.use(function(req, res, next) {
   req.db = monk(db);

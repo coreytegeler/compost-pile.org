@@ -35,7 +35,6 @@ $ ->
       @elem= null
       @graph= null
       @easel= null
-      @canvases = {}
       @papers = {}
       @groups = {}
 
@@ -61,135 +60,152 @@ $ ->
             $('select.date').val(date)
           else
             logs = response
-          loc.stretchCanvas('scraps')
-          loc.stretchCanvas('compost')
+          loc.graphPoints('scraps')
+          loc.graphPoints('compost')
           $(loc.elem).addClass('show')
           return
       return
 
-    stretchCanvas: (type) ->
-      this.papers[type] = new (paper.PaperScope)
-      this[type] = document.createElement('canvas')
+    graphPoints: (type) ->
+      loc = this
+      loc[type] = d3.select(loc.easel).append('svg')
       width = w()
       height = graphHeight
-      this[type].height = height
-      $(this[type]).css height: height
-      $(this[type]).attr('resize', false).attr('id', type)
-      $(this[type]).appendTo($(this.easel))
-      this.papers[type].setup this.canvases[type]
-      this.graphPoints(logs, type)
-
-    createLogList: () ->
-      i = 0
-      while i < logs.length
-        row = logs[i]
-        id = row._id
-        date = moment(row.date).format('MMMM Do, YYYY')
-        scraps = row.scraps
-        compost = row.compost
-        dateHtml = '<div class="cell date">' + date + '</div>'
-        scrapsHtml = '<div class="cell scraps">' + scraps + ' lbs.</div>'
-        compostHtml = '<div class="cell compost">' + compost + ' lbs.</div>'
-        html = '<li data-id="' + id + '">' + dateHtml + scrapsHtml + compostHtml + '</li>'
-        $logList.prepend(html)
-
-    graphPoints: (logs, type) ->
-      loc = this
+      $svg = $(loc[type].node())
+      $svg.css height: height
+      $svg.attr('resize', false)
+      $svg.addClass(type)
       if logs.length == 0
-        # SHOW THAT NO LOGS ARE ENTERED
         return
-      loc.groups[type] = new loc.papers[type].Group
-      groupNames = ['graph','graphContent','clippedGraphContent','markers','markerHovers','fillSymbols','fillContent','axes','graphUtils']
       i = 0
-      while i < groupNames.length
-        groupName = groupNames[i]
-        newGroup = new (loc.papers[type].Group)(name: groupName)
-        thisGroup = loc.groups[type]
-        thisGroup[groupName] = newGroup
-        loc.groups[type].addChildren thisGroup[groupName]
-        i++
-      xFactor = 250
-      line = new (loc.papers[type].Path)(
-        name: 'line'
-        strokeWidth: 4
-        strokeCap: 'round'
-        strokeJoin: 'round'
-        strokeColor: dark
-        opacity: 1
+      data = d3.range(40).map( (i) ->
+        if i % 5
+          x: i / 39,
+          y: (Math.sin(i / 3) + 2) / 4
+        else null
       )
-      width = $('canvas#'+type).innerWidth()
-      lastX = undefined
-      firstDayUnix = moment(logs[0].date).unix()
-      line.add(-ease, graphHeight + 5)
-      $(logs).each (i, log) ->
-        if(log[type] >= 0)
-          date = moment(log.date)
-          humanDate = date.format('MMMM Do, YYYY')
-          thisDayUnix = moment(date).unix()
-          id = log._id
-          since = (thisDayUnix - firstDayUnix) / 250000
-          x = since * xFactor
-          lastX = x
-          yFactor = 5
-          value = log[type]
-          y = graphHeight - (parseInt(value) * yFactor) - 15
-          data = 
-            date: humanDate
-            id: id
-            index: i
-            valueType: type
-            value: log[type]
-            x: x
-            y: y
-          line.add(x, y)
-          marker = new (loc.papers[type].Shape.Circle)(
-            name: id
-            x: x
-            y: y
-            radius: 8
-            strokeWidth: 3
-            strokeColor: dark
-            fillColor: light
-            data: data
-            opacity: 1
-          )
-          markerHover = marker.clone().set(
-            radius: 15
-            strokeWidth: 0
-            opacity: 0
-          )
-          loc.groups[type].markers.addChild(marker)
-          loc.groups[type].markerHovers.addChild(markerHover)
-          popupModel = $('.popup.model')
-          popup = $(popupModel).clone()
-          $(popup).removeClass 'model'
-          $(popup).attr 'data-id', id
-          $(popup).css top: '1000px'
-          $(popup).children('.date').children('.data').html humanDate
-          $(popup).children('.value').children('.title').html type
-          $(popup).children('.value').children('.data').html log[type] + ' lbs.'
-          $(popup).attr('data-type', type).addClass type
-          $(popup).insertAfter $(popupModel)
+      console.log data
+      margin = 
+        top: 40
+        right: 40
+        bottom: 40
+        left: 40
+      width = 960 - (margin.left) - (margin.right)
+      height = 500 - (margin.top) - (margin.bottom)
+      x = d3.scaleLinear().range([0,width])
+      y = d3.scaleLinear().range([height,0])
+      line = d3.line().defined((d) ->
+        d
+      ).x((d) ->
+        x d.x
+      ).y((d) ->
+        y d.y
+      )
+      # console.log loc[type]
+      # svg = loc[type]
+      # console.log $('#'+loc.id)
 
-          markerHover.onMouseEnter = (event) ->
-            id = event.target.data.id
-            loc.showPopUp(id)
-            $('.graph').css 'cursor': 'pointer'
+      loc[type]
+          .datum(data).attr('width', width + margin.left + margin.right)
+          .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+          .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
-          markerHover.onMouseLeave = (event) ->
-            id = event.target.data.id
-            loc.hidePopUp(id)
-            $('.graph').css 'cursor': 'default'
+      loc[type].append('g')
+        .attr('class', 'axis axis--x')
+        .attr('transform', 'translate(0,' + height + ')')
+        .call(d3.axisBottom(x))
 
-          markerHover.onClick = (event) ->
-            id = event.target.data.id
-            loc.scrollToListItem(id)
+      loc[type].append('g')
+        .attr('class', 'axis axis--y')
+        .call(d3.axisLeft(y))
 
-        if(i == logs.length - 1)
-          line.add(lastX + ease, graphHeight + 5)
-          line.sendToBack()
-          line.simplify()
-          loc.loadFillSymbols(line, type)
+      loc[type].append('path')
+        .attr('class', 'line')
+        .attr('d', line)
+
+      loc[type].selectAll('.dot').data(data.filter((d) ->
+        return d
+      )).enter().append('circle')
+          .attr('class', 'dot')
+          .attr('cx', line.x())
+          .attr('cy', line.y())
+          .attr('r', 3.5)
+
+      this.showGraph(type)
+      # width = $('canvas#'+type).innerWidth()
+      # lastX = undefined
+      # firstDayUnix = moment(logs[0].date).unix()
+      # line.add(-ease, graphHeight + 5)
+      # $(logs).each (i, log) ->
+      #   if(log[type] > 0)
+      #     date = moment(log.date)
+      #     humanDate = date.format('MMMM Do, YYYY')
+      #     thisDayUnix = moment(date).unix()
+      #     id = log._id
+      #     since = (thisDayUnix - firstDayUnix) / 250000
+      #     x = since * xFactor
+      #     lastX = x
+      #     yFactor = 5
+      #     value = log[type]
+      #     y = graphHeight - (parseInt(value) * yFactor) - 15
+      #     data = 
+      #       date: humanDate
+      #       id: id
+      #       index: i
+      #       valueType: type
+      #       value: log[type]
+      #       x: x
+      #       y: y
+      #     line.add(x, y)
+      #     marker = new (loc.papers[type].Shape.Circle)(
+      #       name: id
+      #       x: x
+      #       y: y
+      #       radius: 8
+      #       strokeWidth: 3
+      #       strokeColor: dark
+      #       fillColor: light
+      #       data: data
+      #       opacity: 1
+      #     )
+      #     markerHover = marker.clone().set(
+      #       radius: 15
+      #       strokeWidth: 0
+      #       opacity: 0
+      #     )
+      #     loc.groups[type].markers.addChild(marker)
+      #     loc.groups[type].markerHovers.addChild(markerHover)
+      #     popupModel = $('.popup.model')
+      #     popup = $(popupModel).clone()
+      #     $(popup).removeClass 'model'
+      #     $(popup).attr 'data-id', id
+      #     $(popup).css top: '1000px'
+      #     $(popup).children('.date').children('.data').html humanDate
+      #     $(popup).children('.value').children('.title').html type
+      #     $(popup).children('.value').children('.data').html log[type] + ' lbs.'
+      #     $(popup).attr('data-type', type).addClass type
+      #     $(popup).insertAfter $(popupModel)
+
+      #     markerHover.onMouseEnter = (event) ->
+      #       id = event.target.data.id
+      #       loc.showPopUp(id)
+      #       $('.graph').css 'cursor': 'pointer'
+
+      #     markerHover.onMouseLeave = (event) ->
+      #       id = event.target.data.id
+      #       loc.hidePopUp(id)
+      #       $('.graph').css 'cursor': 'default'
+
+      #     markerHover.onClick = (event) ->
+      #       id = event.target.data.id
+      #       loc.scrollToListItem(id)
+
+      #   if(i == logs.length - 1)
+      #     line.add(lastX + ease, graphHeight + 5)
+      #     line.sendToBack()
+      #     line.simplify()
+      #     loc.loadFillSymbols(line, type)
 
     loadFillSymbols: (line, type) ->
       loc = this
@@ -287,10 +303,8 @@ $ ->
     showGraph: (type) ->
       $(this.graph).addClass('show').removeClass('loading')
       $(this.elem).addClass('loaded')
-      if $(this.elem).hasClass('opened')
-        this.showGraphUtils this.id
       if type == 'compost'
-        $(this[type]).addClass 'show'
+        $(this[type].node()).addClass 'show'
 
     showPopUp: (id) ->
       loc = this
@@ -378,29 +392,22 @@ $ ->
         $('select.date').val(date).change()
         # swapPileDate(date)
 
-    showGraphUtils: (type) ->
-      loc = this
-      thisGroup = loc.groups[type]
-      markers = thisGroup.markers
-      while i < markers.children.length
-        markers.children[i].opacity = 0
-        i++
-      loc.papers[type].view.draw()
-      return
-
-    hideGraphUtils: (type) ->
-      loc = this
-      thisGroup = loc.groups[type]
-      markers = thisGroup.markers
-      markerCount = markers.children.length
-      i = 0
-      while i < markers.children.length
-        markers.children[i].opacity = 0
-        i++
-      loc.papers[type].view.draw()
-
     getType: () ->
       return $(this.easel).find('canvas.show').attr('id')
+
+    createLogList: () ->
+      i = 0
+      while i < logs.length
+        row = logs[i]
+        id = row._id
+        date = moment(row.date).format('MMMM Do, YYYY')
+        scraps = row.scraps
+        compost = row.compost
+        dateHtml = '<div class="cell date">' + date + '</div>'
+        scrapsHtml = '<div class="cell scraps">' + scraps + ' lbs.</div>'
+        compostHtml = '<div class="cell compost">' + compost + ' lbs.</div>'
+        html = '<li data-id="' + id + '">' + dateHtml + scrapsHtml + compostHtml + '</li>'
+        $logList.prepend(html)
 
 
   setup = () ->
@@ -425,13 +432,13 @@ $ ->
         .attr('id', loc._id)
         .attr('data-id', loc._id)
         .attr('data-slug', loc.slug)
-        .appendTo('.locations')
+        .appendTo('.container')
     else
       $loc = $('.location')
     loc = new Location(loc)
     loc.elem = $loc
-    loc.graph = $loc.find('.graph')
-    loc.easel = $loc.find('.easel')
+    loc.graph = $loc.find('.graph')[0]
+    loc.easel = $loc.find('.easel')[0]
     locs[loc.slug] = loc
     loc.getData()
 
@@ -483,11 +490,11 @@ $ ->
     if(!date || typeof date != 'string')
       date = this.value
     $(loc.graph).addClass 'loading'
-    $(loc.canvases[type]).one transitionEnd, ->
+    $(loc[type]).one transitionEnd, ->
       loc.papers['scraps'].remove()
       loc.papers['compost'].remove()
       getData(date)
-    $(loc.canvases[type]).removeClass 'show'
+    $(loc[type]).removeClass 'show'
     
   isStart = (pile) ->
     if pile.bounds.x + 200 > 0
@@ -504,22 +511,22 @@ $ ->
 
   createLogo = ->
     loc = this
-    logoCanvas = document.createElement('canvas')
+    logoSVG = document.createElement('canvas')
     headerWidth = 530
     headerHeight = 300
-    $(logoCanvas).attr('id', 'logo').attr('resize', true).css
+    $(logoSVG).attr('id', 'logo').attr('resize', true).css
       width: headerWidth
       height: headerHeight
-    logoCanvas.width = headerWidth
-    logoCanvas.height = headerHeight
-    $('header#logo a#logoLink').append logoCanvas
+    logoSVG.width = headerWidth
+    logoSVG.height = headerHeight
+    $('header#logo a#logoLink').append logoSVG
     $('header#logo a#logoLink').click (event) ->
       return
       event.preventDefault()
       if $('.location.opened')
         closeSection()
       return
-    logoPaper.setup logoCanvas
+    logoPaper.setup logoSVG
     hovering = false
     logoUrl = '../images/logo.svg'
     $.get(logoUrl, null, ((data) ->
@@ -551,7 +558,7 @@ $ ->
         return
 
       $('header#logo').addClass('show')
-      $('section.locations').addClass('show')
+      $('section.container').addClass('show')
       # $('header.where').addClass('show')
       # $('canvas#logo').on 'mouseenter', (event) ->
       #   hovering = true
@@ -633,16 +640,16 @@ $ ->
     return
 
   createDirt = ->
-    dirtCanvas = document.createElement('canvas')
+    dirtSVG = document.createElement('canvas')
     footerWidth = w()
     footerHeight = 300
-    $(dirtCanvas).attr('id', 'dirt').attr('resize', true).css
+    $(dirtSVG).attr('id', 'dirt').attr('resize', true).css
       width: footerWidth
       height: footerHeight
-    dirtCanvas.width = footerWidth
-    dirtCanvas.height = footerHeight
-    $('footer .dirt').append dirtCanvas
-    dirtPaper.setup dirtCanvas
+    dirtSVG.width = footerWidth
+    dirtSVG.height = footerHeight
+    $('footer .dirt').append dirtSVG
+    dirtPaper.setup dirtSVG
     i = 0
     while i < 6
       imgUrl = '../images/compost/' + i + '.svg'
